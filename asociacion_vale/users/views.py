@@ -3,6 +3,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 import json
 from users.models import User
+from users.controller import Controller
 
 NEEDED_USERS_FIELDS =  ["name","username","password","role"]
 ALL_USERS_FIELDS =  ["name","username","password","role","email","phoneNumber","birthDay"]
