@@ -24,6 +24,8 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('users/', views.index, name='users'),
      #path('pictograms/', views.pictogramas, name='pictogramas'),
-    path('users/create', views.users_create, name='users_create'),
-    path('users/login' , views.users_login, name='users_login' )
+    path('users/create', views.usersCreate, name='usersCreate'),
+    path('users/login' , views.usersLogin, name='usersLogin' ),
+    path('pictograms', views.pictograms, name='pictograms'),
+    path('randomUser', views.randomUser, name='randomUser')
 ]

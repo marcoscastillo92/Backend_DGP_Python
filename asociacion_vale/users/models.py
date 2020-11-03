@@ -1,24 +1,32 @@
 from django.db import models
-
+import json
 # Create your models here.
 class User(models.Model):
+    class Role(models.TextChoices):
+        admin = 'admin',
+        tutor = 'tutor',
+        user = 'user'
+
+    class Gender(models.TextChoices):
+        male = 'male',
+        female = 'female'
+    
     name= models.CharField(max_length=150)
     email= models.CharField(max_length=150)
     username= models.CharField(max_length=150)
     password= models.CharField(max_length=150)
     phoneNumber= models.CharField(max_length=150)
     profileImage= models.ImageField(default='null')
-    #role= {type= String, enum= ['admin', 'tutor', 'user'], default= 'user'}
-    #birthDate= models.DateTimeField()
+    role= models.CharField(max_length=5, choices=Role.choices, default=Role.tutor)
+    birthDate= models.DateTimeField(auto_now_add=True)
     token= models.CharField(max_length=300)
     createdAt= models.DateTimeField(auto_now_add=True)
-    #gender= {type= String, enum= ['male', 'female'], default= 'male'}
+    gender= models.CharField(max_length=6, choices=Gender.choices, default=Gender.male)
 
 class Pictograms(models.Model):
     name= models.CharField(max_length=150)
     key= models.CharField(max_length=300)
     section= models.CharField(max_length=150)
-    value= models.CharField(max_length=150)
 
 
 class Message(models.Model):

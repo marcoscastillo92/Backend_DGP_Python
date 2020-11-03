@@ -1,14 +1,11 @@
 from django.shortcuts import render, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
+from django.core import serializers
 import json
-from users.models import User
-from users.controller import Controller
+from .models import User
+from .controller import Controller
 
-NEEDED_USERS_FIELDS =  ["name","username","password","role"]
-ALL_USERS_FIELDS =  ["name","username","password","role","email","phoneNumber","birthDay"]
-NEEDED_USER_LOGIN_FIELDS = ["password"]
-ALL_USER_LOGIN_FIELDS = ["password"]
 # Create your views here.
 def index(request):
     return HttpResponse("API para la Asociación Vale.")
@@ -20,12 +17,10 @@ def correctFields(request,neededFields, allFields ):
     return
     
 @csrf_exempt
-def users_create(request):
+def usersCreate(request):
     if request.method == 'POST':
         bodyUnicode = request.body.decode('utf-8')
-        print(bodyUnicode)
         userData = json.loads(bodyUnicode)
-        print(userData)
         user = User(
             name= userData["name"],
             email= userData["email"],
@@ -40,17 +35,29 @@ def users_create(request):
         user.save()
     return JsonResponse(json.loads('{"name":"Marcos", "apellidos":"Castillo Trigueros"}'))
 
-
-
-def user_login(request):
-
-    return
-
-def users_login(request):
+@csrf_exempt
+def usersLogin(request):
+    controller = Controller()
     if request.method == 'POST':
-        if request.session and request.session.user:
-            response = json.dumps({"result": "error", "message" : "You are already logged"})
-            return response
-
-    return user_login(request)
+        return controller.usersLogin(request)
+        
     
+@csrf_exempt
+def pictograms(request):
+    controller = Controller()
+    if request.method == 'GET':
+        return controller.getPictograms(request)
+    if request.method == 'POST':
+        return controller.savePictograms(request)
+        
+
+@csrf_exempt
+def randomUser(request):
+    controller = Controller()
+    if request.method == 'GET':
+        return controller.getRandomUser(request)
+    if request.method == 'POST':
+        return controller.saveRandomUser(request)
+        
+
+
