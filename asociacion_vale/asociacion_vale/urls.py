@@ -27,5 +27,7 @@ urlpatterns = [
     path('users/create', views.usersCreate, name='usersCreate'),
     path('users/login' , views.usersLogin, name='usersLogin' ),
     path('pictograms', views.pictograms, name='pictograms'),
-    path('randomUser', views.randomUser, name='randomUser')
+    path('randomUser', views.randomUser, name='randomUser'),
+    path('password/', views.generatePassword, name='generatePassword'),
+
 ]

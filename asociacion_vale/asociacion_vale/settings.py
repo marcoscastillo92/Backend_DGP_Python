@@ -1,3 +1,4 @@
+
 """
 Django settings for asociacion_vale project.
 
@@ -143,3 +144,5 @@ CORS_ALLOW_HEADERS = [
     'x-csrftoken',
     'x-requested-with',
 ]
+
+

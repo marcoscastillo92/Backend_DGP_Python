@@ -1,3 +1,5 @@
+#from asociacion_vale.users.views import pictograms
+from json.decoder import JSONDecoder
 from .models import User
 from django.http import JsonResponse
 import json
@@ -63,6 +65,10 @@ class Controller:
         pictograms = list(Pictograms.objects.values())
         return JsonResponse(pictograms, safe=False)
 
+    def generatePassword(self,request):
+        pictograms = self.getPictograms(request)
+        return pictograms
+        
     def savePictograms(self, request):
         newPictogram = Pictograms(
             name= "cerdo",
@@ -131,7 +137,10 @@ class Controller:
         return JsonResponse(response)
         
         
+    
 
+
+    
 """ 
 /**
  * @author Jose

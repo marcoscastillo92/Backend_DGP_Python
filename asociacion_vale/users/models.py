@@ -1,11 +1,15 @@
 from django.db import models
 import json
+import secrets
+
+
 # Create your models here.
+
 class User(models.Model):
-    class Role(models.TextChoices):
+    """ class Role(models.TextChoices):
         admin = 'admin',
         tutor = 'tutor',
-        user = 'user'
+        user = 'user', """
 
     class Gender(models.TextChoices):
         male = 'male',
@@ -17,12 +21,21 @@ class User(models.Model):
     password= models.CharField(max_length=150)
     phoneNumber= models.CharField(max_length=150)
     profileImage= models.ImageField(default='null')
-    role= models.CharField(max_length=5, choices=Role.choices, default=Role.tutor)
+    #role= models.CharField(max_length=5, choices=Role.choices, default=Role.tutor)
     birthDate= models.DateTimeField(auto_now_add=True)
-    token= models.CharField(max_length=300)
+    token= models.CharField(max_length=300 , default=secrets.token_hex(64))
     createdAt= models.DateTimeField(auto_now_add=True)
     gender= models.CharField(max_length=6, choices=Gender.choices, default=Gender.male)
 
+ 
+    def __str__(self):
+        return """
+            Nombre: %s \n
+            Username: %s \n
+            phoneNumber: %s \n
+           
+            
+        """ %(self.name, self.username,self.phoneNumber)
 class Pictograms(models.Model):
     name= models.CharField(max_length=150)
     key= models.CharField(max_length=300)
