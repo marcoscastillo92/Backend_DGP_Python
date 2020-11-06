@@ -25,13 +25,7 @@ class User(models.Model):
 
  
     def __str__(self):
-        return """
-            Nombre: %s \n
-            Username: %s \n
-            phoneNumber: %s \n
-           
-            
-        """ %(self.name, self.username,self.phoneNumber)
+        return f"{self.username}"
     
     class Meta:
         verbose_name = "Usuario"

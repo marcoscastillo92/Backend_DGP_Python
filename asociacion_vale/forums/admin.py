@@ -3,6 +3,7 @@ from .models import Forum, Message
 
 # Register your models here.
 class MessageAdmin(admin.ModelAdmin):
+    list_filter = ('forum', 'author__username', 'createdAt')
     pass
 
 class ForumAdmin(admin.ModelAdmin):

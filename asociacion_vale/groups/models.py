@@ -19,7 +19,7 @@ class Groups(models.Model):
     name= models.CharField(max_length=150, verbose_name="Nombre")
     memberCount= models.IntegerField(default=0, verbose_name="Contador de miembros")
     category = models.ForeignKey(Category, verbose_name=("Categoría"), on_delete=models.CASCADE, null=True)
-    users = models.ManyToManyField(User, verbose_name="Miembros")
+    users = models.ManyToManyField(User, verbose_name="Miembros", blank=True)
     createdAt = models.DateTimeField(default=datetime.now, verbose_name="Creado en", blank=True)
 
     class Meta:
@@ -30,10 +30,7 @@ class Groups(models.Model):
         print(self.category)
         return f"{self.name} - {self.category}"
 
-    def save(self, idCategory, *args, **kwargs):
+    def save(self, *args, **kwargs):
         if self.category is None:  # Set default reference
             self.category = Category.objects.get(id=1)
-        elif idCategory:
-            self.category = Category.objects.get(id=idCategory)
-
         super(Groups, self).save(*args, **kwargs)

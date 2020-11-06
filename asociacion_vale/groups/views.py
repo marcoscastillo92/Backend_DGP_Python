@@ -17,7 +17,7 @@ def groupsCreate(request):
         group = Groups(
             name= groupData['name'],
         )
-        group.save(idCategory=groupData['category'])
+        group.save()
         forum = Forum.objects.filter(idTarget=group)
         if not forum:
             forum = Forum(idTarget=group)
