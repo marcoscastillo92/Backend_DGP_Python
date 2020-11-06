@@ -1,22 +1,26 @@
-from django.shortcuts import render
+from django.shortcuts import render, HttpResponse
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 from .models import Groups
-from json import json
+import json
 
 # Create your views here.
+@csrf_exempt
+def index(request):
+    pass
+
+@csrf_exempt
 def groupsCreate(request):
     if request.method == 'POST':
-        bodyUnicode = request.body.decode('utf-8')
-        userData = json.loads(bodyUnicode)
+        groupData = json.loads(request.body)
         group = Groups(
-            name= userData["name"],
-            email= userData["email"],
-            username= userData["username"],
-            password= userData["password"],
-            phoneNumber= userData["phoneNumber"],
-            profileImage= userData ["profileImage"],
-           # role= userData ["role"],
-           # birthDate= userData["birthDate"],
-            #gender= userData["gender"]
+            name= groupData['name'],
+            category = groupData['category']
         )
         group.save()
-    return JsonResponse(json.loads('{"name":"Marcos", "apellidos":"Castillo Trigueros"}'))
+        string = '{"Name":"'+groupData['name']+'", "Category":"'+groupData['category']+'"}'
+    return JsonResponse(json.loads(string))
+
+@csrf_exempt
+def groupsGet(request, id):
+    pass
