@@ -1,9 +1,11 @@
 from django.db import models
+from datetime import datetime
 import json
 import secrets
 
-
-# Create your models here.
+def user_directory_path(instance, filename): 
+    # file will be uploaded to MEDIA_ROOT / user_<id>/<filename> 
+    return 'uploads/img/user_{0}/{1}'.format(instance.user.id, filename)
 
 class User(models.Model):
     """ class Role(models.TextChoices):
@@ -20,12 +22,12 @@ class User(models.Model):
     username= models.CharField(max_length=150)
     password= models.CharField(max_length=150)
     phoneNumber= models.CharField(max_length=150)
-    profileImage= models.ImageField(default='null')
-    #role= models.CharField(max_length=5, choices=Role.choices, default=Role.tutor)
+    profileImage= models.ImageField(upload_to=user_directory_path, default='null')
+    role= models.CharField(max_length=5, choices=Role.choices, default=Role.tutor)
     birthDate= models.DateTimeField(auto_now_add=True)
-    token= models.CharField(max_length=300 , default=secrets.token_hex(64))
-    createdAt= models.DateTimeField(auto_now_add=True)
+    token= models.CharField(max_length=300)
     gender= models.CharField(max_length=6, choices=Gender.choices, default=Gender.male)
+    createdAt= models.DateTimeField(default=datetime.now, blank=True)
 
  
     def __str__(self):
@@ -40,29 +42,3 @@ class Pictograms(models.Model):
     name= models.CharField(max_length=150)
     key= models.CharField(max_length=300)
     section= models.CharField(max_length=150)
-
-
-class Message(models.Model):
-    body = models.CharField(max_length=1000)
-    author = models.ForeignKey(User,on_delete=models.CASCADE)
-   # mimeType = 
-    createdAt = models.DateTimeField(auto_now_add=True)
-    
-class Log(models.Model):
-    source = models.CharField(max_length=150),
-    message = models.CharField(max_length=150),
-    data = models.Field
-    createdAt = models.DateTimeField(auto_now_add=True)
-
-class Groups(models.Model):
-    name= models.CharField(max_length=150)
-    memberCount= models.IntegerField
-    category = models.CharField(max_length=150)
-   # users = models.ma
-    createdAt = models.DateTimeField(auto_now_add=True)
-
-
-class Forum (models.Model):
-    idTarget = models.ForeignKey(Groups, on_delete=models.CASCADE)
-    #messages
-    createdAt = models.DateTimeField(auto_now_add=True)
