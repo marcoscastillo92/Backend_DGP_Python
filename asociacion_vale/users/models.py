@@ -32,6 +32,10 @@ class User(models.Model):
            
             
         """ %(self.name, self.username,self.phoneNumber)
+    
+    class Meta:
+        verbose_name = "Usuario"
+        verbose_name_plural = "Usuarios"
 
 class Pictograms(models.Model):
     name= models.CharField(max_length=150)

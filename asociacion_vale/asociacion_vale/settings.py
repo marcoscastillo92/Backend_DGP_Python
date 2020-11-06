@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'groups',
     'forums',
     'corsheaders',
+    'ckeditor',
 ]
 
 MIDDLEWARE = [
@@ -144,4 +145,9 @@ CORS_ALLOW_HEADERS = [
     'x-requested-with',
 ]
 
-
+# CKeditor
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': None,
+    }
+}
