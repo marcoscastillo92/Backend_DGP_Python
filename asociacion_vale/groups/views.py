@@ -2,7 +2,7 @@ from django.shortcuts import render, HttpResponse
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from .models import Groups, Category
-from forums.models import Forum
+from .models import ForumGroup
 import json
 
 # Create your views here.
@@ -18,9 +18,9 @@ def groupsCreate(request):
             name= groupData['name'],
         )
         group.save()
-        forum = Forum.objects.filter(idTarget=group)
+        forum = ForumGroup.objects.filter(idTarget=group)
         if not forum:
-            forum = Forum(idTarget=group)
+            forum = ForumGroup(idTarget=group)
             forum.save()
         string = '{"Name":"'+groupData['name']+'", "Category":"'+str(groupData['category'])+'"}'
     return JsonResponse(json.loads(string))

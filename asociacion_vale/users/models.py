@@ -6,6 +6,8 @@ import secrets
 def user_directory_path(instance, filename): 
     # file will be uploaded to MEDIA_ROOT / user_<id>/<filename> 
     return 'uploads/img/user_{0}/{1}'.format(instance.id, filename)
+def generateToken():
+    return secrets.token_hex(64)
 
 class User(models.Model):
     class Gender(models.TextChoices):
@@ -19,7 +21,7 @@ class User(models.Model):
     phoneNumber= models.CharField(max_length=150)
     profileImage= models.ImageField(upload_to=user_directory_path, default='null')
     birthDate= models.DateTimeField(auto_now_add=True)
-    token= models.CharField(max_length=300)
+    token= models.CharField(max_length=300, default=generateToken())
     gender= models.CharField(max_length=6, choices=Gender.choices, default=Gender.male)
     createdAt= models.DateTimeField(default=datetime.now, blank=True)
 

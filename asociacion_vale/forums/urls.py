@@ -3,5 +3,5 @@ from . import views
 
 
 urlpatterns = [
-    path('post-message/', views.postMessage, name='postMessage'),
+    #path('post-message/', views.postMessage, name='postMessage'),
 ]

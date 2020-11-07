@@ -65,24 +65,6 @@ def randomUser(request):
 def generatePassword(request):
     if request.method == 'GET':
         controller = Controller()
-        d = controller.generatePassword(request)
-        possibleKeys = []
-        possibleNames = []
+        return controller.generatePassword(request)
 
-        for x in d:
-            array = json.loads(x)
-            for index in range(len(array)):
-                possibleKeys.append(array[index]["key"])
-                possibleNames.append(array[index]["name"])
-            
-        password = ""
-        secret = 0
-        names = ""
-        for i in range(len(possibleKeys)):
-           secret = secrets.randbelow(len(possibleKeys))
-           password +=  possibleKeys[secret] #Se obtiene una key aleatoria
-           names += " " + possibleNames[secret]
-        
-        response =json.dumps({"names" : names,"password" : password}, separators=(',', ':'))
-        return JsonResponse(response , safe=False)
-         
+     

@@ -67,7 +67,25 @@ class Controller:
 
     def generatePassword(self,request):
         pictograms = self.getPictograms(request)
-        return pictograms
+        possibleKeys = []
+        possibleNames = []
+
+        for x in pictograms:
+            array = json.loads(x)
+            for index in range(len(array)):
+                possibleKeys.append(array[index]["key"])
+                possibleNames.append(array[index]["name"])
+            
+        password = ""
+        secret = 0
+        names = ""
+        for i in range(len(possibleKeys)):
+           secret = secrets.randbelow(len(possibleKeys))
+           password +=  possibleKeys[secret] #Se obtiene una key aleatoria
+           names += " " + possibleNames[secret]
+    
+        response = {"names" : names,"password" : password}
+        return JsonResponse(response, safe=False)
         
     def savePictograms(self, request):
         newPictogram = Pictograms(
