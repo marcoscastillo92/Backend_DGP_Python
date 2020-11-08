@@ -17,6 +17,24 @@ def postMessage(request):
             return gControler.saveMessage(requestData)
         if requestData['messageType'] == 'forumUser':
             return uControler.saveMessage(requestData)
+#        if requestData['messageType'] == 'forumTask':
+#            return tController.saveMessage(request)
+
+
+@csrf_exempt
+def getMessages(request):
+    if request.method == 'GET':
+        body_unicode = request.body.decode('utf-8')
+        requestData = json.loads(body_unicode)
+        
+        gControler = groupController()
+        uControler = userController()
+
+        #Publicar un mensaje tipo forum
+        if requestData['messageType'] == 'forumGroup':
+            return gControler.getMessages(requestData)
+        if requestData['messageType'] == 'forumUser':
+            return uControler.getMessages(requestData)
         #if requestData['messageType'] == 'forumTask':
-            #controller.saveMessage(request)
+            #controller.getMessages(request)
         

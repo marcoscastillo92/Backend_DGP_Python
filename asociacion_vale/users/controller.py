@@ -1,5 +1,7 @@
 #from asociacion_vale.users.views import pictograms
 from json.decoder import JSONDecoder
+from .models import MessageForumUser
+from .models import ForumUser
 from .models import User
 from django.http import JsonResponse
 import json
@@ -154,48 +156,74 @@ class Controller:
         
         return JsonResponse(response)
         
+    def getAuthor(self, token):
+        authorQS = User.objects.filter(token=token)
+        if authorQS:
+            author = authorQS[0]
+        else:
+            author = None
+        return author
+
+    def getForum(self, idForum):
+        forumQS = ForumUser.objects.filter(id=idForum)
+        if forumQS:
+            forum = forumQS[0]
+        else:
+            forum= None 
+        return forum
+    
+    def saveMessage(self, requestData):
+        body = requestData['body']
+        token = requestData['token']
+        author = self.getAuthor(token)
+        mimeType = requestData['mimeType']
+        idforum = requestData['idForum']
+        forum = self.getForum(idforum)
+
+        if author and forum:
+            messageToSave = MessageForumUser(
+                body = body,
+                author = author,
+                mimeType = mimeType,
+                forum = forum,
+            )
+            messageToSave.save()
+            response = json.loads('{"result": "success", "message": "Mensaje almacenado correctamente"}')
+        elif not author:
+            response = json.loads('{"result": "error", "message": "El usuario no existe"}')
+        elif not forum:
+            response = json.loads('{"result": "error", "message": "El foro no existe"}')
+        return JsonResponse(response)
+    
+    def getAuthor(self, token):
+        authorQS = User.objects.filter(token=token)
+        if authorQS:
+            author = authorQS[0]
+        else:
+            author = None
+        return author
+
+    def getMessages(self, requestData):
+        messageType = requestData['messageType']
+        if messageType == 'forumUser':
+            token = requestData['token']
+            tutorId = requestData['idTutor']
+            author = self.getAuthor(token)
+            if author:
+                forumUser = ForumUser.objects.filter(user_id=author.id, tutor_id=tutorId)
+                if forumUser:
+                    messagesForumUser = list(MessageForumUser.objects.filter(forum_id=forumUser[0].id).values())
+                    if messagesForumUser:
+                        return JsonResponse(messagesForumUser, safe=False)
+                    else:
+                        response = json.loads('{"result": "error", "message": "El foro no contiene ningún mensaje"}')
+                        return JsonResponse(response)    
+                else:
+                    response = json.loads('{"result": "error", "message": "El foro no existe"}')
+                    return JsonResponse(response)
+            else:
+                response = json.loads('{"result": "error", "message": "El usuario no existe"}')
+                return JsonResponse(response)
+
         
-    
 
-
-    
-""" 
-/**
- * @author Jose
- * @params: User es el objeto usuarioq ue se obntiene de la bd
- * @return: retorna el JSON con el objeto Usuario.
- */
-async function getUserInfoById(req, res) {
-    var id = req.params.id;
-    try{
-        var user = await User.findById(id);
-    }catch{
-        user = {"error": "UserNotFound"};
-        Logger.addLog('userController', 'User not found', {'id': id, 'requestParams': req.params});
-        res.status(404).send(user);
-    }
-    res.send(user);
-}
-
-/**
- * Fn que crea un usuario con unos datos mínimos especificados
- * @author Marcos
- * @param {*} req
- * @param {*} res
- * @return new user object or json with missing fields
- */
-async function createUser(req, res){
-    delete req.body.token;
-    if(correctFields(req, res, neededUserFields, allUserFields)){
-        var userData = req.body;
-        userData.role = userData.role.toLowerCase();
-        //userData.password = bcrypt.hashSync(userData.password, bcrypt.genSaltSync(10));
-        var newUser = await new User(userData);
-        newUser.save((err, result) =>{
-            if(err) Logger.addLog('userController', 'Creation error', {'error': err, 'userObject': result, 'requestBody': userData});
-            else Logger.addLog('userController', 'User created', {'userObject': result, 'requestBody': userData});
-        });
-        res.send(newUser);
-    }
-}
- """

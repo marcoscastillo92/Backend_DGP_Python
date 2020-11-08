@@ -43,3 +43,25 @@ class Controller:
         elif not forum:
             response = json.loads('{"result": "error", "message": "El foro no existe"}')
         return JsonResponse(response)
+
+    def getMessages(self, requestData):
+        messageType = requestData['messageType']
+        if messageType == 'forumGroup':
+            token = requestData['token']
+            idForum = requestData['idForum']
+            author = self.getAuthor(token)
+            if author:
+                forumGroup = ForumGroup.objects.filter(id=idForum)
+                if forumGroup:
+                    messagesForumGroup = list(MessageForumGroup.objects.filter(forum_id=forumGroup[0].id).values())
+                    if messagesForumGroup:
+                        return JsonResponse(messagesForumGroup, safe=False)
+                    else:
+                        response = json.loads('{"result": "error", "message": "El foro no contiene ningún mensaje"}')
+                        return JsonResponse(response)    
+                else:
+                    response = json.loads('{"result": "error", "message": "El foro no existe"}')
+                    return JsonResponse(response)
+            else:
+                response = json.loads('{"result": "error", "message": "El usuario no existe"}')
+                return JsonResponse(response)
