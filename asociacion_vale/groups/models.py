@@ -33,6 +33,16 @@ class Groups(models.Model):
     def save(self, *args, **kwargs):
         if self.category is None:  # Set default reference
             self.category = Category.objects.get(id=1)
+            
+        usersRegistredAlready = Groups.objects.getUsers()
+        notificacion = True
+        for user in users:
+            for uR in usersRegistredAlready:
+                if user==uR:
+                    notificacion = False
+            if notificacion:
+                print("Usuario agregado ")
+                #pritnuser.Notify("Grupo")
         super(Groups, self).save(*args, **kwargs)
 
 class ForumGroup (models.Model):
