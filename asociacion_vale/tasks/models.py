@@ -41,21 +41,30 @@ class Task(models.Model):
         return f'{self.title} - {self.shortDescription}'
 
     def serializeCustom(self, token):
-        rating = Rating.objects.filter(task__id=self.id, user__token=token)[0]
+        try:
+            rating = Rating.objects.filter(task__id=self.id, user__token=token)[0]
+            text = rating.text
+            difficulty = rating.difficulty
+            utility = rating.utility
+        except:
+            text = ""
+            difficulty = 0
+            utility = 0
+
         data = { 
-            "id_tarea": self.id,
-            "title": self.title,
-            "shortDescription": self.shortDescription,
-            "fullDescription": self.fullDescription.replace("\"", "	&quot;"),
-            "image": self.image.url,
-            "mediaDescription": self.media.path.replace("\\", "/").split("asociacion_vale/")[1],
-            "category": str(self.category),
-            "rating": {
-                "text": rating.text,
-                "difficulty": rating.difficulty,
-                "utility": rating.utility
+                "id_tarea": self.id,
+                "title": self.title,
+                "shortDescription": self.shortDescription,
+                "fullDescription": self.fullDescription.replace("\"", "	&quot;"),
+                "image": self.image.url,
+                "mediaDescription": self.media.path.replace("\\", "/").split("asociacion_vale/")[1],
+                "category": str(self.category),
+                "rating": {
+                    "text": text,
+                    "difficulty": difficulty,
+                    "utility": utility
+                }
             }
-        }
         return data
 
 class Rating(models.Model):
