@@ -1,3 +1,4 @@
+
 """
 Django settings for asociacion_vale project.
 
@@ -38,14 +39,16 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'users',
+    'groups',
+    'forums',
     'corsheaders',
+    'ckeditor',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
     'corsheaders.middleware.CorsPostCsrfMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -125,8 +128,6 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 # CORS VARIABLES
-
-
 ALLOWED_HOSTS=['*']
 CORS_ORIGIN_ALLOW_ALL = False
 CORS_ORIGIN_WHITELIST = (
@@ -143,3 +144,10 @@ CORS_ALLOW_HEADERS = [
     'x-csrftoken',
     'x-requested-with',
 ]
+
+# CKeditor
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': None,
+    }
+}

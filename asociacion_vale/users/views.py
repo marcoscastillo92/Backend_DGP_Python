@@ -5,6 +5,7 @@ from django.core import serializers
 import json
 from .models import User
 from .controller import Controller
+import secrets
 
 # Create your views here.
 def index(request):
@@ -59,5 +60,11 @@ def randomUser(request):
     if request.method == 'POST':
         return controller.saveRandomUser(request)
         
+#Metodo para generar una contraseña
+@csrf_exempt
+def generatePassword(request):
+    if request.method == 'GET':
+        controller = Controller()
+        return controller.generatePassword(request)
 
-
+     
