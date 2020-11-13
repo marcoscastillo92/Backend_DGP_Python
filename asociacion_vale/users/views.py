@@ -67,4 +67,16 @@ def generatePassword(request):
         controller = Controller()
         return controller.generatePassword(request)
 
-     
+#Metodo para obtener un perfil
+@csrf_exempt
+def profile(request):
+    if request.method == 'GET':
+        controller = Controller()
+        return controller.getUserProfile(request)
+
+#Metodo para realizar el logout
+@csrf_exempt
+def logout(request):
+    if request.method == 'POST':
+        controller = Controller()
+        return controller.userLogout(request)
