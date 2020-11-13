@@ -26,7 +26,6 @@ class User(models.Model):
     token= models.CharField(max_length=300, default=generateToken())
     gender= models.CharField(max_length=6, choices=Gender.choices, default=Gender.male)
     createdAt= models.DateTimeField(default=datetime.now, blank=True)
-
  
     def __str__(self):
         return f"{self.username}"

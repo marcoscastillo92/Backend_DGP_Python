@@ -3,7 +3,8 @@ from . import views
 
 
 urlpatterns = [
-    path('', views.index, name='index'),
     path('create/', views.createTask, name='createTask'),
-    path('get/<int:id>' , views.groupsGet, name='groupsGet')
+    path('get/' , views.getAllTasks, name='getTasks'),
+    path('get/<int:id>' , views.getTask, name='getTask'),
+    path('rate/' , views.rateTask, name='rateTask')
 ]
