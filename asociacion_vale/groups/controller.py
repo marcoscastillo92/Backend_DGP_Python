@@ -1,4 +1,4 @@
-from .models import MessageForumGroup
+from .models import Groups, MessageForumGroup
 from users.models import User
 from .models import ForumGroup
 from django.http import JsonResponse
@@ -14,16 +14,18 @@ class Controller:
         return author
 
     def getForum(self, idForum):
-        forumQS = ForumGroup.objects.filter(id=idForum)
+        forumQS = Groups.objects.filter(id=idForum)
         if forumQS:
             forum = forumQS[0]
         else:
             forum= None 
         return forum
         
-    def saveMessage(self, requestData):
+    def saveMessage(self, request):
+        bodyUnicode = request.body.decode('utf-8')
+        requestData = json.loads(bodyUnicode)
         body = requestData['body']
-        token = requestData['token']
+        token = request.META['HTTP_AUTHORIZATION']
         author = self.getAuthor(token)
         mimeType = requestData['mimeType']
         idforum = requestData['idForum']
@@ -34,7 +36,7 @@ class Controller:
                 body = body,
                 author = author,
                 mimeType = mimeType,
-                forum = forum,
+                group = forum,
             )
             messageToSave.save()
             response = json.loads('{"result": "success", "message": "Mensaje almacenado correctamente"}')
@@ -44,16 +46,19 @@ class Controller:
             response = json.loads('{"result": "error", "message": "El foro no existe"}')
         return JsonResponse(response)
 
-    def getMessages(self, requestData):
+    def getMessages(self, request):
+        body_unicode = request.body.decode('utf-8')
+        requestData = json.loads(body_unicode)
+        
         messageType = requestData['messageType']
         if messageType == 'forumGroup':
-            token = requestData['token']
+            token =  request.META['HTTP_AUTHORIZATION']
             idForum = requestData['idForum']
             author = self.getAuthor(token)
             if author:
-                forumGroup = ForumGroup.objects.filter(id=idForum)
+                forumGroup = Groups.objects.filter(id=idForum)
                 if forumGroup:
-                    messagesForumGroup = list(MessageForumGroup.objects.filter(forum_id=forumGroup[0].id).values())
+                    messagesForumGroup = list(MessageForumGroup.objects.filter(group_id=forumGroup[0].id).values())
                     if messagesForumGroup:
                         return JsonResponse(messagesForumGroup, safe=False)
                     else:

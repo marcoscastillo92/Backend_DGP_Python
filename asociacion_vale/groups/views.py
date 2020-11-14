@@ -1,7 +1,7 @@
 from django.shortcuts import render, HttpResponse
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from .models import Groups, Category
+from .models import Groups
 from .models import ForumGroup
 import json
 
@@ -18,24 +18,11 @@ def groupsCreate(request):
             name= groupData['name'],
         )
         group.save()
-        forum = ForumGroup.objects.filter(idTarget=group)
-        if not forum:
-            forum = ForumGroup(idTarget=group)
-            forum.save()
-        string = '{"Name":"'+groupData['name']+'", "Category":"'+str(groupData['category'])+'"}'
+       
+        string = '{"Name":"'+groupData['name']+' "}"'
     return JsonResponse(json.loads(string))
 
 @csrf_exempt
 def groupsGet(request, id):
     pass
 
-@csrf_exempt
-def categoryCreate(request):
-    if request.method == 'POST':
-        categoryData = json.loads(request.body)
-        group = Category(
-            name= categoryData['name']
-        )
-        group.save()
-        string = '{"Name":"'+categoryData['name']+'"}'
-    return JsonResponse(json.loads(string))

@@ -14,9 +14,9 @@ def postMessage(request):
 
         #Publicar un mensaje tipo forum
         if requestData['messageType'] == 'forumGroup':
-            return gControler.saveMessage(requestData)
+            return gControler.saveMessage(request)
         if requestData['messageType'] == 'forumUser':
-            return uControler.saveMessage(requestData)
+            return uControler.saveMessage(request)
 #        if requestData['messageType'] == 'forumTask':
 #            return tController.saveMessage(request)
 
@@ -32,9 +32,9 @@ def getMessages(request):
 
         #Publicar un mensaje tipo forum
         if requestData['messageType'] == 'forumGroup':
-            return gControler.getMessages(requestData)
+            return gControler.getMessages(request)
         if requestData['messageType'] == 'forumUser':
-            return uControler.getMessages(requestData)
+            return uControler.getMessages(request)
         #if requestData['messageType'] == 'forumTask':
             #controller.getMessages(request)
         
