@@ -45,27 +45,26 @@ class Controller:
     def usersLogin(self, request):
         neededUserLoginFields = ["password"]
         allUserLoginFields = ["password"]
-        if  self.correctFields(request, neededUserLoginFields, allUserLoginFields):
+        if self.correctFields(request, neededUserLoginFields, allUserLoginFields):
             bodyUnicode = request.body.decode('utf-8')
             userData = json.loads(bodyUnicode)
-            userFromDB = list(User.objects.filter(password=userData['password']).values())
+            userFromDB = User.objects.get(password=userData['password'])
             if userFromDB:
-                userData = userFromDB[0]
-                #response = json.dumps('{"result": "success", "token": userFromDB["token"]}')
-                response = {'result':'success', 'token': userData['token']}
-                request.session.user = userData
-                print(response['token'])
+                userFromDB.token = secrets.token_hex(64)
+                userFromDB.save()
+                response = {'result':'success', 'token': userFromDB.token}
+                request.session.user = userFromDB
                 request.session.token = response['token']
                 return JsonResponse(response, safe=False)
             else:
-                #response = json.loads('{"result": "error", "message": "User not registred"}')
                 response = {'result':'error', 'message': 'User not registred'}
-                #response.status_code = 404
                 return JsonResponse(response, safe=False)
 
     def getPictograms(self, request):
         pictograms = list(Pictograms.objects.values())
-        return JsonResponse(pictograms, safe=False)
+        if pictograms:
+            response = {"pictograms": pictograms}
+        return JsonResponse(response, safe=False)
 
     def generatePassword(self,request):
         pictograms = self.getPictograms(request)
@@ -143,7 +142,9 @@ class Controller:
 
     def getRandomUser(self, request):
         randomUser = list(User.objects.filter(email="marcos@gmail.com").values())
-        return JsonResponse(randomUser, safe=False)
+        if randomUser:
+            response = {"user": randomUser[0]}
+        return JsonResponse(response, safe=False)
 
 
     def  getUserInfobyId(self, request, id):
@@ -156,7 +157,7 @@ class Controller:
         
         return JsonResponse(response)
         
-    def getAuthor(self, token):
+    def getUserByToken(self, token):
         authorQS = User.objects.filter(token=token)
         if authorQS:
             author = authorQS[0]
@@ -175,7 +176,7 @@ class Controller:
     def saveMessage(self, requestData):
         body = requestData['body']
         token = requestData['token']
-        author = self.getAuthor(token)
+        author = self.getUserByToken(token)
         mimeType = requestData['mimeType']
         idforum = requestData['idForum']
         forum = self.getForum(idforum)
@@ -195,7 +196,7 @@ class Controller:
             response = json.loads('{"result": "error", "message": "El foro no existe"}')
         return JsonResponse(response)
     
-    def getAuthor(self, token):
+    def getUserByToken(self, token):
         authorQS = User.objects.filter(token=token)
         if authorQS:
             author = authorQS[0]
@@ -208,7 +209,7 @@ class Controller:
         if messageType == 'forumUser':
             token = requestData['token']
             tutorId = requestData['idTutor']
-            author = self.getAuthor(token)
+            author = self.getUserByToken(token)
             if author:
                 forumUser = ForumUser.objects.filter(user_id=author.id, tutor_id=tutorId)
                 if forumUser:
@@ -226,4 +227,25 @@ class Controller:
                 return JsonResponse(response)
 
         
+    def getUserProfile(self, request):
+        token = request.META['HTTP_AUTHORIZATION']
+        userFromDB = self.getUserByToken(token)
+        if userFromDB:
+            response = {"user" : {"username":userFromDB.username, "age":userFromDB.birthDate, "genre":userFromDB.gender, "image":userFromDB.profileImage}}
+            return JsonResponse(response, safe=False)
+        else:
+            response = {"result":"error", "message":"El usuario no existe"}
+            return JsonResponse(response, safe=False)
 
+    #Borra el token asociado al usuario, lo pone a null
+    def userLogout(self, request):
+        token = request.META['HTTP_AUTHORIZATION']
+        userFromDB = self.getUserByToken(token)
+        userFromDB.token = "null"
+        userFromDB.save()
+        if userFromDB and userFromDB.token=="null":
+            response = {"result":"success", "message":"Se ha realizado el logout correctamente"}
+            return JsonResponse(response, safe=False)
+        else:
+            response = {"result":"error", "message":"No se ha podido realizar el logout correctamente"}
+            return JsonResponse(response, safe=False)

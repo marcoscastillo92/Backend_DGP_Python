@@ -21,9 +21,9 @@ class User(models.Model):
     username= models.CharField(max_length=150)
     password= models.CharField(max_length=150)
     phoneNumber= models.CharField(max_length=150)
-    profileImage= models.ImageField(upload_to=user_directory_path, default='null')
+    profileImage= models.CharField(max_length=255)
     birthDate= models.DateTimeField(auto_now_add=True)
-    token= models.CharField(max_length=300, default=generateToken())
+    token= models.CharField(max_length=300, default="null")
     gender= models.CharField(max_length=6, choices=Gender.choices, default=Gender.male)
     createdAt= models.DateTimeField(default=datetime.now, blank=True)
 
