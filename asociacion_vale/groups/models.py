@@ -33,17 +33,7 @@ class Groups(models.Model):
                 #pritnuser.Notify("Grupo")
         super(Groups, self).save(*args, **kwargs)
  """
-class ForumGroup (models.Model):
-    name = models.CharField(max_length=150, verbose_name="Nombre")
-    Group =  models.ForeignKey(Groups, on_delete=models.CASCADE, null=True, verbose_name="Grupo")
-    createdAt = models.DateTimeField(default=datetime.now, blank=True, verbose_name="Fecha de creación")
 
-    class Meta:
-        verbose_name = "Chat de Grupo"
-        verbose_name_plural = "Chats de Grupo"
-
-    def __str__(self):
-        return str(self.name)
 
 class MessageForumGroup(models.Model):
     body = RichTextField(verbose_name="Mensaje")

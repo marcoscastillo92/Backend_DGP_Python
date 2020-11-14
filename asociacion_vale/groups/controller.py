@@ -1,6 +1,5 @@
 from .models import Groups, MessageForumGroup
 from users.models import User
-from .models import ForumGroup
 from django.http import JsonResponse
 
 import json

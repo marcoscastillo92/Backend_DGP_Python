@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Groups, MessageForumGroup, ForumGroup
+from .models import Groups, MessageForumGroup
 
 # Register your models here.
 class GroupsAdmin(admin.ModelAdmin):
