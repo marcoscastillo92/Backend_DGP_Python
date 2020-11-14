@@ -18,13 +18,12 @@ def groupsCreate(request):
             name= groupData['name'],
         )
         group.save()
-        forum = ForumGroup.objects.filter(idTarget=group)
-        if not forum:
-            forum = ForumGroup(idTarget=group)
-            forum.save()
-        string = '{"Name":"'+groupData['name']+'"}'
+       
+        string = '{"Name":"'+groupData['name']+' "}"'
     return JsonResponse(json.loads(string))
 
 @csrf_exempt
 def groupsGet(request, id):
     pass
+
+
