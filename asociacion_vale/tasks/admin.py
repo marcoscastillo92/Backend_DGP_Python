@@ -1,13 +1,20 @@
 from django.contrib import admin
-from .models import Forum, MessageForum
+from .models import Task, Progress, Rating, Category
 
 # Register your models here.
-class MessageAdmin(admin.ModelAdmin):
-    list_filter = ('forum', 'author__username', 'createdAt')
+class TaskAdmin(admin.ModelAdmin):
     pass
 
-class ForumAdmin(admin.ModelAdmin):
+class ProgressAdmin(admin.ModelAdmin):
     pass
 
-admin.site.register(MessageForum, MessageAdmin)
-admin.site.register(Forum, ForumAdmin)
+class RatingAdmin(admin.ModelAdmin):
+    pass
+
+class CategoryAdmin(admin.ModelAdmin):
+    pass
+
+admin.site.register(Task, TaskAdmin)
+admin.site.register(Progress, ProgressAdmin)
+admin.site.register(Rating, RatingAdmin)
+admin.site.register(Category, CategoryAdmin)

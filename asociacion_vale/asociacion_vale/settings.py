@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'users',
     'groups',
     'forums',
+    'tasks',
     'corsheaders',
     'ckeditor',
 ]
