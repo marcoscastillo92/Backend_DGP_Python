@@ -1,6 +1,6 @@
 sudo apt install python3-pip
 if [[ ! $(pip3 list|grep "Django") ]]; then
-    pip install Django==3.0.5
+    pip install Django
 fi
 
 if [[ ! $(pip3 list|grep "djongo") ]]; then
@@ -15,6 +15,7 @@ if [[ ! $(pip3 list|grep "django-ckeditor") ]]; then
     pip install django-ckeditor
 fi
 
+pip install django-referrer-policy
 echo "from django.contrib.auth.models import User; User.objects.create_superuser('admin', 'admin@example.com', 'admin')" | python3 manage.py shell
 
 sudo python3 manage.py makemigrations
