@@ -2,6 +2,7 @@ from django.shortcuts import render, HttpResponse
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from .models import Groups
+from groups.controller import  Controller
 
 import json
 
@@ -23,7 +24,10 @@ def groupsCreate(request):
     return JsonResponse(json.loads(string))
 
 @csrf_exempt
-def groupsGet(request, id):
-    pass
-
+def groupsGet(request):
+    if request.method == 'GET':
+        controller = Controller()
+        return controller.getGroups(request)
+    
+    
 
