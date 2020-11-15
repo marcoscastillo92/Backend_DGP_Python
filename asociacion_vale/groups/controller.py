@@ -2,6 +2,7 @@ from .models import Groups, MessageForumGroup
 from users.models import User
 from django.http import JsonResponse
 
+
 import json
 class Controller:
     def getAuthor(self, token):
@@ -69,3 +70,16 @@ class Controller:
             else:
                 response = json.loads('{"result": "error", "message": "El usuario no existe"}')
                 return JsonResponse(response)
+
+
+    def getGroups(self,request):
+        tokenUser= request.META['HTTP_AUTHORIZATION']
+        user = User.objects.filter(token=tokenUser)
+        if user:
+            userId= user[0].id
+            myQuery = Groups.objects.filter(users__id = userId)
+            groups = list(myQuery.values('name','memberCount', 'id'))
+            return JsonResponse(groups, safe=False)
+        else:
+            response = json.loads('{"result": "error", "message": "El usuario no existe"}')
+            return JsonResponse(response)
