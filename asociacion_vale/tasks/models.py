@@ -2,8 +2,11 @@ from django.db import models
 from datetime import datetime
 from ckeditor.fields import RichTextField
 from users.models import User
+from forums.models import Forum
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.core.serializers import serialize
+from django.contrib.auth.models import User as Tutor
+import secrets
 
 def taskImageDirectoryPath(instance, filename): 
     return 'uploads/tasks/{0}/images/{1}'.format(instance.id, filename)
@@ -31,10 +34,19 @@ class Task(models.Model):
     media = models.FileField(verbose_name=("Archivo"), upload_to=taskMediaDirectoryPath, default='null')
     category = models.ForeignKey(Category, verbose_name=("Categoría"), on_delete=models.CASCADE, null=True)
     users = models.ManyToManyField(User, verbose_name="Asignada a", blank=True)
-
+    identifier = models.CharField(verbose_name=("Identificador"), default=secrets.token_hex(10), max_length=300)
     def save(self, *args, **kwargs):
         if self.category is None:
             self.category = Category.objects.get(id=1)
+
+        forum = Forum(
+            body = "Bienvenidos al chat de tarea",
+            tutor = Tutor.objects.get(id=1), #obtener el tutor en la sesión
+            author = None,
+            category = "welcomeMessage",
+            identifier = self.identifier
+        )
+        forum.save()
         super(Task, self).save(*args, **kwargs)
 
     def __str__(self):
