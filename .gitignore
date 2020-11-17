@@ -3,10 +3,10 @@ asociacion_vale/asociacion_vale/__pycache__/
 
 *.pyc
 
-asociacion_vale/users/migrations/
+asociacion_vale/users/migrations/__pycache__/
 
-asociacion_vale/forums/migrations/
+asociacion_vale/forums/migrations/__pycache__/
 
-asociacion_vale/groups/migrations/
+asociacion_vale/groups/migrations/__pycache__/
 
 asociacion_vale/uploads/
