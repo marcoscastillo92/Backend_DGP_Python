@@ -1,0 +1,9 @@
+{% extends "admin/base.html" %} 
+  
+{% block title %}{% if subtitle %}{{ subtitle }} | {% endif %}{{ title }} | {{ site_title|default:_('Asociación Vale') }}{% endblock %} 
+  
+{% block branding %} 
+<h1 id="site-name" style="font-family: cursive;" ><img src="https://asvale.org/wp-content/uploads/2020/05/cropped-LOGO-200_90.png" style="width: 100px;"><a href="{% url 'admin:index' %}">Asociación Vale</a></h1> 
+{% endblock %} 
+  
+{% block nav-global %}{% endblock %}
