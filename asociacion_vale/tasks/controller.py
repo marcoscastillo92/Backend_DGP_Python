@@ -1,4 +1,4 @@
-from .models import Rating, Task, Progress
+from .models import Rating, Task, Progress, Category
 from django.shortcuts import HttpResponse
 from django.http import JsonResponse, HttpResponseBadRequest, Http404, HttpResponseNotAllowed
 from users.models import User
@@ -87,3 +87,38 @@ def getAllTasks(request):
         response += json.dumps(task.serializeCustom(token)) + ","
     response += "}"
     return HttpResponse(response, content_type="text/json-comment-filtered")
+
+def saveRandomTask(request):
+    category = Category(title='Categoría random')
+    category.save()
+    newTask = Task(
+        title = 'Random Task',
+        shortDescription = 'Tarea de prueba aleatoria, esto es la descripción corta',
+        fullDescription = 'Esto es la descripción larga de la tarea aleatoria para pruebas, ',
+        category = category
+    )
+    newTask.save()
+    category2 = Category(title='Categoría random 2')
+    category2.save()
+    newTask2 = Task(
+        title = 'Random Task 2',
+        shortDescription = 'Tarea de prueba aleatoria, esto es la descripción corta',
+        fullDescription = 'Esto es la descripción larga de la tarea aleatoria para pruebas, ',
+        category = category2
+    )
+    newTask2.save()
+    newTask3 = Task(
+        title = 'Random Task 2',
+        shortDescription = 'Tarea de prueba aleatoria, esto es la descripción corta',
+        fullDescription = 'Esto es la descripción larga de la tarea aleatoria para pruebas, ',
+        category = category2
+    )
+    newTask3.save()
+    response = json.loads('{"result": "success", "message": "Tarea creada correctamente"}')
+    return JsonResponse(response)
+
+def getRandomTask(request):
+    randomTask = list(Task.objects.filter(title__contains='Random Task').values())
+    if randomTask:
+        response = {"task": randomTask}
+    return JsonResponse(response, safe=False)

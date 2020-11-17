@@ -1,5 +1,4 @@
 from django.db import models
-from datetime import datetime
 from users.models import User
 from django.contrib.auth.models import User as Tutor
 from forums.models import Forum
@@ -13,7 +12,7 @@ class Groups(models.Model):
     name= models.CharField(max_length=150, verbose_name="Nombre")
     memberCount= models.IntegerField(default=0, verbose_name="Contador de miembros")
     users = models.ManyToManyField(User, verbose_name="Miembros", blank=True)
-    createdAt = models.DateTimeField(default=datetime.now, verbose_name="Creado en", blank=True)
+    createdAt = models.DateTimeField(auto_now_add=True, verbose_name="Creado en", blank=True)
     identifier = models.CharField(verbose_name=("Identificador"), default=secrets.token_hex(10), max_length=300)
     #Cada vez que se cree un grupo o una tarea se crea un Forum con un "identifier" asociado
     #Este "identifier" será fijo, todos lo smensajes asociados a un grupo o un tarea tendrán este "identifier"

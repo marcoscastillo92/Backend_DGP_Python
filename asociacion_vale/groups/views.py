@@ -14,13 +14,13 @@ def index(request):
 @csrf_exempt
 def groupsCreate(request):
     if request.method == 'POST':
-        groupData = json.loads(request.body)
+        bodyUnicode = request.body.decode('utf-8')
+        groupData = json.loads(bodyUnicode)
         group = Groups(
             name= groupData['name'],
         )
         group.save()
-       
-        string = '{"Name":"'+groupData['name']+' "}"'
+        string = '{"Name":"'+groupData['name']+'"}'
     return JsonResponse(json.loads(string))
 
 @csrf_exempt
