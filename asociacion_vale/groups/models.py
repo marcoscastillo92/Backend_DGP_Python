@@ -1,5 +1,4 @@
 from django.db import models
-from datetime import datetime
 from users.models import User
 from ckeditor.fields import RichTextField
 # Create your models here.
@@ -10,7 +9,7 @@ class Groups(models.Model):
     name= models.CharField(max_length=150, verbose_name="Nombre")
     memberCount= models.IntegerField(default=0, verbose_name="Contador de miembros")
     users = models.ManyToManyField(User, verbose_name="Miembros", blank=True)
-    createdAt = models.DateTimeField(default=datetime.now, verbose_name="Creado en", blank=True)
+    createdAt = models.DateTimeField(auto_now_add=True, verbose_name="Creado en", blank=True)
 
     class Meta:
         verbose_name = 'Grupo'
@@ -40,7 +39,7 @@ class MessageForumGroup(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Autor")
     mimeType = models.FileField(upload_to ='uploads/attach', default="null", verbose_name="Tipo de mensaje") 
     group = models.ForeignKey(Groups, on_delete=models.CASCADE, null=True, verbose_name="Grupo")
-    createdAt = models.DateTimeField(default=datetime.now, blank=True, verbose_name="Fecha de creacion")
+    createdAt = models.DateTimeField(auto_now_add=True, blank=True, verbose_name="Fecha de creacion")
 
     def save(self, *args, **kwargs):
         super(MessageForumGroup, self).save(*args, **kwargs)

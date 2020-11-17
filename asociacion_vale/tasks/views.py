@@ -49,3 +49,10 @@ def rateTask(request):
     if request.method == 'POST':
         return TaskController.rateTask(request)
     return HttpResponseBadRequest("BAD REQUEST")
+
+@csrf_exempt
+def randomTask(request):
+    if request.method == 'GET':
+        return TaskController.getRandomTask(request)
+    if request.method == 'POST':
+        return TaskController.saveRandomTask(request)
