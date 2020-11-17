@@ -32,13 +32,13 @@ class Controller:
                 if l.emisorUser_id:
                     user = User.objects.filter(id = l.emisorUser_id)
                     print(user[0].username)
-                    respuesta = {"body":l.body, "emisor":user[0].username,  "created":l.createdAt, "identifier":l.identifier}
+                    respuesta = {"body":l.body, "emisor":user[0].username,  "created":l.createdAt, "identifier":l.identifier, "mimeType":l.mimeType.path}
                     var.append(respuesta)
 
                 if l.emisorTutor_id:
                     user = Tutor.objects.filter(id = l.emisorTutor_id)
                     print(user[0].username)
-                    respuesta = {"body":l.body, "emisor":user[0].username,  "created":l.createdAt, "identifier":l.identifier}
+                    respuesta = {"body":l.body, "emisor":user[0].username,  "created":l.createdAt, "identifier":l.identifier, "mimeType":l.mimeType.path}
                     var.append(respuesta)
             print(var)
             formatResponse = {"mensajes" : var}
