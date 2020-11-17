@@ -1,7 +1,5 @@
 #from asociacion_vale.users.views import pictograms
 from json.decoder import JSONDecoder
-from .models import MessageForumUser
-from .models import ForumUser
 from .models import User
 from django.http import JsonResponse
 import json

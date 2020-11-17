@@ -1,4 +1,4 @@
-from .models import Groups, MessageForumGroup
+from .models import Groups
 from users.models import User
 from django.http import JsonResponse
 
@@ -21,55 +21,7 @@ class Controller:
             forum= None 
         return forum
         
-    def saveMessage(self, request):
-        bodyUnicode = request.body.decode('utf-8')
-        requestData = json.loads(bodyUnicode)
-        body = requestData['body']
-        token = request.META['HTTP_AUTHORIZATION']
-        author = self.getAuthor(token)
-        mimeType = requestData['mimeType']
-        idforum = requestData['idForum']
-        forum = self.getForum(idforum)
-
-        if author and forum:
-            messageToSave = MessageForumGroup(
-                body = body,
-                author = author,
-                mimeType = mimeType,
-                group = forum,
-            )
-            messageToSave.save()
-            response = json.loads('{"result": "success", "message": "Mensaje almacenado correctamente"}')
-        elif not author:
-            response = json.loads('{"result": "error", "message": "El usuario no existe"}')
-        elif not forum:
-            response = json.loads('{"result": "error", "message": "El foro no existe"}')
-        return JsonResponse(response)
-
-    def getMessages(self, request):
-        body_unicode = request.body.decode('utf-8')
-        requestData = json.loads(body_unicode)
-        
-        messageType = requestData['messageType']
-        if messageType == 'forumGroup':
-            token =  request.META['HTTP_AUTHORIZATION']
-            idForum = requestData['idForum']
-            author = self.getAuthor(token)
-            if author:
-                forumGroup = Groups.objects.filter(id=idForum)
-                if forumGroup:
-                    messagesForumGroup = list(MessageForumGroup.objects.filter(group_id=forumGroup[0].id).values())
-                    if messagesForumGroup:
-                        return JsonResponse(messagesForumGroup, safe=False)
-                    else:
-                        response = json.loads('{"result": "error", "message": "El foro no contiene ningún mensaje"}')
-                        return JsonResponse(response)    
-                else:
-                    response = json.loads('{"result": "error", "message": "El foro no existe"}')
-                    return JsonResponse(response)
-            else:
-                response = json.loads('{"result": "error", "message": "El usuario no existe"}')
-                return JsonResponse(response)
+   
 
 
     def getGroups(self,request):
@@ -78,8 +30,9 @@ class Controller:
         if user:
             userId= user[0].id
             myQuery = Groups.objects.filter(users__id = userId)
-            groups = list(myQuery.values('name','memberCount', 'id'))
-            return JsonResponse(groups, safe=False)
+            groups = list(myQuery.values('name','memberCount', 'identifier'))
+            response = {"grupos" : groups}
+            return JsonResponse(response, safe=False)
         else:
             response = json.loads('{"result": "error", "message": "El usuario no existe"}')
             return JsonResponse(response)

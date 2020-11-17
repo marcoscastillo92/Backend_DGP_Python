@@ -1,6 +1,7 @@
 from users.models import User
 from forums.models import Forum
 from django.http import JsonResponse
+from django.contrib.auth.models import User as Tutor
 import json
 class Controller:
     def getUserByToken(self, token):
@@ -17,8 +18,31 @@ class Controller:
         if userFromDB:
             bodyData = json.loads(request.body)
             identifier = bodyData['identifier']
-            messagesForum = list(Forum.objects.filter(identifier=identifier).values())
-            return JsonResponse(messagesForum, safe=False)
+            category = bodyData['category']
+            if category == 'task':
+                lista = Forum.objects.filter(identifier=identifier, emisorUser=userFromDB) | Forum.objects.filter(identifier=identifier, receptorUser=userFromDB)
+            elif category == 'group':
+                lista = Forum.objects.filter(identifier=identifier)
+            myList = list(lista.order_by('createdAt').reverse())
+            
+           
+            var = []
+            for l in myList:
+                print(l.id)
+                if l.emisorUser_id:
+                    user = User.objects.filter(id = l.emisorUser_id)
+                    print(user[0].username)
+                    respuesta = {"body":l.body, "emisor":user[0].username,  "created":l.createdAt, "identifier":l.identifier}
+                    var.append(respuesta)
+
+                if l.emisorTutor_id:
+                    user = Tutor.objects.filter(id = l.emisorTutor_id)
+                    print(user[0].username)
+                    respuesta = {"body":l.body, "emisor":user[0].username,  "created":l.createdAt, "identifier":l.identifier}
+                    var.append(respuesta)
+            print(var)
+            formatResponse = {"mensajes" : var}
+            return JsonResponse(formatResponse, safe=False)
         else:
             response = {"result":"error", "message":"El usuario no existe"}
             return JsonResponse(response, safe=False)
@@ -30,15 +54,17 @@ class Controller:
             bodyData = json.loads(request.body)
             #{idForum:int,messageType: "string",body:"string", mimeType}
             identifier = bodyData['identifier']
-            forum = Forum.objects.filter(identifier = identifier) #mensaje creado por defecto
+            forum = Forum.objects.filter(identifier = identifier, category="welcomeMessage") #mensaje creado por defecto
             if forum:
                 body = bodyData['body']
                 mimeType = bodyData['mimeType']
                 category = bodyData['category']
                 newForum = Forum(
                     body = body,
-                    tutor = forum[0].tutor,
-                    author = userFromDB,
+                    emisorTutor = None,
+                    emisorUser = userFromDB,
+                    receptorTutor = forum[0].emisorTutor, #obtener el tutor en la sesión,
+                    receptorUser = None,
                     mimeType = mimeType,
                     category = category,
                     identifier = identifier
