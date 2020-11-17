@@ -2,7 +2,17 @@ from .models import Rating, Task, Progress, Category
 from django.shortcuts import HttpResponse
 from django.http import JsonResponse, HttpResponseBadRequest, Http404, HttpResponseNotAllowed
 from users.models import User
+from forums.models import Forum
+from django.contrib.auth.models import User as Tutor
 import json
+
+def getUserByToken(self, token):
+        authorQS = User.objects.filter(token=token)
+        if authorQS:
+            author = authorQS[0]
+        else:
+            author = None
+        return author
 
 def messageManagement(request):
     bodyUnicode = request.body.decode('utf-8')
@@ -27,6 +37,11 @@ def assignTask(request):
 
 def rateTask(request):
     token = request.META['HTTP_AUTHORIZATION']
+    author = self.getUserByToken(token)
+    if not author:
+        response = {"result":"error", "message":"El usuario no existe"}
+        return JsonResponse(response, safe=False)
+
     bodyData = json.loads(request.body)
     idTask = bodyData['id_tarea']
     newRating = False
@@ -50,12 +65,22 @@ def rateTask(request):
 
 def getTask(request, id):
     token = request.META['HTTP_AUTHORIZATION']
+    author = self.getUserByToken(token)
+    if not author:
+        response = {"result":"error", "message":"El usuario no existe"}
+        return JsonResponse(response, safe=False)
+
     task = Task.objects.get(id=id)
     response = json.dumps(task.serializeCustom(token))
     return HttpResponse(response, content_type="text/json-comment-filtered")
 
 def getAllTasks(request):
     token = request.META['HTTP_AUTHORIZATION']
+    author = self.getUserByToken(token)
+    if not author:
+        response = {"result":"error", "message":"El usuario no existe"}
+        return JsonResponse(response, safe=False)
+
     tasks = Task.objects.filter(users__id=User.objects.get(token=token).id)
     response = "{"
     for task in tasks:

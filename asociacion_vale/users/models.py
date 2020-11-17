@@ -21,7 +21,7 @@ class User(models.Model):
     username= models.CharField(max_length=150)
     password= models.CharField(max_length=150)
     phoneNumber= models.CharField(max_length=150)
-    profileImage= models.CharField(max_length=255)
+    profileImage= models.ImageField(verbose_name=("Imagen de Perfil"), upload_to=user_directory_path, default='null')
     birthDate= models.DateTimeField(auto_now_add=True)
     token= models.CharField(max_length=300, default="null")
     gender= models.CharField(max_length=6, choices=Gender.choices, default=Gender.male)
@@ -39,30 +39,3 @@ class Pictograms(models.Model):
     key= models.CharField(max_length=300)
     section= models.CharField(max_length=150)
 
-class ForumUser (models.Model):
-    user =  models.ForeignKey(User, on_delete=models.CASCADE, null=True, verbose_name="Propietario")
-    createdAt = models.DateTimeField(default=datetime.now, blank=True, verbose_name="Fecha de creación")
-    tutor = models.ForeignKey(Tutor, on_delete=models.CASCADE, null=True, verbose_name="Tutor")
-    
-    class Meta:
-        verbose_name = "Chat de Usuario"
-        verbose_name_plural = "Chats de Usuario"
-
-    def __str__(self):
-        return f"{self.tutor}"
-class MessageForumUser(models.Model):
-    body = RichTextField(verbose_name="Mensaje")
-    author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Autor")
-    mimeType = models.FileField(upload_to ='uploads/attach', default="null", verbose_name="Tipo de mensaje") 
-    forum = models.ForeignKey(ForumUser, on_delete=models.CASCADE, null=True, verbose_name="Conversacion")
-    createdAt = models.DateTimeField(default=datetime.now, blank=True, verbose_name="Fecha de creacion")
-
-    def save(self, *args, **kwargs):
-        if self.forum is None:  # Set default reference
-            self.forum = ForumUser.objects.get(id=1)
-        super(MessageForumUser, self).save(*args, **kwargs)
-    
-
-    class Meta:
-        verbose_name = "Mensaje"
-        verbose_name_plural = "Mensajes"
