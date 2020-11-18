@@ -27,7 +27,6 @@ class Category(models.Model):
         return self.title
 
 class Task(models.Model):
-
     title = models.CharField(verbose_name=("Título"), max_length=200)
     shortDescription = models.CharField(verbose_name=("Descripción corta"), max_length=600)
     fullDescription = RichTextField(verbose_name=("Descripción completa"))
@@ -100,14 +99,31 @@ class Progress(models.Model):
     def __str__(self):
         return f'{str(self.user)} | {str(self.category)} - {self.done}/{self.total}'
 
+class TaskStatus(models.Model):
+    user = models.ForeignKey(User, verbose_name=("Usuario"), on_delete=models.CASCADE, null=True)
+    task = models.ForeignKey(Task, verbose_name=("Tarea"), on_delete=models.CASCADE, null=True)
+    done = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{str(user)} | {str(task)} | Completada" if done else f"{str(user)} | {str(task)} | Pendiente"
+    
+    def serializeCustom(self):
+        data = { 
+                "user": str(self.user),
+                "task": str(self.task),
+                "done": self.done,
+            }
+        return data
 
 @receiver(m2m_changed, sender=Task.users.through)
 def my_handler(sender, instance, **kwargs):
-    tarea = Task.objects.filter(id=instance.id)
-    identifier = tarea[0].identifier
+    pk_set = kwargs.get('pk_set', None)
+    action = kwargs.get('action')
+    tarea = Task.objects.filter(id=instance.id)[0]
+    identifier = tarea.identifier
     isForumCreated = Forum.objects.filter(identifier=identifier)
     if not isForumCreated:
-        for user in tarea[0].users.all():
+        for user in tarea.users.all():
             forum = Forum(
                 body = "Bienvenidos al chat de tarea",
                 emisorTutor = Tutor.objects.get(id=1), #obtener el tutor en la sesión
@@ -118,8 +134,31 @@ def my_handler(sender, instance, **kwargs):
                 identifier = identifier
             )
             forum.save()
-
-#def usersTask():
-    
-
-#m2m_changed.connect(usersTask, sender=Task.users.through)
+    if action == 'pre_add':
+        # Por cada usuario que se asigne nuevo
+        for pk in pk_set:
+            user = User.objects.get(id=pk)
+            taskStatus = TaskStatus(user=user, task=tarea)
+            taskStatus.save()
+            isProgressCreated = Progress.objects.filter(user=user, category__id=tarea.category.id)
+            # Si no tiene progreso asignado el usuario asignado nuevo a esa categoría se crea
+            if not isProgressCreated:
+                progress = Progress(
+                    user = user,
+                    category = tarea.category,
+                    total = 1,
+                    done = 0
+                )
+                progress.save()
+    elif action == 'pre_remove':
+        for pk in pk_set:
+            taskStatus = TaskStatus.objects.get(user=user, task=tarea)
+            taskStatus.save()
+            progress = Progress.objects.filter(user__id=pk, category__id=tarea.category.id)
+            if progress:
+                progress.total = progress.total - 1
+                # Comprobar si está completada para restar a las completadas 1 también
+                if taskStatus.done:
+                    progress.done = progress.done - 1
+                taskStatus.delete()
+                progress.save()

@@ -9,4 +9,5 @@ urlpatterns = [
     path('rate/' , views.rateTask, name='rateTask'),
     path('delete/<int:id>', views.deleteTask, name='deleteTask'),
     path('randomTask', views.randomTask, name='randomTask'),
+    path('status', views.statusTask, name='statusTask'),
 ]

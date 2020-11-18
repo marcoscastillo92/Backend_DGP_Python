@@ -56,3 +56,10 @@ def randomTask(request):
         return TaskController.getRandomTask(request)
     if request.method == 'POST':
         return TaskController.saveRandomTask(request)
+
+@csrf_exempt
+def statusTask(request):
+    if request.method == 'GET':
+        return TaskController.getTaskStatus(request)
+    if request.method == 'POST':
+        return TaskController.setTaskStatus(request)

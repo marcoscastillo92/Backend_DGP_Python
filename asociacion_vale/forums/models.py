@@ -25,3 +25,8 @@ class Forum(models.Model):
     
     def __str__(self):
         return self.category
+
+    def save_model(self, request, obj, form, change):
+        if not change:
+            obj.emisorTutor = request.user
+        obj.save()
