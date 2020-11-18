@@ -117,8 +117,8 @@ class TaskStatus(models.Model):
 
 @receiver(m2m_changed, sender=Task.users.through)
 def my_handler(sender, instance, **kwargs):
-    pk_set = kwargs.get('pk_set', None)
-    action = kwargs.get('action')
+    pk_set = kwargs.pop('pk_set', None)
+    action = kwargs.pop('action', None)
     tarea = Task.objects.filter(id=instance.id)[0]
     identifier = tarea.identifier
     isForumCreated = Forum.objects.filter(identifier=identifier)
