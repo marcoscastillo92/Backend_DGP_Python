@@ -93,6 +93,7 @@ class Controller:
             tutorPass = Tutor.objects.filter(username= request.POST.get('username')).values('password')
             if tutorPass:
                 if check_password(request.POST.get('password'),tutorPass[0]['password']) :
+                    request.session['username'] = request.POST.get('username')
                     return redirect('/tutors/home')
                 else:
                     context = {}
@@ -103,3 +104,6 @@ class Controller:
                 context['msg'] = '*El usuario no existe'
                 return render(request,'./tutors/index.html', context) 
 
+    def tutorGroups(self,request):
+        
+        return render(request,'./tutors/groups.html')

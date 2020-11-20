@@ -1,5 +1,5 @@
 from django.http.response import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from .controller import Controller
 from django.views.decorators.csrf import csrf_exempt
 import json
@@ -35,6 +35,20 @@ def tutorsLogin(request):
 @csrf_exempt
 def tutorsHome(request):
     if request.method == 'GET':
-        
-        return render(request,'./tutors/home.html')
-        
+        if request.session.get('username', False):
+            return render(request,'./tutors/home.html')
+        else:
+            return redirect('/')
+@csrf_exempt
+def tutorsLogout(request):
+    if request.method == 'GET':
+        #Borro la cookie de usurname que es la que me dice si estoy logueado
+        del request.session['username']
+        request.session.modified = True
+        return redirect('/')
+
+@csrf_exempt
+def tutorsGroup(request):
+    if request.method == 'GET':
+        controller = Controller()
+        return  controller.tutorGroups(request)
