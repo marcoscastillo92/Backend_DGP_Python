@@ -1,12 +1,13 @@
-from .models import Rating, Task, Progress, Category, TaskStatus
-from django.shortcuts import HttpResponse
-from django.http import JsonResponse, HttpResponseBadRequest, Http404, HttpResponseNotAllowed
-from users.models import User
-from forums.models import Forum
-from django.contrib.auth.models import User as Tutor
 import json
 
-def getUserByToken(self, token):
+from django.http import JsonResponse
+from django.shortcuts import HttpResponse
+
+from users.models import User
+from .models import Rating, Task, Progress, Category, TaskStatus
+
+
+def getUserByToken(token):
         authorQS = User.objects.filter(token=token)
         if authorQS:
             author = authorQS[0]
@@ -14,21 +15,13 @@ def getUserByToken(self, token):
             author = None
         return author
 
-def messageManagement(request):
-    bodyUnicode = request.body.decode('utf-8')
-    requestData = json.loads(bodyUnicode)
-
-    #Publicar un mensaje tipo forum
-    if requestData['messageType'] == 'forum':
-        print() 
-    pass
-
 def createTask(request):
     task = Task(request.body)
     task.save()
-    return JsonResponse(json.loads(task.serializeCustom))
+    return JsonResponse(task.serializeCustom)
 
 def assignTask(request):
+    #TODO
     if request.method == 'POST':
         task = Task.objects.get(id=request.body.taskId)
         user = User.objects.get(id=request.body.userId)
@@ -130,11 +123,11 @@ def getTaskStatus(request):
     if not author:
         response = {"result":"error", "message":"El usuario no existe"}
         return JsonResponse(response, safe=False)
-    task = Task.objects.get(id=requestData.id)
+    task = Task.objects.get(id=requestData.get('id'))
     if task:
-        taskStatus = TaskStatus.objects.get(user=author, task= task)
+        taskStatus = TaskStatus.objects.get(user=author, task=task)
         if taskStatus:
-            return JsonResponse({"status":json.loads(taskStatus.serializeCustom())}, safe=False)
+            return JsonResponse({"status":taskStatus.serializeCustom()}, safe=False)
         return JsonResponse({"result":"error", "message":"No hay estado para la tarea"}, safe=False)
     return JsonResponse({"result":"error", "message":"No existe la tarea"}, safe=False)
 
@@ -145,14 +138,24 @@ def setTaskStatus(request):
     if not author:
         response = {"result":"error", "message":"El usuario no existe"}
         return JsonResponse(response, safe=False)
-    task = Task.objects.get(id=requestData.idTask)
+    task = Task.objects.get(id=requestData.get('idTask'))
+    user = User.objects.get(id=requestData.get('idUser'))
     if task:
-        taskStatus = TaskStatus.objects.get(user__id=requestData.idUser, task= task)
+        taskStatus = TaskStatus.objects.get(user=user, task=task)
         if taskStatus:
-            taskStatus.done = bool(requestData.done)
-            if bool(requestData.done):
-                progress = Progress(user__id=requestData.idUser, category=task.category)
-            taskStatus.save()
-            return JsonResponse({"status":json.loads(taskStatus.serializeCustom())}, safe=False)
+            alreadyDone = taskStatus.done
+            substract = False
+            if taskStatus.done and not requestData.get('done'):
+                substract = True
+            taskStatus.done = bool(requestData.get('done'))
+            taskStatus.save(force_update=True)
+            progress = Progress.objects.get(user=user, category=task.category)
+            if progress:
+                if bool(requestData.get('done')) and not alreadyDone:
+                    progress.done = progress.done + 1
+                elif substract:
+                    progress.done = progress.done - 1
+                progress.save(force_update=True)
+            return JsonResponse({"status":taskStatus.serializeCustom()}, safe=False)
         return JsonResponse({"result":"error", "message":"No hay estado para la tarea"}, safe=False)
     return JsonResponse({"result":"error", "message":"No existe la tarea"}, safe=False)

@@ -105,7 +105,7 @@ class TaskStatus(models.Model):
     done = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"{str(user)} | {str(task)} | Completada" if done else f"{str(user)} | {str(task)} | Pendiente"
+        return f"{str(self.user)} | {str(self.task)} | Completada" if self.done else f"{str(self.user)} | {str(self.task)} | Pendiente"
     
     def serializeCustom(self):
         data = { 
@@ -120,20 +120,21 @@ def my_handler(sender, instance, **kwargs):
     pk_set = kwargs.pop('pk_set', None)
     action = kwargs.pop('action', None)
     tarea = Task.objects.filter(id=instance.id)[0]
-    identifier = tarea.identifier
-    isForumCreated = Forum.objects.filter(identifier=identifier)
-    if not isForumCreated:
-        for user in tarea.users.all():
-            forum = Forum(
-                body = "Bienvenidos al chat de tarea",
-                emisorTutor = Tutor.objects.get(id=1), #obtener el tutor en la sesión
-                emisorUser = None,
-                receptorTutor = None, 
-                receptorUser = user,
-                category = "welcomeMessage",
-                identifier = identifier
-            )
-            forum.save()
+    if action == 'post_add':
+        identifier = tarea.identifier
+        isForumCreated = Forum.objects.filter(identifier=identifier)
+        if not isForumCreated:
+            for user in tarea.users.all():
+                forum = Forum(
+                    body = "Bienvenidos al chat de tarea",
+                    emisorTutor = Tutor.objects.get(id=1), #obtener el tutor en la sesión
+                    emisorUser = None,
+                    receptorTutor = None,
+                    receptorUser = user,
+                    category = "welcomeMessage",
+                    identifier = identifier
+                )
+                forum.save()
     if action == 'pre_add':
         # Por cada usuario que se asigne nuevo
         for pk in pk_set:
@@ -150,11 +151,14 @@ def my_handler(sender, instance, **kwargs):
                     done = 0
                 )
                 progress.save()
+            else:
+                isProgressCreated[0].total = isProgressCreated[0].total + 1
+                isProgressCreated[0].save()
     elif action == 'pre_remove':
         for pk in pk_set:
+            user = User.objects.get(id=pk)
             taskStatus = TaskStatus.objects.get(user=user, task=tarea)
-            taskStatus.save()
-            progress = Progress.objects.filter(user__id=pk, category__id=tarea.category.id)
+            progress = Progress.objects.get(user=user, category__id=tarea.category.id)
             if progress:
                 progress.total = progress.total - 1
                 # Comprobar si está completada para restar a las completadas 1 también
