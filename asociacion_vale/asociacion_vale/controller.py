@@ -1,7 +1,9 @@
+from django.shortcuts import redirect, render
 from users.models import User
 from forums.models import Forum
 from django.http import JsonResponse
 from django.contrib.auth.models import User as Tutor
+from django.contrib.auth.hashers import check_password
 import json
 class Controller:
     def getUserByToken(self, token):
@@ -80,3 +82,24 @@ class Controller:
         else:
             response = {"result":"error", "message":"El usuario no existe"}
             return JsonResponse(response, safe=False)
+
+    def tutorLogin(self, request):
+        print(request.POST)
+        if not request.POST.get('username', False) or not  request.POST.get('password', False) :
+            context = {}
+            context['msg'] = '*Todos los campos son obligatorios'
+            return render(request,'./tutors/index.html', context)
+        else:
+            tutorPass = Tutor.objects.filter(username= request.POST.get('username')).values('password')
+            if tutorPass:
+                if check_password(request.POST.get('password'),tutorPass[0]['password']) :
+                    return redirect('/tutors/home')
+                else:
+                    context = {}
+                    context['msg'] = '*Contraseña incorrecta'
+                    return render(request,'./tutors/index.html', context)
+            else:
+                context = {}
+                context['msg'] = '*El usuario no existe'
+                return render(request,'./tutors/index.html', context) 
+
