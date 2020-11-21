@@ -23,7 +23,9 @@ from . import views
 urlpatterns = [
     path('', views.index, name='index'),
     path('tutors/home' , views.tutorsHome , name='home'),
+    path('tutors/groups' , views.tutorsGroup , name='groups'),
     path('tutors/login' , views.tutorsLogin, name='login' ),
+    path('tutors/logout' , views.tutorsLogout , name='logout'),
     path('admin/', admin.site.urls),
     path('users/', include('users.urls')),
     path('groups/', include('groups.urls')),
