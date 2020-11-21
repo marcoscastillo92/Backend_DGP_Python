@@ -1,6 +1,7 @@
 from django.shortcuts import redirect, render
 from users.models import User
 from forums.models import Forum
+from groups.models import Groups
 from django.http import JsonResponse
 from django.contrib.auth.models import User as Tutor
 from django.contrib.auth.hashers import check_password
@@ -105,5 +106,21 @@ class Controller:
                 return render(request,'./tutors/index.html', context) 
 
     def tutorGroups(self,request):
-        
-        return render(request,'./tutors/groups.html')
+        context = {}
+        listGroups = list(Groups.objects.filter(tutors__username = request.session.get('username')).order_by('createdAt').reverse().values())
+        listUsers = list(User.objects.all().values())
+
+        if listUsers:
+            arrayUsers = []
+            for user in listUsers:
+                arrayUsers.append(user)
+        context['users'] = arrayUsers
+        if listGroups:
+            arrayGroups = []
+            for group in listGroups:
+                arrayGroups.append(group)
+            context['groups'] = arrayGroups
+            return render(request,'./tutors/groups.html', context)
+        else:
+            return render(request,'./tutors/groups.html')
+            
