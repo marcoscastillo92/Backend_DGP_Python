@@ -5,6 +5,8 @@
 function add() {
     location.replace("http://localhost:8000/tutors/groups/add")
 }
+
+
 </script>
 <style>
     @media (min-width: 1200px) {
@@ -27,16 +29,19 @@ function add() {
     }
     
     
-    .container.list{ width: 80% !important; height:  400px; overflow: auto;}
+    .container.list{ width: 80% !important; height:  500px; overflow: auto;}
     .container.list{
         background-color: rgba(142, 242, 245, 0.288);
     }
     
+    
 </style>
 <div class="container ">
-    <div class= "row mt-4  ">
+    <div class= "row mt-4 mb-3 ">
         <div class= "col-sm ">
-            <h2>Grupos</h3>
+            <h2 style="color: ghostwhite;"><b>Grupos</b></h3>
+          
+
         </div>
         <div class= "col-sm">
           
@@ -45,47 +50,96 @@ function add() {
         <div class= "col-sm justify-content-end">
             <div class= "row">
                 <div class= "col-sm  justify-content-end">
-                  <button type="submit" style="width: 50% ;float: right;" name="add" onclick="add()"> <img style="width: 20%;" src="https://image.flaticon.com/icons/png/512/63/63747.png"></button> 
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@getbootstrap">Nuevo Grupo</button>
+
+                    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Nuevo Grupo</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                            <form action="/groups/create" method="POST">
+                              <div class="form-group">
+                                <label for="recipient-name" class="col-form-label">Nombre:</label>
+                                <input type="text" class="form-control" name="groupName" id="recipient-name">
+                              </div>
+                              <div class="form-group">
+                                <label for="message-text" class="col-form-label">Alumnos:  <br><small id="emailHelp" class="form-text text-muted" style="color:red">*Para seleccionar varios CTRL+ Click izquierdo</small></label>
+                                
+                                <select name="listUsers" style="width: 100%" id="listUsers" multiple>
+                                    {% for user in users %}
+                                        <option value="{{ user.username }}">{{ user.username }}</option>
+                                    {% endfor %}
+                                </select>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                                <button type="submit" class="btn btn-success">Crear</button>
+                              </div>
+                            </form>
+                          </div>
+                         
+                        </div>
+                      </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<div class="container list  ">
-    <div class= "row mt-4  ">
+<div class="container list bg-light  " >
+    <div class= "row mt-4" style=" text-align: center;">
         <div class= "col-sm ">
-            <h2>Grupos</h3>
-        </div>
+            <h5><b>Nombre</b></h5> 
         
-    </div>
-    <div class= "row mt-4  ">
+        </div> 
         <div class= "col-sm ">
-            <h2>Grupos</h3>
-        </div>
-        
-    </div>
-    <div class= "row mt-4  ">
+            <h5><b>Participantes</b></h5> 
+        </div> 
         <div class= "col-sm ">
-            <h2>Grupos</h3>
-        </div>
-        
-    </div>
-    <div class= "row mt-4  ">
+            <h5><b>Fecha de creación</b></h5>
+        </div> 
         <div class= "col-sm ">
-            <h2>Grupos</h3>
-        </div>
-        
+            <h5><b>Acciones</b></h5>
+        </div> 
     </div>
-    <div class= "row mt-4  ">
-        <div class= "col-sm ">
-            <h2>Grupos</h3>
-            <h2>Grupos</h3>
-                <h2>Grupos</h3>
-                    <h2>Grupos</h3>
-                        <h2>Grupos</h3>
-                            <h2>Grupos</h3>
+    <hr>
+    {% for group in groups %}
+    <div  id="myUL">
+        <div class= "row mt-2 bg-gradient-light list" style=" text-align: center;">
+            <div class= "col-sm  mt-4">
+                <h7><a>{{ group.name }} </a></h7> 
+            </div> 
+            <div class= "col-sm  mt-4">
+                <p>{{ group.memberCount }}</p> 
+            </div>
+            <div class= "col-sm mt-4 mb-2">
+                <p>{{ group.createdAt }}</p> 
+            </div>  
+            <div class= "col-sm  mt-4">
+                <form action="" method=""> 
+                    <input type="hidden" name="identifier" value="{{group.identifier}}">
+                    <input type="button" style="float:left"value="Ver" class="btn btn-success ml-3">
+                </form>
+                <form action="" method=""> 
+                    <input type="hidden" name="identifier" value="{{group.identifier}}">
+                    <input type="button" style="float:left"value="Editar" class="btn btn-primary ml-3">
+                </form>
+                <form action="" method="post">
+                    <input type="hidden" name="identifier" value="{{group.identifier}}">
+                    <input type="submit" style="float:right" value="Borrar" class="btn btn-danger mr-4">
+                </form>
+            </div> 
         </div>
-        
+        <hr>
     </div>
+    {% endfor %}
+    
+        
 </div>
+    
 {% endblock %}

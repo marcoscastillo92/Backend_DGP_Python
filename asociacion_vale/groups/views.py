@@ -14,14 +14,8 @@ def index(request):
 @csrf_exempt
 def groupsCreate(request):
     if request.method == 'POST':
-        bodyUnicode = request.body.decode('utf-8')
-        groupData = json.loads(bodyUnicode)
-        group = Groups(
-            name= groupData['name'],
-        )
-        group.save()
-        string = '{"Name":"'+groupData['name']+'"}'
-    return JsonResponse(json.loads(string))
+        controller = Controller()
+        return controller.createGroup(request)
 
 @csrf_exempt
 def groupsGet(request):
