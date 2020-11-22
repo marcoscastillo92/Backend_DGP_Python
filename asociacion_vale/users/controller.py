@@ -229,7 +229,7 @@ class Controller:
         token = request.META['HTTP_AUTHORIZATION']
         userFromDB = self.getUserByToken(token)
         if userFromDB:
-            response = {"user" : {"username":userFromDB.username, "age":userFromDB.birthDate, "genre":userFromDB.gender, "image":userFromDB.profileImage}}
+            response = {"user" : {"username":userFromDB.username, "age":userFromDB.birthDate, "genre":userFromDB.gender, "image":""}}
             return JsonResponse(response, safe=False)
         else:
             response = {"result":"error", "message":"El usuario no existe"}
