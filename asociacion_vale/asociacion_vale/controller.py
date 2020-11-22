@@ -49,6 +49,27 @@ class Controller:
         else:
             response = {"result":"error", "message":"El usuario no existe"}
             return JsonResponse(response, safe=False)
+
+    def getMessagesTutors(self, request):
+            identifier = request.GET.get('identifier')
+            lista = Forum.objects.filter(identifier=identifier)
+            myList = list(lista.order_by('createdAt').reverse())
+            
+            var = []
+            for l in myList:
+                if l.emisorUser_id:
+                    user = User.objects.filter(id = l.emisorUser_id)
+                    print(user[0].username)
+                    respuesta = {"body":l.body, "emisor":user[0].username,  "created":l.createdAt, "identifier":l.identifier, "mimeType":l.mimeType.path}
+                    var.append(respuesta)
+
+                if l.emisorTutor_id:
+                    user = Tutor.objects.filter(id = l.emisorTutor_id)
+                    print(user[0].username)
+                    respuesta = {"body":l.body, "emisor":user[0].username,  "created":l.createdAt, "identifier":l.identifier, "mimeType":l.mimeType.path}
+                    var.append(respuesta)
+            formatResponse = {"mensajes" : var}
+            return formatResponse
     
     def postMessage(self, request):
         token = request.META['HTTP_AUTHORIZATION']
@@ -120,7 +141,6 @@ class Controller:
             for group in listGroups:
                 arrayGroups.append(group)
             context['groups'] = arrayGroups
-            return render(request,'./tutors/groups.html', context)
-        else:
-            return render(request,'./tutors/groups.html')
+        
+        return render(request,'./tutors/groups.html', context)
             

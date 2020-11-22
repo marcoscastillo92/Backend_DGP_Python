@@ -1,0 +1,65 @@
+{% extends  "tutors/tutors.html" %}
+{% block otherScripts %}
+<script type="text/javascript" src="../static/groups.js"></script>
+{% endblock %}
+{% block main %}
+<style>
+    @media (min-width: 1200px) {
+        .container.list {
+            width: 70% !important;
+            height:  400px;
+        }
+    }
+    @media (min-width: 992px) {
+        .container.list {
+            width: 70% !important;
+            height:  400px;
+        }
+    }
+    @media (min-width: 768px) {
+        .container.list {
+                width: 70% !important;
+                height:  400px;
+        }
+    }
+    
+    .container.list{ width: 80% !important; height:  500px; overflow: auto;}
+    .container.list{
+        background-color: rgba(142, 242, 245, 0.288);
+    }
+    
+    
+</style>
+<div class="container ">
+    <div class= "row mt-4 mb-3 ">
+        <div class= "col-sm ">
+            <h2 style="color: ghostwhite;"><b>{{group.name}}</b></h3>
+        </div>
+        <div class= "col-sm">
+          
+        </div>
+    </div>
+</div>
+<div class="container list bg-light  " >
+    <div class= "row mt-4" style=" text-align: center;">
+        
+    </div>
+    {% for message in messages.mensajes %}
+        {% if tutor == message.emisor %}
+            <div class= "mt-2 bg-success"  style="color:white; text-align: end; padding: 10px; border-radius: 10px;">
+                <h7><a id="{{ group.name }}">{{ message.emisor }} </a></h7> <br>
+                <h7><a id="{{ group.name }}">{{ message.body }} </a></h7> 
+                <small id="emailHelp" class="form-text " style="color:white;">{{ message.created }}</small>
+            </div>
+        {% else %}
+            <div class= "mt-2 bg-primary"  style="color:white; text-align: start; padding: 10px; border-radius: 10px;">
+                <h7><a id="{{ group.name }}">{{ message.emisor }} </a></h7> <br>
+                <h7><a id="{{ group.name }}">{{ message.body }} </a></h7> 
+                <small id="emailHelp" class="form-text " style="color:white;">{{ message.created }}</small>
+            </div>
+        {% endif %}
+    {% endfor %}
+        
+</div>
+    
+{% endblock %}

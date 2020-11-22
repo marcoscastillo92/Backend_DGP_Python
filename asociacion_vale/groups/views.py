@@ -22,6 +22,13 @@ def groupsGet(request):
     if request.method == 'GET':
         controller = Controller()
         return controller.getGroups(request)
+
+@csrf_exempt
+def groupsDelete(request):
+    if request.method == 'POST':
+        controller = Controller()
+        return controller.deleteGroup(request)
     
+
     
 

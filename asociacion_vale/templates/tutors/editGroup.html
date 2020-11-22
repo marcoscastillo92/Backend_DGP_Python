@@ -1,0 +1,29 @@
+{% extends  "tutors/tutors.html" %}
+{% block main %}
+  <p> {{ info }}</p>
+  <div class="container bg-light rounded"   style="width: 60%;" >
+    <form method="POST" action="/tutors/groups/edit">
+        <div class="form-group">
+          <label for="exampleInputEmail1">Nombre</label>
+          <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" value="{{ info.name }}">
+          
+        </div>
+        <div class="form-group">
+            <label for="exampleFormControlSelect2">Añade miembros</label>
+            <select name="listUsers" multiple class="form-control" id="exampleFormControlSelect2">
+            
+            {% for uI in userIn %}
+              <option value="{{ uI.name }} " selected=" true"  >{{ uI.name }}</option>
+            {% endfor %}
+            
+            {% for uO in userOut %}
+              <option value="{{ uO.name }} "   >{{ uO.name }}</option>
+            {% endfor %}
+            
+            </select>
+          </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+  </div>
+
+{% endblock %}

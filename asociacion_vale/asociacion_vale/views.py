@@ -1,6 +1,7 @@
 from django.http.response import HttpResponse
 from django.shortcuts import redirect, render
 from .controller import Controller
+from groups.controller import Controller as gController
 from django.views.decorators.csrf import csrf_exempt
 import json
 # Create your views here.
@@ -52,3 +53,15 @@ def tutorsGroup(request):
     if request.method == 'GET':
         controller = Controller()
         return  controller.tutorGroups(request)
+
+@csrf_exempt
+def groupsEdit(request):
+    if request.method == 'GET':
+        controller = gController()
+        return controller.editGroup(request)
+
+@csrf_exempt
+def groupsChat(request):
+    if request.method == 'GET':
+        controller = gController()
+        return controller.chatGroup(request)
