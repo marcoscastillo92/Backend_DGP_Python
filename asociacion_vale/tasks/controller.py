@@ -132,12 +132,7 @@ def getTaskStatus(request):
     return JsonResponse({"result":"error", "message":"No existe la tarea"}, safe=False)
 
 def setTaskStatus(request):
-    token = request.META['HTTP_AUTHORIZATION']
     requestData = json.loads(request.body)
-    author = getUserByToken(token)
-    if not author:
-        response = {"result":"error", "message":"El usuario no existe"}
-        return JsonResponse(response, safe=False)
     task = Task.objects.get(id=requestData.get('idTask'))
     user = User.objects.get(id=requestData.get('idUser'))
     if task:
@@ -148,7 +143,7 @@ def setTaskStatus(request):
             if taskStatus.done and not requestData.get('done'):
                 substract = True
             taskStatus.done = bool(requestData.get('done'))
-            taskStatus.save(force_update=True)
+            taskStatus.save()
             progress = Progress.objects.get(user=user, category=task.category)
             if progress:
                 if bool(requestData.get('done')) and not alreadyDone:

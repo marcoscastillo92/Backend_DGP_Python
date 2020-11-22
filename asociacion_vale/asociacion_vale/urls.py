@@ -22,10 +22,11 @@ from . import views
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('tutors/home' , views.tutorsHome , name='home'),
-    path('tutors/groups' , views.tutorsGroup , name='groups'),
-    path('tutors/login' , views.tutorsLogin, name='login' ),
-    path('tutors/logout' , views.tutorsLogout , name='logout'),
+    path('tutors/home', views.tutorsHome, name='tutorHome'),
+    path('tutors/groups', views.tutorsGroup, name='tutorGroups'),
+    path('tutors/login', views.tutorsLogin, name='tutorLogin'),
+    path('tutors/logout', views.tutorsLogout, name='tutorLogout'),
+    path('tutors/tasks', views.tutorsTasks, name='tutorTasks'),
     path('admin/', admin.site.urls),
     path('users/', include('users.urls')),
     path('groups/', include('groups.urls')),

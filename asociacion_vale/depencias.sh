@@ -7,6 +7,10 @@ if [[ ! $(pip3 list|grep "djongo") ]]; then
     pip install djongo
 fi
 
+if [[ ! $(pip3 list|grep "crum") ]]; then
+    pip install django-crum
+fi
+
 if [[ ! $(pip3 list|grep "django-cors-headers") ]]; then
     pip install django-cors-headers
 fi
