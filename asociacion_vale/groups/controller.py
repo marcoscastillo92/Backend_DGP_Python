@@ -8,7 +8,9 @@ from asociacion_vale.controller import Controller as ascController
 from django.shortcuts import redirect, render
 import secrets
 import json
-    
+from django.dispatch import receiver
+from django.db.models.signals import m2m_changed
+
 class Controller:
     def getAuthor(self, token):
         authorQS = User.objects.filter(token=token)
@@ -53,7 +55,6 @@ class Controller:
             newGroup.save()
             newGroup.tutors.set(tutor)
 
-            arrayUser = []
             for user in usersInGroup:
                 userFromDB = User.objects.get(username=user)
                 if userFromDB:
@@ -85,16 +86,34 @@ class Controller:
         else:
             return redirect('/tutors/groups')        
  
+    def editConfirmGroup(self, request):
+        if request.session.get('username', False):
+            nameGroup = request.POST.get('groupName')
+            identifier = request.POST.get('identifier')
+            usersInGroup = request.POST.getlist('listUsers')
+            if identifier:
+                groupFromDB = Groups.objects.get(identifier = identifier)
+                if groupFromDB:
+                    groupFromDB.name = nameGroup
+                    groupFromDB.memberCount = len(usersInGroup)
+                    groupFromDB.save()
+
+                    for user in usersInGroup:
+                        userFromDB = User.objects.filter(username=user)
+                        if userFromDB:
+                            groupFromDB.users.add(userFromDB)
+                    groupFromDB.save()
+                return redirect('/tutors/groups')
+
     def editGroup(self,request):
         if request.GET.get('identifier',False):
             id = request.GET.get('identifier',False)
             group = Groups.objects.get(identifier= id)
-            usersIngroup = group.users.all()
-           
+            usersInGroup = group.users.all()
             context = {}
             context['info'] = group
-            context['usersIn'] = usersIngroup
-            usersGroups = usersIngroup.values()
+            context['usersIn'] = usersInGroup
+            usersGroups = usersInGroup.values()
             allUsers = list(User.objects.all().values())
             usersOut = []
             usersIn = []
@@ -112,11 +131,13 @@ class Controller:
                 for j in usersIn:
                     for key , value in usersOut[i].items():
                         if key=="username" and value == j['username']:
-                            print("Borrando a" )
-                            print(j['username'])
                             usersOut.pop(i)
                             break
                 break
             return  render(request, './tutors/editGroup.html', context)
 
-       
+    def postMessageGroup(self, request):
+        controller = ascController()
+        if controller.postMessageTutor(request):
+            url = "/tutors/groups/chat?identifier=" + request.POST.get('identifier')
+            return redirect(url)    

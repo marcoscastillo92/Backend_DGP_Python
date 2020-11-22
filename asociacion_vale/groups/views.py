@@ -29,6 +29,10 @@ def groupsDelete(request):
         controller = Controller()
         return controller.deleteGroup(request)
     
-
+@csrf_exempt
+def groupsPostMessage(request):
+    if request.method == 'POST':
+        controller = Controller()
+        return controller.postMessageGroup(request)  
     
 

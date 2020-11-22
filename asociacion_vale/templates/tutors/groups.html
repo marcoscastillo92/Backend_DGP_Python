@@ -1,6 +1,7 @@
 {% extends  "tutors/tutors.html" %}
 {% block otherScripts %}
-<script type="text/javascript" src="../static/groups.js"></script>
+{% load static %}
+    <script type="text/javascript" src="{% static 'groups.js' %}"></script>
 {% endblock %}
 {% block main %}
 <style>
@@ -35,13 +36,7 @@
     <div class= "row mt-4 mb-3 ">
         <div class= "col-sm ">
             <h2 style="color: ghostwhite;"><b>Grupos</b></h3>
-          
-
         </div>
-        <div class= "col-sm">
-          
-        </div>
-        
         <div class= "col-sm justify-content-end">
             <div class= "row">
                 <div class= "col-sm  justify-content-end">
@@ -121,8 +116,8 @@
                     <input type="submit" style="float:left"value="Chat" class="btn btn-success ml-3">
                 </form>
                 <form action="/tutors/groups/edit" method="GET" id="{{group.name}}"> 
-                    <input type="hidden" name="{{group.identifier}}_groupName" value="{{group.identifier}}">
                     <input type="hidden" name="identifier" value="{{group.identifier}}">
+                    <input type="hidden" name="listUsers" value="{{group.users}}">
                     <button type="submit" id="buttonOpenEditModal" class="btn btn-primary ml-3" style="float:left" data-target="#editGroupModal" data-whatever="@getbootstrap">Editar</button>
                 </form>
                 <form action="/groups/delete" method="POST" name="form">
@@ -159,8 +154,6 @@
         <hr>
     </div>
     {% endfor %}
-    
-        
 </div>
     
 {% endblock %}

@@ -61,6 +61,12 @@ def groupsEdit(request):
         return controller.editGroup(request)
 
 @csrf_exempt
+def groupsEditConfirm(request):
+    if request.method == 'POST':
+        controller = gController()
+        return controller.editConfirmGroup(request)
+
+@csrf_exempt
 def groupsChat(request):
     if request.method == 'GET':
         controller = gController()

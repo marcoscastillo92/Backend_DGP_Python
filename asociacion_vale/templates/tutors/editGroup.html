@@ -1,12 +1,21 @@
 {% extends  "tutors/tutors.html" %}
+{% block otherScripts %}
+{% load static %}
+    <script type="text/javascript" src="{% static 'editGroup.js' %}"></script>
+{% endblock %}
 {% block main %}
-  <p> {{ info }}</p>
-  <div class="container bg-light rounded"   style="width: 60%;" >
-    <form method="POST" action="/tutors/groups/edit">
+
+<div class="container p-2 mb-2"   style="color:white; background-color: rgba(142, 242, 245, 0.288);width: 60%;" >
+  <h2>{{info}}</h2>
+  
+</div>
+
+  <div class="container bg-light rounded p-3"   style="width: 60%;" >
+    <form method="POST" action="/tutors/groups/edit/confirm">
         <div class="form-group">
           <label for="exampleInputEmail1">Nombre</label>
-          <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" value="{{ info.name }}">
-          
+          <input type="text" class="form-control" name="groupName" id="exampleInputEmail1" aria-describedby="emailHelp" value="{{ info.name }}">
+          <input type="hidden" name="identifier" value="{{info.identifier}}">
         </div>
         <div class="form-group">
             <label for="exampleFormControlSelect2">Añade miembros</label>
@@ -22,7 +31,8 @@
             
             </select>
           </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-success">Confirmar</button>
+        <a class="btn btn-danger" href="/tutors/groups" role="button">Volver</a>
       </form>
   </div>
 

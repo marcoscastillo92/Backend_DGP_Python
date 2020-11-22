@@ -53,7 +53,7 @@ class Controller:
     def getMessagesTutors(self, request):
             identifier = request.GET.get('identifier')
             lista = Forum.objects.filter(identifier=identifier)
-            myList = list(lista.order_by('createdAt').reverse())
+            myList = list(lista.order_by('createdAt'))
             
             var = []
             for l in myList:
@@ -104,6 +104,28 @@ class Controller:
         else:
             response = {"result":"error", "message":"El usuario no existe"}
             return JsonResponse(response, safe=False)
+
+    def postMessageTutor(self, request):
+        identifier = request.POST.get('identifier')
+        forum = Forum.objects.filter(identifier = identifier, category="welcomeMessage") #mensaje creado por defecto
+        if forum:
+            body = request.POST.get('body')
+            mimeType = request.POST.get('mimeType')
+            category = request.POST.get('category')
+            newForum = Forum(
+                body = body,
+                emisorTutor = forum[0].emisorTutor,
+                emisorUser = None,
+                receptorTutor = None, 
+                receptorUser = None,
+                mimeType = mimeType,
+                category = category,
+                identifier = identifier
+            )                
+            newForum.save()
+            return True
+        else:
+            return False
 
     def tutorLogin(self, request):
         print(request.POST)
