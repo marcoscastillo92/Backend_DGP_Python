@@ -64,5 +64,20 @@ def tutorsTasks(request):
         if request.session.get('username', False):
             controller = Controller()
             return controller.tutorTasks(request)
-        else:
-            return redirect('/')
+    return redirect('/')
+
+@csrf_exempt
+def tutorsTasksEdit(request, id):
+    if request.session.get('username', False):
+        controller = Controller()
+        return controller.tutorTasksEdit(request, id)
+    return redirect('/')
+
+
+@csrf_exempt
+def tutorsTasksDelete(request, id):
+    if request.method == 'GET':
+        if request.session.get('username', False):
+            controller = Controller()
+            return controller.tutorTasksDelete(request, id)
+    return redirect('/')

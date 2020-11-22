@@ -38,14 +38,14 @@ class Controller:
                     user = User.objects.filter(id=l.emisorUser_id)
                     print(user[0].username)
                     respuesta = {"body": l.body, "emisor": user[0].username, "created": l.createdAt,
-                                 "identifier": l.identifier, "mimeType": l.mimeType.path}
+                                 "identifier": l.identifier, "mimeType": l.mimeType.path, "isTutor": 0}
                     var.append(respuesta)
 
                 if l.emisorTutor_id:
                     user = Tutor.objects.filter(id=l.emisorTutor_id)
                     print(user[0].username)
                     respuesta = {"body": l.body, "emisor": user[0].username, "created": l.createdAt,
-                                 "identifier": l.identifier, "mimeType": l.mimeType.path}
+                                 "identifier": l.identifier, "mimeType": l.mimeType.path, "isTutor": 1}
                     var.append(respuesta)
             print(var)
             formatResponse = {"mensajes": var}
@@ -119,5 +119,19 @@ class Controller:
             if not status.task in tasks:
                 tasks.append(status.task)
         context = {'tutor': tutor, 'tasks': tasks}
-        #print(tasks[0].serializeCustom("dbbdbd"))
         return render(request, './tutors/tasks.html', context)
+
+    def tutorTasksEdit(self, request, id):
+        infoTask = Task.objects.get(id=id)
+        # FALTA Cargar form del model TASK y rellenarlo con la info de la TASK
+        context = {'task': infoTask}
+        if request.method == 'POST':
+            # Guardar cambios
+            form = request.POST
+
+        return render(request, 'tutors/task-detail.html', context)
+
+    def tutorTasksDelete(self, request, id):
+        task = Task.objects.get(id=id)
+        task.delete()
+        return render(request, 'tutors/tasks.html')
