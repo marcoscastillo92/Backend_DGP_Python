@@ -42,10 +42,12 @@
             <div class="col-sm">
               <div class="row align-items-center">
                 <div class="col-sm">
-                    <button type="submit" style="float: right;" name="edit" onclick="add()"> <img style="width: 110%;" src="{% static 'img/editar.png' %}" /></button>
+                    <a class="btn btn-light btn-outline-dark" href="{% url 'tutorTasksEdit' id=task.id  %}" role="button"><img style="width: 110%;" src="{% static 'img/editar.png' %}" /></a>
+                    <!--<button type="submit" style="float: right;" name="edit" onclick="add()"><img style="width: 110%;" src="{% static 'img/editar.png' %}" /></button>-->
                 </div>
                 <div class="col-sm">
-                    <button type="submit" style="float: right;" name="remove" onclick="add()"> <img style="width: 110%;" src="{% static 'img/eliminar.png' %}" /></button>
+                    <a class="btn btn-light btn-outline-dark" href="{% url 'tutorTasksDelete' id=task.id  %}" role="button"><img style="width: 110%;" src="{% static 'img/eliminar.png' %}" /></a>
+                    <!--<button type="submit" style="float: right;" name="remove" onclick="add()"> <img style="width: 110%;" src="{% static 'img/eliminar.png' %}" /></button>-->
                 </div>
               </div>
             </div>
