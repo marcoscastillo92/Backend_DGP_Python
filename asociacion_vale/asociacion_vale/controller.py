@@ -2,6 +2,7 @@ from django.shortcuts import redirect, render
 from users.models import User
 from forums.models import Forum
 from tasks.models import Task, TaskStatus
+from tasks.forms import TaskForm
 from django.http import JsonResponse
 from django.contrib.auth.models import User as Tutor
 from django.contrib.auth.hashers import check_password
@@ -124,11 +125,14 @@ class Controller:
     def tutorTasksEdit(self, request, id):
         infoTask = Task.objects.get(id=id)
         # FALTA Cargar form del model TASK y rellenarlo con la info de la TASK
-        context = {'task': infoTask}
+        taskForm = TaskForm()
         if request.method == 'POST':
+            taskForm = TaskForm(request.POST)
+            context = {'task': infoTask, 'form': taskForm}
             # Guardar cambios
-            form = request.POST
-
+            if taskForm.is_valid():
+                return render(request, 'tutors/task-detail.html', context)
+        context = {'task': infoTask, 'form': taskForm}
         return render(request, 'tutors/task-detail.html', context)
 
     def tutorTasksDelete(self, request, id):
