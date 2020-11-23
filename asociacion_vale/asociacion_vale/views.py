@@ -67,10 +67,10 @@ def tutorsTasks(request):
     return redirect('/')
 
 @csrf_exempt
-def tutorsTasksEdit(request, id):
+def tutorsTasksDetail(request, id):
     if request.session.get('username', False):
         controller = Controller()
-        return controller.tutorTasksEdit(request, id)
+        return controller.tutorTasksDetail(request, id)
     return redirect('/')
 
 

@@ -2,11 +2,19 @@ from django.shortcuts import redirect, render
 from users.models import User
 from forums.models import Forum
 from tasks.models import Task, TaskStatus
-from tasks.forms import TaskForm
+from tasks import forms
 from django.http import JsonResponse
 from django.contrib.auth.models import User as Tutor
 from django.contrib.auth.hashers import check_password
 import json
+
+
+def handle_upload_image_task_form(f):
+    fileName = 'static/uploads/'+f.name
+    with open(fileName, 'wb+') as destination:
+        for chunk in f.chunks():
+            destination.write(chunk)
+    return fileName
 
 
 class Controller:
@@ -122,17 +130,17 @@ class Controller:
         context = {'tutor': tutor, 'tasks': tasks}
         return render(request, './tutors/tasks.html', context)
 
-    def tutorTasksEdit(self, request, id):
+    def tutorTasksDetail(self, request, id):
         infoTask = Task.objects.get(id=id)
-        # FALTA Cargar form del model TASK y rellenarlo con la info de la TASK
-        taskForm = TaskForm()
+        taskForm = forms.TaskForm(request.POST or None, request.FILES or None, instance=infoTask)
+        taskForm.fields['image'].required = False
+        taskForm.fields['media'].required = False
+        context = {'task': infoTask, 'form': taskForm}
         if request.method == 'POST':
-            taskForm = TaskForm(request.POST)
-            context = {'task': infoTask, 'form': taskForm}
             # Guardar cambios
             if taskForm.is_valid():
+                taskForm.save()
                 return render(request, 'tutors/task-detail.html', context)
-        context = {'task': infoTask, 'form': taskForm}
         return render(request, 'tutors/task-detail.html', context)
 
     def tutorTasksDelete(self, request, id):

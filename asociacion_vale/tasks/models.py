@@ -12,11 +12,11 @@ from django.dispatch import receiver
 
 
 def taskImageDirectoryPath(instance, filename): 
-    return 'uploads/tasks/{0}/images/{1}'.format(instance.id, filename)
+    return 'static/uploads/tasks/{0}/images/{1}'.format(instance.id, filename)
 
 
 def taskMediaDirectoryPath(instance, filename): 
-    return 'uploads/tasks/{0}/media/{1}'.format(instance.id, filename)
+    return 'static/uploads/tasks/{0}/media/{1}'.format(instance.id, filename)
 
 
 class Category(models.Model):

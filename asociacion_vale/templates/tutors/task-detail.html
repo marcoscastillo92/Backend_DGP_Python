@@ -1,9 +1,31 @@
 {% extends  "tutors/tutors.html" %}
 {% load static %}
 {% block main %}
-    <form action="{% url 'tutorTasksEdit' id=task.id %}" method="post">
     {% csrf_token %}
-    {{ form }}
-    <input type="submit" value="Enviar">
+    <form action="{% url 'tutorTasksEdit' id=task.id %}" method="post" enctype="multipart/form-data">
+    <table>
+        {% for field in form %}
+            <tr>
+                <td>
+                    {{ field.label_tag }}
+                </td>
+                <td>
+                    {{ field.errors }}
+                    {{ field }}
+                </td>
+                <td>
+                    {% if field.help_text %}
+                        {{ field.help_text }}
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+            <tr>
+                <td></td>
+                <td>
+                    <input type="submit" value="Enviar">
+                </td>
+            </tr>
+    </table>
 </form>
 {% endblock %}
