@@ -2,6 +2,7 @@ from django.http.response import HttpResponse
 from django.shortcuts import redirect, render
 from .controller import Controller
 from groups.controller import Controller as gController
+from users.controller import Controller as uController
 from django.views.decorators.csrf import csrf_exempt
 import json
 # Create your views here.
@@ -53,6 +54,12 @@ def tutorsGroup(request):
     if request.method == 'GET':
         controller = Controller()
         return  controller.tutorGroups(request)
+
+@csrf_exempt
+def tutorsUsers(request):
+    if request.method == 'GET':
+        controller = Controller()
+        return  controller.tutorUsers(request)
 
 @csrf_exempt
 def groupsEdit(request):

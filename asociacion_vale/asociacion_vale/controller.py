@@ -19,9 +19,8 @@ class Controller:
         token = request.META['HTTP_AUTHORIZATION']
         userFromDB = self.getUserByToken(token)
         if userFromDB:
-            bodyData = json.loads(request.body)
-            identifier = bodyData['identifier']
-            category = bodyData['category']
+            identifier = request.GET.get('identifier')
+            category = request.GET.get('category')
             if category == 'task':
                 lista = Forum.objects.filter(identifier=identifier, emisorUser=userFromDB) | Forum.objects.filter(identifier=identifier, receptorUser=userFromDB)
             elif category == 'group':
@@ -165,4 +164,15 @@ class Controller:
             context['groups'] = arrayGroups
         
         return render(request,'./tutors/groups.html', context)
+
+    def tutorUsers(self,request):
+        context = {}
+        listUsers = list(User.objects.all().values())
+
+        if listUsers:
+            arrayUsers = []
+            for user in listUsers:
+                arrayUsers.append(user)
+        context['users'] = arrayUsers
+        return render(request,'./tutors/users.html', context)
             
