@@ -180,13 +180,14 @@ class Controller:
 
     def tutorsUsersEdit(self,request,id):
         infoUser = User.objects.get(id=id)
-        userForm = uForm.userForm(request.POST or None, request.FILES or None, instance=infoUser)
-        userForm.fields['image'].required = False
-        userForm.fields['media'].required = False
-        context = {'task': infoUser, 'form': userForm}
+        userForm = uForm.UserForm(request.POST or None, request.FILES or None, instance=infoUser)
+        userForm.fields['profileImage'].required = False
+        #userForm.fields['media'].required = False
+        context = {'task': infoUser, 'form': userForm , 'id' : id}
+        
         if request.method == 'POST':
             # Guardar cambios
             if userForm.is_valid():
                 userForm.save()
-                return render(request, 'tutors/task-detail.html', context)
-        return render(request, 'tutors/task-detail.html', context)
+                return render(request, 'tutors/editUser.html', context)
+        return render(request, 'tutors/editUser.html', context)

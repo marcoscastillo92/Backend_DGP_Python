@@ -6,7 +6,7 @@
       <div class="row">
         <div class="col-sm align-self-start">
             <br>
-            <a href="{% url 'tutorTasks' %}" class="btn btn-secondary" role="button">Volver atrás</a>
+            <a href="{% url 'users' %}" class="btn btn-secondary" role="button">Volver atrás</a>
         </div>
         <div class="col-sm">
         <br>
@@ -15,26 +15,26 @@
                 <h5 class="card-title">{{ user.username }}</h5>
                   <hr/>
                   <p class="card-text">
-                      <form action="{% url 'tutorsUsersEdit' id=user.id %}" method="post" enctype="multipart/form-data">
+                      <form action="{% url 'tutorsUserEdit' id=id %}" method="post" enctype="multipart/form-data">
                         <table>
                             {% for field in form %}
                                 <tr>
                                     <td>
-                                        {{ field.label_tag }}
+                                        {{ field.label_tag  }}
                                     </td>
                                     <td>
-                                        {{ field.errors }}
+                                        {{ field.errors  }}
                                         {{ field }}
                                     </td>
                                     <td>
-                                        {% if field.help_text %}
-                                            {{ field.help_text }}
+                                        {% if field.help_text  %}
+                                            {{ field.help_text  }}
                                         {% endif %}
                                     </td>
                                     <td>
-                                        {% if field == form.image and task.image.url != 'null' %}
+                                        {% if field == form.image and user.image.url != 'null' %}
                                             Icono actual:<br>
-                                            <a href="/{{ task.image.url }}"><img style="width: 100px;" src="/{{ task.image.url }}"></a>
+                                            <a href="/{{ user.profileImage.url }}"><img style="width: 100px;" src="/{{ user.profileImage.url }}"></a>
                                         {% endif %}
                                     </td>
                                 </tr>

@@ -51,32 +51,45 @@ def tutorsLogout(request):
 
 @csrf_exempt
 def tutorsGroup(request):
-    if request.method == 'GET':
-        controller = Controller()
-        return  controller.tutorGroups(request)
+    if request.session.get('username', False):
 
+        if request.method == 'GET':
+            controller = Controller()
+            return  controller.tutorGroups(request)
+    return redirect('/')
 @csrf_exempt
 def tutorsUsers(request):
-    if request.method == 'GET':
-        controller = Controller()
-        return  controller.tutorUsers(request)
+    if request.session.get('username', False):
 
+        if request.method == 'GET':
+            controller = Controller()
+            return  controller.tutorUsers(request)
+    return redirect('/')
 @csrf_exempt
 def groupsEdit(request):
-    if request.method == 'GET':
-        controller = gController()
-        return controller.editGroup(request)
-
+    if request.session.get('username', False):
+        if request.method == 'GET':
+            controller = gController()
+            return controller.editGroup(request)
+    return redirect('/')
 @csrf_exempt
 def groupsEditConfirm(request):
-    if request.method == 'POST':
-        controller = gController()
-        return controller.editConfirmGroup(request)
-
+    if request.session.get('username', False):
+        if request.method == 'POST':
+            controller = gController()
+            return controller.editConfirmGroup(request)
+    return redirect('/')
 @csrf_exempt
 def groupsChat(request):
-    if request.method == 'GET':
-        controller = gController()
-        return controller.chatGroup(request)
+    if request.session.get('username', False):
+        if request.method == 'GET':
+            controller = gController()
+            return controller.chatGroup(request)
 
-def tutorsUsersEdit()
+    return redirect('/')
+@csrf_exempt
+def tutorsUsersEdit(request,id):
+    if request.session.get('username', False):
+        controller = Controller()
+        return controller.tutorsUsersEdit(request, id)
+    return redirect('/')
