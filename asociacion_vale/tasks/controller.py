@@ -7,6 +7,22 @@ from users.models import User
 from .models import Rating, Task, Progress, Category, TaskStatus
 
 
+def append_value(dict_obj, key, value):
+    # Check if key exist in dict or not
+    if key in dict_obj:
+        # Key exist in dict.
+        # Check if type of value of key is list or not
+        if not isinstance(dict_obj[key], list):
+            # If type is not list then make it list
+            dict_obj[key] = [dict_obj[key]]
+        # Append the value in list
+        dict_obj[key].append(value)
+    else:
+        # As key is not in dict,
+        # so, add key-value pair
+        dict_obj[key] = value
+
+
 def getUserByToken(token):
         authorQS = User.objects.filter(token=token)
         if authorQS:
@@ -64,8 +80,9 @@ def getTask(request, id):
         return JsonResponse(response, safe=False)
 
     task = Task.objects.get(id=id)
-    response = "{\"task\":" + json.dumps(task.serializeCustom(token)) + "}"
-    return HttpResponse(response, content_type="text/json-comment-filtered")
+    response = {}
+    append_value(response, 'task', task.serializeCustom(token))
+    return JsonResponse(response)
 
 def getAllTasks(request):
     token = request.META['HTTP_AUTHORIZATION']
@@ -75,11 +92,10 @@ def getAllTasks(request):
         return JsonResponse(response, safe=False)
 
     tasks = Task.objects.filter(users__id=User.objects.get(token=token).id)
-    response = "{\"tasks\": {"
+    response = {}
     for task in tasks:
-        response += json.dumps(task.serializeCustom(token)) + ","
-    response += "}"
-    return HttpResponse(response, content_type="text/json-comment-filtered")
+        append_value(response, 'tasks', task.serializeCustom(token))
+    return JsonResponse(response)
 
 def saveRandomTask(request):
     category = Category(title='Categoría random')
