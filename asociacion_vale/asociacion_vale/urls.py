@@ -25,6 +25,7 @@ urlpatterns = [
     path('tutors/home' , views.tutorsHome , name='home'),
     path('tutors/groups' , views.tutorsGroup , name='groups'),
     path('tutors/users' , views.tutorsUsers , name='users'),
+    path('tutors/users/edit/<int:id>' , views.tutorsUsersEdit , name='tutorsUserEdit'),
     path('tutors/login' , views.tutorsLogin, name='login' ),
     path('tutors/logout' , views.tutorsLogout , name='logout'),
     path('tutors/groups/chat' , views.groupsChat, name='groupsChat'),

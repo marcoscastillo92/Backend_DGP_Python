@@ -1,0 +1,71 @@
+{% extends  "tutors/tutors.html" %}
+{% load static %}
+{% block main %}
+    {% csrf_token %}
+    <div class="container">
+      <div class="row">
+        <div class="col-sm align-self-start">
+            <br>
+            <a href="{% url 'tutorTasks' %}" class="btn btn-secondary" role="button">Volver atrás</a>
+        </div>
+        <div class="col-sm">
+        <br>
+            <div class="card" style="width: 50rem;">
+              <div class="card-body">
+                <h5 class="card-title">{{ user.username }}</h5>
+                  <hr/>
+                  <p class="card-text">
+                      <form action="{% url 'tutorsUsersEdit' id=user.id %}" method="post" enctype="multipart/form-data">
+                        <table>
+                            {% for field in form %}
+                                <tr>
+                                    <td>
+                                        {{ field.label_tag }}
+                                    </td>
+                                    <td>
+                                        {{ field.errors }}
+                                        {{ field }}
+                                    </td>
+                                    <td>
+                                        {% if field.help_text %}
+                                            {{ field.help_text }}
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if field == form.image and task.image.url != 'null' %}
+                                            Icono actual:<br>
+                                            <a href="/{{ task.image.url }}"><img style="width: 100px;" src="/{{ task.image.url }}"></a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                                <tr>
+                                    <td></td>
+                                    <td>
+                                        <input type="submit" value="Enviar">
+                                    </td>
+                                </tr>
+                        </table>
+                    </form>
+                  </p>
+                <hr/>
+                <div class="container">
+                  <div class="row">
+                    <div class="col-sm">
+                      <button type="button" class="btn btn-secondary">Resultados</button>
+                    </div>
+                    <div class="col-sm">
+                    </div>
+                    <div class="col-sm">
+                      <button type="button" class="btn btn-secondary">Valoraciones</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+        <div class="col-sm">
+        </div>
+      </div>
+    </div>
+{% endblock %}

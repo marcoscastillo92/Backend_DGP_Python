@@ -78,3 +78,5 @@ def groupsChat(request):
     if request.method == 'GET':
         controller = gController()
         return controller.chatGroup(request)
+
+def tutorsUsersEdit()

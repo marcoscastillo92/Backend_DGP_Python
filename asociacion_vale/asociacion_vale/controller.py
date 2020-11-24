@@ -6,6 +6,7 @@ from django.http import JsonResponse
 from django.contrib.auth.models import User as Tutor
 from django.contrib.auth.hashers import check_password
 import json
+from users import forms as uForm
 class Controller:
     def getUserByToken(self, token):
         authorQS = User.objects.filter(token=token)
@@ -176,3 +177,16 @@ class Controller:
         context['users'] = arrayUsers
         return render(request,'./tutors/users.html', context)
             
+
+    def tutorsUsersEdit(self,request,id):
+        infoUser = User.objects.get(id=id)
+        userForm = uForm.userForm(request.POST or None, request.FILES or None, instance=infoUser)
+        userForm.fields['image'].required = False
+        userForm.fields['media'].required = False
+        context = {'task': infoUser, 'form': userForm}
+        if request.method == 'POST':
+            # Guardar cambios
+            if userForm.is_valid():
+                userForm.save()
+                return render(request, 'tutors/task-detail.html', context)
+        return render(request, 'tutors/task-detail.html', context)

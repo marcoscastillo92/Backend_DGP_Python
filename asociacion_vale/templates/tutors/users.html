@@ -1,134 +1,65 @@
 {% extends  "tutors/tutors.html" %}
-{% block otherScripts %}
 {% load static %}
-    <script type="text/javascript" src="{% static 'groups.js' %}"></script>
+{% block otherScripts %}
+<script type="text/javascript" src="{% static 'users.js' %}"></script>    
 {% endblock %}
 {% block main %}
-<style>
-    @media (min-width: 1200px) {
-        .container.list {
-            width: 70% !important;
-            height:  400px;
-        }
-    }
-        @media (min-width: 992px) {
-        .container.list {
-            width: 70% !important;
-            height:  400px;
-        }
-        }
-        @media (min-width: 768px) {
-        .container.list {
-             width: 70% !important;
-             height:  400px;
-        }
-    }
-    
-    
-    .container.list{ width: 80% !important; height:  500px; overflow: auto;}
-    .container.list{
-        background-color: rgba(142, 242, 245, 0.288);
-    }
-    
-    
-</style>
-<div class="container ">
-    <div class= "row mt-4 mb-3 ">
-        <div class= "col-sm ">
-            <h2 style="color: ghostwhite;"><b>Usuarios</b></h3>
-        </div>
-        <div class= "col-sm justify-content-end">
-            <div class= "row">
-                <div class= "col-sm  justify-content-end">
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newGroupModal" data-whatever="@getbootstrap">Nuevo Grupo</button>
+    <div class="container ">
+        <div class= "row mt-4  ">
+            <div class= "col-sm ">
+                <h2>Usuarios</h2>
+            </div>
+            <div class= "col-sm">
 
-                    <div class="modal fade" id="newGroupModal" tabindex="-1" role="dialog" aria-labelledby="newGroupModalLabel" aria-hidden="true">
-                      <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <h5 class="modal-title" id="newGroupModalLabel">Nuevo Usuario</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                              <span aria-hidden="true">&times;</span>
-                            </button>
-                          </div>
-                          <div class="modal-body">
-                            <form action="/groups/create" method="POST">
-                              <div class="form-group">
-                                <label for="recipient-name" class="col-form-label">Nombre:</label>
-                                <input type="text" class="form-control" name="groupName" id="recipient-name" placeholder="Introduzca el nombre del grupo">
-                              </div>
-                              <div class="form-group">
-                                <label for="message-text" class="col-form-label">Alumnos:  <br><small id="emailHelp" class="form-text text-muted" style="color:red">*Para seleccionar varios CTRL+ Click izquierdo</small></label>
-                                
-                                <select name="listUsers" style="width: 100%" id="listUsers" multiple>
-                                    {% for user in users %}
-                                        <option value="{{ user.username }}">{{ user.username }}</option>
-                                    {% endfor %}
-                                </select>
-                              </div>
-                              <div class="modal-footer">
-                                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-                                <button type="submit" class="btn btn-success">Crear</button>
-                              </div>
-                            </form>
-                          </div>
-                         
-                        </div>
-                      </div>
+            </div>
+
+            <div class= "col-sm justify-content-end">
+                <div class= "row">
+                    <div class= "col-sm  justify-content-end">
+                      <button type="submit" style="width: 15% ;float: right;" name="add" onclick=""> <img style="width: 70%;" src="{% static 'mas.png' %}"></button>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
-<div class="container list bg-light  " >
-    <div class= "row mt-4" style=" text-align: center;">
-        <div class= "col-sm ">
-            <h5><b>Nombre</b></h5> 
         
-        </div> 
-        <div class= "col-sm ">
-            <h5><b>Nombre de Usuario</b></h5> 
-        </div> 
-        <div class= "col-sm ">
-            <h5><b>Número de Teléfono</b></h5>
-        </div> 
-        <div class= "col-sm ">
-            <h5><b>Email</b></h5>
-        </div> 
-        <div class= "col-sm ">
-            <h5><b>Fecha de Creación</b></h5>
-        </div> 
-        <div class= "col-sm ">
-            <h5><b>Género</b></h5>
-        </div> 
+        <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names..">
     </div>
-    <hr>
+    <div id = "myUL">
     {% for user in users %}
-    <div  id="myUL">
-        <div class= "row mt-2 bg-gradient-light list"  style=" text-align: center;">
-            <div class= "col-sm  mt-4">
-                <h7><a id="{{ group.name }}">{{ user.name }} </a></h7> 
-            </div> 
-            <div class= "col-sm  mt-4">
-                <p>{{ user.username }}</p> 
+        <div class="container">
+          <div class="row align-items-center fila">
+            <div class="col-sm">
+              <a href="{% static 'editUser' %}">
+                  <div class="card" style="width: 55rem;">
+                      <div class="card-body">
+                          <div class="row align-items-center">
+                            <div class="col-1">
+                              <img style="width: 50px;" class="card-img" src="{% static 'default_profile_image.png' %}" alt="Card image cap">
+                            </div>
+                            <div class="col-sm">
+                              <h5 class="card-title">{{ user.name }}</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">{{ user.createdAt }}</h6>
+                            </div>
+                          </div>
+                      </div>
+                  </div>
+              </a>
             </div>
-            <div class= "col-sm mt-4 mb-2">
-                <p>{{ user.phoneNumber }}</p> 
-            </div>  
-            <div class= "col-sm mt-4 mb-2">
-                <p>{{ user.email }}</p> 
-            </div>  
-            <div class= "col-sm mt-4 mb-2">
-                <p>{{ user.createdAt }}</p> 
-            </div>  
-            <div class= "col-sm mt-4 mb-2">
-                <p>{{ user.gender }}</p> 
-            </div>  
+            <div class="col-sm">
+              <div class="row align-items-center">
+                <div class="col-sm">
+                    <a class="btn btn-light btn-outline-dark" href="#" role="button"><img style="width: 110%;" src="{% static 'editar.png' %}" width="45px"/></a>
+                    <!--<button type="submit" style="float: right;" name="edit" onclick="add()"><img style="width: 110%;" src="{% static 'img/editar.png' %}" /></button>-->
+                </div>
+                <div class="col-sm">
+                    <a class="btn btn-light btn-outline-dark" href="#" role="button"><img style="width: 110%;" src="{% static 'eliminar.png' %}" /></a>
+                    <!--<button type="submit" style="float: right;" name="remove" onclick="add()"> <img style="width: 110%;" src="{% static 'img/eliminar.png' %}" /></button>-->
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <hr>
-    </div>
+        <br>
     {% endfor %}
 </div>
-    
 {% endblock %}
