@@ -18,9 +18,8 @@ class Controller:
         token = request.META['HTTP_AUTHORIZATION']
         userFromDB = self.getUserByToken(token)
         if userFromDB:
-            bodyData = json.loads(request.body)
-            identifier = bodyData['identifier']
-            category = bodyData['category']
+            identifier = request.GET.get('identifier')
+            category = request.GET.get('category')
             if category == 'task':
                 lista = Forum.objects.filter(identifier=identifier, emisorUser=userFromDB) | Forum.objects.filter(identifier=identifier, receptorUser=userFromDB)
             elif category == 'group':
@@ -34,13 +33,13 @@ class Controller:
                 if l.emisorUser_id:
                     user = User.objects.filter(id = l.emisorUser_id)
                     print(user[0].username)
-                    respuesta = {"body":l.body, "emisor":user[0].username,  "created":l.createdAt, "identifier":l.identifier, "mimeType":l.mimeType.path}
+                    respuesta = {"body":l.body, "emisor_name": user[0].name, "emisor":user[0].username,  "created":l.createdAt, "identifier":l.identifier, "mimeType":l.mimeType.path, "tutor": False}
                     var.append(respuesta)
 
                 if l.emisorTutor_id:
                     user = Tutor.objects.filter(id = l.emisorTutor_id)
                     print(user[0].username)
-                    respuesta = {"body":l.body, "emisor":user[0].username,  "created":l.createdAt, "identifier":l.identifier, "mimeType":l.mimeType.path}
+                    respuesta = {"body":l.body, "emisor_name": user[0].name, "emisor":user[0].username,  "created":l.createdAt, "identifier":l.identifier, "mimeType":l.mimeType.path, "tutor": True}
                     var.append(respuesta)
             print(var)
             formatResponse = {"mensajes" : var}

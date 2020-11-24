@@ -56,11 +56,21 @@ class Task(models.Model):
             text = ""
             difficulty = 0
             utility = 0
-
+        try:
+            status = TaskStatus.objects.get(user__token=token, task__id=self.id)
+            finished = status.done
+            comment = status.comment
+        except:
+            finished = False
+            comment = ""
         data = { 
                 "id_tarea": self.id,
                 "title": self.title,
                 "shortDescription": self.shortDescription,
+                "status": {
+                    "finished": finished,
+                    "finishedComment": comment
+                },
                 "fullDescription": self.fullDescription.replace("\"", "	&quot;"),
                 "image": self.image.url,
                 "mediaDescription": self.media.path.replace("\\", "/").split("asociacion_vale/")[1],
@@ -103,6 +113,8 @@ class TaskStatus(models.Model):
     user = models.ForeignKey(User, verbose_name=("Usuario"), on_delete=models.CASCADE, null=True)
     task = models.ForeignKey(Task, verbose_name=("Tarea"), on_delete=models.CASCADE, null=True)
     done = models.BooleanField(default=False)
+    comment = models.CharField(verbose_name=("Comentario"), max_length=800)
+    tutor = models.ForeignKey(Tutor, verbose_name=("Tutor"), on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return f"{str(self.user)} | {str(self.task)} | Completada" if self.done else f"{str(self.user)} | {str(self.task)} | Pendiente"
@@ -112,6 +124,8 @@ class TaskStatus(models.Model):
                 "user": str(self.user),
                 "task": str(self.task),
                 "done": self.done,
+                "tutor": str(self.tutor),
+                "comment": self.comment
             }
         return data
 
