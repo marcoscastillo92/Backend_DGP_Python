@@ -1,7 +1,7 @@
 from django.shortcuts import redirect, render
 from users.models import User
 from forums.models import Forum
-from tasks.models import Task, TaskStatus
+from tasks.models import Task, TaskStatus, Rating
 from tasks import forms
 from django.http import JsonResponse
 from django.contrib.auth.models import User as Tutor
@@ -132,10 +132,34 @@ class Controller:
 
     def tutorTasksDetail(self, request, id):
         infoTask = Task.objects.get(id=id)
+        tutor = Tutor.objects.get(username=request.session.get('username'))
+        taskStatus = {}
+        ratings = {}
+        count = 0
+        for user in infoTask.users.all():
+            status = TaskStatus.objects.get(user=user, task=infoTask, tutor=tutor)
+            if status:
+                valueStatus = {'user': user.username, 'status': status.done}
+                if count in taskStatus:
+                    taskStatus[count].append(valueStatus)
+                else:
+                    taskStatus[count] = valueStatus
+            try:
+                rating = Rating.objects.get(user=user, task=infoTask)
+            except:
+                rating = None
+            if rating:
+                valueRating = {'user': user.username, 'rating': rating}
+                if count in taskStatus:
+                    ratings[count].append(valueRating)
+                else:
+                    ratings[count] = valueRating
+            count = count + 1
+
         taskForm = forms.TaskForm(request.POST or None, request.FILES or None, instance=infoTask)
         taskForm.fields['image'].required = False
         taskForm.fields['media'].required = False
-        context = {'task': infoTask, 'form': taskForm}
+        context = {'task': infoTask, 'form': taskForm, 'taskStatus': taskStatus, 'ratings': ratings}
         if request.method == 'POST':
             # Guardar cambios
             if taskForm.is_valid():
