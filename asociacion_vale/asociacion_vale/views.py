@@ -93,3 +93,39 @@ def tutorsUsersEdit(request,id):
         controller = Controller()
         return controller.tutorsUsersEdit(request, id)
     return redirect('/')
+
+@csrf_exempt
+def tutorsUsersDelete(request):
+    if request.session.get('username', False):
+        controller = Controller()
+        return controller.tutorsUsersDelete(request)
+    return redirect('/')
+
+@csrf_exempt
+def tutorsUsersDeleteById(request, id):
+    if request.session.get('username', False):
+        controller = Controller()
+        return controller.tutorsUsersDeleteById(request, id)
+    return redirect('/')
+
+@csrf_exempt
+def tutorsUsersAdd(request):
+    if request.session.get('username', False):
+        controller = Controller()
+        return controller.tutorsUsersAdd(request)
+    return redirect('/')
+
+@csrf_exempt
+def tutorsUsersAddConfirm(request):
+    if request.session.get('username', False):
+        controller = Controller()
+        return controller.tutorsUsersAddConfirm(request)
+    return redirect('/')
+
+@csrf_exempt
+def tutorsEditUsersPictograms(request):
+    if request.session.get('username', False):
+        controller = Controller()
+        return controller.tutorsEditUsersPictograms(request)
+    return redirect('/')
+

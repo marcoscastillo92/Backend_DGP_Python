@@ -1,0 +1,109 @@
+{% extends  "tutors/tutors.html" %}
+{% block otherScripts %}
+{% load static %}
+    <link rel="stylesheet" href="{% static 'css/addUser.css' %}">
+{% endblock %}
+{% block main %}
+    {% csrf_token %}
+    <div class="container d-flex justify-content-center">
+      <div class="row">
+        <div class="col-sm">
+        <br>
+            <div class="card" style="width: 64rem;">
+              <div class="card-body ">
+                <h5 class="card-title">Establecer pictogramas</h5>
+                <hr/>
+                  <p class="card-text">
+                      <form action="{% url 'editUsersPictograms' %}" method="post">
+                        <table>
+                            <h6>Dispone de los siguientes pictogramas</h6><br>
+                            <tr>
+                                {% for pictogram in pictograms %}
+                                <td>
+                                    <div class="card" style="width: 10rem;">
+                                        <img src="{% static pictogram.image %}" class="card-img-top p-2" alt="Imagen del pictograma">
+                                        <div class="card-body text-center">
+                                          <p class="card-text"><b>{{pictogram.name}}</b></nav></p>
+                                        </div>
+                                    </div>
+                                </td>
+                                {% endfor %}
+                            </tr>
+                        </table>
+                        <br>
+                        <hr>
+                        <h6>Seleccione los pictogramas</h6>
+                        <div class="row ml-4">
+                            <div class="card p-2 m-2"  style="width: 18rem;">
+                                <h6>Primer pictograma</h6>
+                                <select name="firstPictogram">
+                                    {% for pictogram in pictograms %}
+                                    <option value="pictogram.name" class="text-capitalize">{{pictogram.name}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="card p-2 m-2"  style="width: 18rem;">
+                                <h6>Segundo pictograma</h6>
+                                <select name="secondPictogram">
+                                    {% for pictogram in pictograms %}
+                                    <option value="pictogram.name" class="text-capitalize">{{pictogram.name}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="card p-2 m-2"  style="width: 18rem;">
+                                <h6>Tercer pictograma</h6>
+                                <select name="thirdPictogram">
+                                    {% for pictogram in pictograms %}
+                                    <option value="pictogram.name" class="text-capitalize">{{pictogram.name}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="card p-2 m-2"  style="width: 18rem;">
+                                <h6>Cuarto pictograma</h6>
+                                <select name="fourthPictogram">
+                                    {% for pictogram in pictograms %}
+                                    <option value="pictogram.name" class="text-capitalize">{{pictogram.name}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="card p-2 m-2"  style="width: 18rem;">
+                                <h6>Quinto pictograma</h6>
+                                <select name="fifthPictogram">
+                                    {% for pictogram in pictograms %}
+                                    <option value="pictogram.name" class="text-capitalize">{{pictogram.name}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="card p-2 m-2"  style="width: 18rem;">
+                                <h6>Sexto pictograma</h6>
+                                <select name="sixthPictogram">
+                                    {% for pictogram in pictograms %}
+                                    <option value="pictogram.name" class="text-capitalize">{{pictogram.name}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row d-flex justify-content-center">
+                            <div class="p-2">
+                                <br>
+                                <input type="hidden" name="id" value="{{ id }}">
+                                <input type="submit" value="Confirmar" class="btn btn-success" role="button">
+                            </div>
+                            <div class="p-2">
+                                <br>
+                                <a href="{% url 'tutorsUsersDeleteById' id=id%}" class="btn btn-danger" role="button">Cancelar</a>
+                            </div>
+                        </div>
+                    </form>
+                    
+                  </p>
+                
+              </div>
+            </div>
+        </div>
+        <div class="col-sm">
+        </div>
+      </div>
+    </div>
+{% endblock %}

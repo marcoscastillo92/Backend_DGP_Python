@@ -1,5 +1,5 @@
 from django.shortcuts import redirect, render
-from users.models import User
+from users.models import User, Pictograms
 from forums.models import Forum
 from groups.models import Groups
 from django.http import JsonResponse
@@ -7,6 +7,8 @@ from django.contrib.auth.models import User as Tutor
 from django.contrib.auth.hashers import check_password
 import json
 from users import forms as uForm
+from users.controller import Controller as uController
+
 class Controller:
     def getUserByToken(self, token):
         authorQS = User.objects.filter(token=token)
@@ -168,7 +170,7 @@ class Controller:
 
     def tutorUsers(self,request):
         context = {}
-        listUsers = list(User.objects.all().values())
+        listUsers = list(User.objects.all().order_by('name').values())
 
         if listUsers:
             arrayUsers = []
@@ -184,10 +186,78 @@ class Controller:
         userForm.fields['profileImage'].required = False
         #userForm.fields['media'].required = False
         context = {'task': infoUser, 'form': userForm , 'id' : id}
-        
         if request.method == 'POST':
             # Guardar cambios
             if userForm.is_valid():
                 userForm.save()
+                context['response']='success'
                 return render(request, 'tutors/editUser.html', context)
         return render(request, 'tutors/editUser.html', context)
+
+    def tutorsUsersAdd(self, request):
+        userForm = uForm.UserForm(request.POST or None, request.FILES or None)
+        #userForm.fields['media'].required = False
+        context = {'form': userForm}
+        if request.method == 'GET':
+            # Guardar cambios
+            return render(request, 'tutors/addUser.html', context)
+        if request.method == 'POST':
+            # Guardar cambios
+            if userForm.is_valid():
+                userForm.save()
+                return render(request, 'tutors/addUser.html', context)
+                
+    def tutorsUsersAddConfirm(self, request):
+        userForm = uForm.UserForm(request.POST or None, request.FILES or None)
+        #userForm.fields['media'].required = False
+        if request.method == 'POST':
+            # Guardar cambios
+            if userForm.is_valid():
+                userForm.save()
+                userFromDB = User.objects.filter(username=request.POST.get('username'))
+                pictogramsFromDB= list(Pictograms.objects.all().values())
+                if not pictogramsFromDB:
+                    userControler = uController()
+                    userControler.savePictograms(request)
+                    pictogramsFromDB= list(Pictograms.objects.all().values())
+                context = {'form': userForm, 'params':request.POST, 'id':userFromDB[0].id, 'pictograms': pictogramsFromDB}
+                print(pictogramsFromDB)
+                return render(request, 'tutors/addUserPictograms.html', context)
+
+    def tutorsUsersDelete(self, request):
+        if request.method == 'POST':
+            userFromDB = User.objects.filter(id=request.POST.get('id'))
+            if userFromDB:
+                userFromDB.delete()
+                return redirect('/tutors/users')
+        
+    def tutorsUsersDeleteById(self, request, id):
+        if request.method == 'GET':
+            userFromDB = User.objects.filter(id=id)
+            if userFromDB:
+                userFromDB.delete()
+                return redirect('/tutors/users')
+
+    def tutorsEditUsersPictograms(self, request):
+        if request.method == 'POST':
+            pictogramSize = 6
+            userId = request.POST.get('id')
+            firstPictogram = request.POST.get('firstPictogram')
+            secondPictogram = request.POST.get('secondPictogram')
+            thirdPictogram = request.POST.get('thirdPictogram')
+            fourthPictogram = request.POST.get('fourthPictogram')
+            fifthPictogram = request.POST.get('fifthPictogram')
+            sixthPictogram = request.POST.get('sixthPictogram')
+
+
+            listPictograms = list(Pictograms.objects.all().values())
+            password = ""
+            for index in range(0,pictogramSize):
+                for i in listPictograms:
+                    if i['name'] == firstPictogram or i['name'] == secondPictogram or i['name'] == thirdPictogram or i['name'] == fourthPictogram or i['name'] == fifthPictogram or i['name'] == sixthPictogram:
+                        password += i['key']
+            userFromDB = User.objects.get(id=userId)
+            userFromDB.password = password
+            userFromDB.save()
+            return redirect('/tutors/users')
+

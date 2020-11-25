@@ -1,44 +1,48 @@
 {% extends  "tutors/tutors.html" %}
 {% load static %}
 {% block otherScripts %}
-<script type="text/javascript" src="{% static 'users.js' %}"></script>    
+<script type="text/javascript" src="{% static 'javascript/users.js' %}"></script>    
 {% endblock %}
 {% block main %}
     <div class="container ">
         <div class= "row mt-4  ">
-            <div class= "col-sm ">
+            <div class= "col-sm " style="color: white;">
                 <h2>Usuarios</h2>
             </div>
-            <div class= "col-sm">
-
-            </div>
-
-            <div class= "col-sm justify-content-end">
+            <div class= "col-sm justify-content-end mb-2">
                 <div class= "row">
+                    
+                    <div class= "col-sm  justify-content-end ml-5">
+                      <input type="text" id="myInput" style="float: right; padding: 10px; width: 262px; border-radius: 10px;" onkeyup="myFunction()" placeholder="Busca por nombre...">
+                    </div>
                     <div class= "col-sm  justify-content-end">
-                      <button type="submit" style="width: 15% ;float: right;" name="add" onclick=""> <img style="width: 70%;" src="{% static 'mas.png' %}"></button>
+                      <button type="submit" style="" name="add" onclick=""> <img style="width: 70%;" src="{% static 'img/mas.png' %}"></button>
+                      <a class="btn btn-dark m-1 w-100" href="http://localhost:8000/tutors/users/add" >Crear Perfil</a>
                     </div>
                 </div>
             </div>
         </div>
         
-        <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names..">
     </div>
     <div id = "myUL">
     {% for user in users %}
         <div class="container">
           <div class="row align-items-center fila">
             <div class="col-sm">
-              <a href="{% url 'tutorsUserEdit'  id=user.id  %}">
+              <a href="{% url 'tutorsUserEdit'  id=user.id  %}" style="text-decoration: none;">
                   <div class="card" style="width: 55rem;">
                       <div class="card-body">
                           <div class="row align-items-center">
                             <div class="col-1">
-                              <img style="width: 50px;" class="card-img" src="{% static 'default_profile_image.png' %}" alt="Card image cap">
+                              {% if user.profileImage == "null" %}
+                                <img style="width: 100px; height:100px; border-radius: 700px;" class="card-img" src="{% static '/img/profile.png' %}" alt="Card image cap">
+                              {% else %}
+                                <img style="width: 100px; height:100px; border-radius: 700px;" class="card-img" src="{% static user.profileImage %}" alt="Card image cap">
+                              {% endif %}
                             </div>
                             <div class="col-sm">
-                              <h5 class="card-title">{{ user.name }}</h5>
-                            <h6 class="card-subtitle mb-2 text-muted">{{ user.createdAt }}</h6>
+                              <h5 class="card-title ml-5 p-2">{{ user.name }}</h5>
+                            <h6 class="card-subtitle mb-2 text-muted ml-5 p-2">Creado el {{ user.createdAt }}</h6>
                             </div>
                           </div>
                       </div>
@@ -47,14 +51,44 @@
             </div>
             <div class="col-sm">
               <div class="row align-items-center">
-                <div class="col-sm">
-                    <a class="btn btn-light btn-outline-dark" href="http://localhost:8000/tutors/users/edit/{{ user.id }}" role="button"><img style="width: 110%;" src="{% static 'editar.png' %}" width="45px"/></a>
-                    <!--<button type="submit" style="float: right;" name="edit" onclick="add()"><img style="width: 110%;" src="{% static 'img/editar.png' %}" /></button>-->
+                <button type="button" class="btn btn-dark m-1 w-100" data-toggle="modal" data-target="#exampleModal">
+                  Ver Progresos
+                </button>
+                <a class="btn btn-dark m-1 w-100" href="http://localhost:8000/tutors/users/edit/{{ user.id }}" >Editar Perfil</a>
+                
+                <button type="button" class="deleteProfile btn btn-dark m-1 w-100" data-toggle="modal" data-id="{{user.id}}" data-name="{{user.name}}" data-target="#deleteProfileModal" data-created="{{user.createdAt}}">Borrar Perfil</button>
+
+                <div class="modal fade" id="deleteProfileModal" tabindex="-1" role="dialog" aria-labelledby="deleteProfileModalLabel" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="deleteProfileModalLabel">Borrar Perfil</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <form method="POST" action="{% url 'tutorsUsersDelete' %}">
+                          <p class="text-center">¿Realmente quiere borrar al usuario?</p>
+                          <div class="form-group">
+                            <label for="recipient-name" class="col-form-label">Nombre:</label>
+                            <input type="text" class="form-control" id="recipient-name" readonly>
+                          </div>
+                          <div class="form-group">
+                            <label for="message-text" class="col-form-label">Creado el:</label>
+                            <input type="text" class="form-control" id="recipient-createdAt" readonly>
+                            <input type="hidden" name="id" id="recipient-id">
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-dark" data-dismiss="modal">Volver</button>
+                            <button type="submit" class="btn btn-danger">Borrar</button>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div class="col-sm">
-                    <a class="btn btn-light btn-outline-dark" href="#" role="button"><img style="width: 110%;" src="{% static 'eliminar.png' %}" /></a>
-                    <!--<button type="submit" style="float: right;" name="remove" onclick="add()"> <img style="width: 110%;" src="{% static 'img/eliminar.png' %}" /></button>-->
-                </div>
+
               </div>
             </div>
           </div>

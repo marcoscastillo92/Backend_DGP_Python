@@ -1,28 +1,27 @@
 {% extends  "tutors/tutors.html" %}
+{% block otherScripts %}
 {% load static %}
+    <link rel="stylesheet" href="{% static 'css/editUser.css' %}">
+{% endblock %}
 {% block main %}
     {% csrf_token %}
-    <div class="container">
+    <div class="container d-flex justify-content-center">
       <div class="row">
-        <div class="col-sm align-self-start">
-            <br>
-            <a href="{% url 'users' %}" class="btn btn-secondary" role="button">Volver atrás</a>
-        </div>
         <div class="col-sm">
         <br>
             <div class="card" style="width: 50rem;">
               <div class="card-body">
-                <h5 class="card-title">{{ user.username }}</h5>
+                <h5 class="card-title">Editar Perfil</h5>
                   <hr/>
                   <p class="card-text">
                       <form action="{% url 'tutorsUserEdit' id=id %}" method="post" enctype="multipart/form-data">
                         <table>
                             {% for field in form %}
                                 <tr>
-                                    <td>
+                                    <td class="editUser_sections">
                                         {{ field.label_tag  }}
                                     </td>
-                                    <td>
+                                    <td class="editUser_inputs">
                                         {{ field.errors  }}
                                         {{ field }}
                                     </td>
@@ -39,28 +38,26 @@
                                     </td>
                                 </tr>
                             {% endfor %}
-                                <tr>
-                                    <td></td>
-                                    <td>
-                                        <input type="submit" value="Enviar">
-                                    </td>
-                                </tr>
+                            <tr>
+                                <td>
+                                    <hr>
+                                    <div class="d-flex justify-content-start">
+                                        <br>
+                                        <input type="submit" value="Confirmar" class="btn btn-success" role="button">
+                                    </div>
+                                </td>
+                                <td>
+                                    <hr>
+                                    <div class="d-flex justify-content-end">
+                                        <br>
+                                        <a href="{% url 'users' %}" class="btn btn-danger" role="button">Volver atrás</a>
+                                    </div>
+                                </td>
+                            </tr>
                         </table>
                     </form>
                   </p>
-                <hr/>
-                <div class="container">
-                  <div class="row">
-                    <div class="col-sm">
-                      <button type="button" class="btn btn-secondary">Resultados</button>
-                    </div>
-                    <div class="col-sm">
-                    </div>
-                    <div class="col-sm">
-                      <button type="button" class="btn btn-secondary">Valoraciones</button>
-                    </div>
-                  </div>
-                </div>
+                
               </div>
             </div>
         </div>

@@ -1,0 +1,69 @@
+{% extends  "tutors/tutors.html" %}
+{% block otherScripts %}
+{% load static %}
+    <link rel="stylesheet" href="{% static 'css/addUser.css' %}">
+{% endblock %}
+{% block main %}
+    {% csrf_token %}
+    <div class="container d-flex justify-content-center">
+      <div class="row">
+        <div class="col-sm">
+        <br>
+            <div class="card" style="width: 50rem;">
+              <div class="card-body">
+                <h5 class="card-title">Crear Usuario</h5>
+                  <hr/>
+                  <p class="card-text">
+                      <form action="{% url 'tutorsUsersAddConfirm' %}" method="POST" enctype="multipart/form-data">
+                        <table>
+                            {% for field in form %}
+                                <tr>
+                                    <td class="editUser_sections">
+                                        {{ field.label_tag  }}
+                                    </td>
+                                    <td class="editUser_inputs">
+                                        {{ field.errors  }}
+                                        {{ field }}
+                                    </td>
+                                    <td>
+                                        {% if field.help_text  %}
+                                            {{ field.help_text  }}
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if field == form.image and user.image.url != 'null' %}
+                                            Icono actual:<br>
+                                            <a href="/{{ user.profileImage.url }}"><img style="width: 100px;" src="/{{ user.profileImage.url }}"></a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            <h5 class="card-title"></h5>
+                            <tr>
+                                <td>
+                                    <hr>
+                                    <div class="d-flex justify-content-start">
+                                        <br>
+                                        <input type="submit" value="Continuar" class="btn btn-success" role="button">
+                                    </div>
+                                </td>
+                                <td>
+                                    <hr>
+                                    <div class="d-flex justify-content-end">
+                                        <br>
+                                        <a href="{% url 'users' %}" class="btn btn-danger" role="button">Volver atrás</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </form>
+                  </p>
+                
+              </div>
+            </div>
+        </div>
+        <div class="col-sm">
+        </div>
+      </div>
+    </div>
+{% endblock %}

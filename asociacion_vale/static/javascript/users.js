@@ -19,3 +19,14 @@ function myFunction() {
       }
     }
   }
+
+$(document).on("click", ".deleteProfile", function () {
+  var name = $(this).data('name');
+  var createdAt = $(this).data('created');
+  var id = $(this).data('id');
+  $(".modal-body #recipient-name").val( name );
+  $(".modal-body #recipient-createdAt").val( createdAt );
+  $(".modal-body #recipient-id").val( id );
+  console.log(name)
+  console.log(createdAt)
+});

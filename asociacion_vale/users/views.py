@@ -80,3 +80,5 @@ def logout(request):
     if request.method == 'POST':
         controller = Controller()
         return controller.userLogout(request)
+
+

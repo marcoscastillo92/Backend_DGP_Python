@@ -60,6 +60,11 @@ class Controller:
 
     def getPictograms(self, request):
         pictograms = list(Pictograms.objects.values())
+        if not len(pictograms):
+            print("Introduciendo pictogramas")
+            self.savePictograms(request)
+
+        pictograms = list(Pictograms.objects.values())
         if pictograms:
             response = {"pictograms": pictograms}
         return JsonResponse(response, safe=False)
@@ -88,42 +93,46 @@ class Controller:
         
     def savePictograms(self, request):
         newPictogram = Pictograms(
-            name= "cerdo",
+            name= "Avion",
             key= secrets.token_hex(15),
+            image="static/uploads/img/pictograms/avion.png",
         )
         newPictogram.save()
         
         newPictogram = Pictograms(
-            name= "perro",
+            name= "Casa",
             key= secrets.token_hex(15),
+            image="static/uploads/img/pictograms/casa.png",
         )
         newPictogram.save()
 
         newPictogram = Pictograms(
-            name= "gato",
+            name= "Coche",
             key= secrets.token_hex(15),
+            image="static/uploads/img/pictograms/coche.png",
         )
         newPictogram.save()
 
         newPictogram = Pictograms(
-            name= "delfin",
+            name= "Libro",
             key= secrets.token_hex(15),
+            image="static/uploads/img/pictograms/libro.png",
         )
         newPictogram.save()
 
         newPictogram = Pictograms(
-            name= "leon",
+            name= "Llaves",
             key= secrets.token_hex(15),
+            image="static/uploads/img/pictograms/llaves.png",
         )
         newPictogram.save()
 
         newPictogram = Pictograms(
-            name= "caballo",
+            name= "Perro",
             key= secrets.token_hex(15),
+            image="static/uploads/img/pictograms/perro.png",
         )
         newPictogram.save() 
-        response = json.loads('{"result": "success", "message": "Pictogramas introducidos correctamente"}')
-        return JsonResponse(response)
 
     def saveRandomUser(self, request):
         newUser = User(
