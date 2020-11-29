@@ -81,3 +81,21 @@ def tutorsTasksDelete(request, id):
             controller = Controller()
             return controller.tutorTasksDelete(request, id)
     return redirect('/')
+
+@csrf_exempt
+def tutorTasksCreate(request):
+    if request.method == 'POST':
+        if request.session.get('username', False):
+            controller = Controller()
+            return controller.tutorTasksCreate(request)
+    return redirect('/')
+
+
+@csrf_exempt
+def tasksChat(request, identifier):
+    if request.session.get('username', False):
+        if request.method == 'GET':
+            controller = Controller()
+            return controller.chatTask(request, identifier)
+
+    return redirect('/')

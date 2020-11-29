@@ -60,6 +60,29 @@ class Controller:
             response = {"result": "error", "message": "El usuario no existe"}
             return JsonResponse(response, safe=False)
 
+    def getMessagesTutors(self, request):
+        identifier = request.GET.get('identifier')
+        lista = Forum.objects.filter(identifier=identifier)
+        myList = list(lista.order_by('createdAt'))
+
+        var = []
+        for l in myList:
+            if l.emisorUser_id:
+                user = User.objects.filter(id=l.emisorUser_id)
+                print(user[0].username)
+                respuesta = {"body": l.body, "emisor": user[0].username, "created": l.createdAt,
+                             "identifier": l.identifier, "mimeType": l.mimeType.path}
+                var.append(respuesta)
+
+            if l.emisorTutor_id:
+                user = Tutor.objects.filter(id=l.emisorTutor_id)
+                print(user[0].username)
+                respuesta = {"body": l.body, "emisor": user[0].username, "created": l.createdAt,
+                             "identifier": l.identifier, "mimeType": l.mimeType.path}
+                var.append(respuesta)
+        formatResponse = {"mensajes": var}
+        return formatResponse
+
     def postMessage(self, request):
         token = request.META['HTTP_AUTHORIZATION']
         userFromDB = self.getUserByToken(token)
@@ -124,7 +147,10 @@ class Controller:
         for status in taskStatus:
             if not status.task in tasks:
                 tasks.append(status.task)
-        context = {'tutor': tutor, 'tasks': tasks}
+        taskForm = forms.TaskForm(request.POST or None, request.FILES or None)
+        taskForm.fields['image'].required = False
+        taskForm.fields['media'].required = False
+        context = {'tutor': tutor, 'tasks': tasks, 'form': taskForm}
         return render(request, './tutors/tasks.html', context)
 
     def tutorTasksDetail(self, request, id):
@@ -136,7 +162,7 @@ class Controller:
         for user in infoTask.users.all():
             status = TaskStatus.objects.get(user=user, task=infoTask, tutor=tutor)
             if status:
-                valueStatus = {'user': user.username, 'status': status.done}
+                valueStatus = {'status': status, 'user': user}
                 if count in taskStatus:
                     taskStatus[count].append(valueStatus)
                 else:
@@ -167,4 +193,26 @@ class Controller:
     def tutorTasksDelete(self, request, id):
         task = Task.objects.get(id=id)
         task.delete()
-        return render(request, 'tutors/tasks.html')
+        return redirect('tutorTasks')
+
+    def tutorTasksCreate(self, request):
+        taskForm = forms.TaskForm(request.POST or None, request.FILES or None)
+        taskForm.fields['image'].required = False
+        taskForm.fields['media'].required = False
+        taskForm.save()
+        return redirect('tutorTasks')
+        pass
+
+    def chatTask(self, request, identifier):
+        if request.session.get('username', False):
+            context = {}
+            messages = self.getMessagesTutors(request)
+            if identifier:
+                taskFromDB = Task.objects.filter(identifier=identifier)
+                context['task'] = taskFromDB[0]
+            if messages:
+                context['messages'] = messages
+            context['tutor'] = request.session.get('username')
+            return render(request, './tutors/task-chat.html', context)
+        else:
+            return redirect('/tutors/tasks')

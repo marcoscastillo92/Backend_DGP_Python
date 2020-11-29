@@ -1,0 +1,61 @@
+<div class="container">
+  <div class="row align-items-center">
+    <div class="col-sm">
+
+    </div>
+    <div class="col-sm">
+        <div class="modal fade" id="newTaskModal" tabindex="-1" role="dialog" aria-labelledby="newTaskModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content" style="width: 37rem;">
+              <div class="modal-header">
+                <h5 class="modal-title" id="newTaskModalLabel">Nueva tarea</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <div class="card" style="width: 35rem;">
+                  <div class="card-body">
+                      <p class="card-text">
+                          <form action="{% url 'tutorTasksCreate' %}" method="post" enctype="multipart/form-data">
+                            <table>
+                                {% for field in form %}
+                                    <tr>
+                                        <td>
+                                            {{ field.label_tag }}
+                                        </td>
+                                        <td>
+                                            {{ field.errors }}
+                                            {{ field }}
+                                        </td>
+                                        <td>
+                                            {% if field.help_text %}
+                                                {{ field.help_text }}
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                    <tr>
+                                        <td></td>
+                                        <td>
+                                            <input type="submit" value="Enviar">
+                                        </td>
+                                    </tr>
+                            </table>
+                        </form>
+                      </p>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+    <div class="col-sm">
+
+    </div>
+  </div>
+</div>

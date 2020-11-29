@@ -13,7 +13,7 @@
             <div class= "col-sm justify-content-end">
                 <div class= "row">
                     <div class= "col-sm  justify-content-end">
-                      <button type="submit" style="width: 15% ;float: right;" name="add" onclick="add()"> <img style="width: 70%;" src="{% static 'img/mas.png' %}"></button>
+                        <button type="button" class="btn btn-light btn-outline-dark" style="width: 60px; float: right;" data-toggle="modal" data-target="#newTaskModal"><img style="width: 70%;" src="{% static 'img/mas.png' %}"></button>
                     </div>
                 </div>
             </div>
@@ -55,4 +55,5 @@
         </div>
         <br>
     {% endfor %}
+    {% include "tutors/task-new.html" with form=form %}
 {% endblock %}
