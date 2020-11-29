@@ -52,9 +52,8 @@ class Controller:
             response = {"result":"error", "message":"El usuario no existe"}
             return JsonResponse(response, safe=False)
 
-    def getMessagesTutors(self, request):
-            identifier = request.GET.get('identifier')
-            lista = Forum.objects.filter(identifier=identifier)
+    def getMessagesTutors(self, id):
+            lista = Forum.objects.filter(identifier=id)
             myList = list(lista.order_by('createdAt'))
             
             var = []
@@ -221,7 +220,6 @@ class Controller:
                     userControler.savePictograms(request)
                     pictogramsFromDB= list(Pictograms.objects.all().values())
                 context = {'form': userForm, 'params':request.POST, 'id':userFromDB[0].id, 'pictograms': pictogramsFromDB}
-                print(pictogramsFromDB)
                 return render(request, 'tutors/addUserPictograms.html', context)
 
     def tutorsUsersDelete(self, request):
@@ -249,15 +247,38 @@ class Controller:
             fifthPictogram = request.POST.get('fifthPictogram')
             sixthPictogram = request.POST.get('sixthPictogram')
 
-
+            arrayPictograms = [firstPictogram, secondPictogram, thirdPictogram, fourthPictogram, fifthPictogram, sixthPictogram]
             listPictograms = list(Pictograms.objects.all().values())
             password = ""
-            for index in range(0,pictogramSize):
-                for i in listPictograms:
-                    if i['name'] == firstPictogram or i['name'] == secondPictogram or i['name'] == thirdPictogram or i['name'] == fourthPictogram or i['name'] == fifthPictogram or i['name'] == sixthPictogram:
-                        password += i['key']
+            for index in range(0, pictogramSize):
+                for pictogram in listPictograms:
+                    if pictogram['name'] == arrayPictograms[index]:
+                        password += pictogram['key'] 
             userFromDB = User.objects.get(id=userId)
             userFromDB.password = password
             userFromDB.save()
             return redirect('/tutors/users')
 
+    
+    def tutorsEditUserPassword(self, request, id):
+        if request.method == 'GET':
+            pictogramsSize = 6
+            pictogramsFromDB= list(Pictograms.objects.all().values())
+            userFromDB = User.objects.filter(id=id)
+            userPassword = userFromDB[0].password
+            userPictogramConfig = []
+            passwordSize = len(userFromDB[0].password)
+            indexSubstring = passwordSize // pictogramsSize
+            print(userPassword)
+            for i in range(0, pictogramsSize):
+                substring = userPassword[indexSubstring * i: ((i+1)*indexSubstring)]
+                print(substring)
+                for pictogram in pictogramsFromDB:
+                    if substring == pictogram['key']:
+                        userPictogramConfig.append(pictogram['name'])
+            print(userPictogramConfig)
+
+            context = {'id':id, 'pictograms': pictogramsFromDB, 'userPictograms': userPictogramConfig}
+            return render(request, 'tutors/addUserPictograms.html', context)
+
+    

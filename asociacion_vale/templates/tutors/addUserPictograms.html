@@ -38,7 +38,11 @@
                                 <h6>Primer pictograma</h6>
                                 <select name="firstPictogram">
                                     {% for pictogram in pictograms %}
-                                    <option value="pictogram.name" class="text-capitalize">{{pictogram.name}}</option>
+                                        {% if userPictograms and pictogram.name == userPictograms.0 %}
+                                            <option value="{{pictogram.name}}" class="text-capitalize" selected>{{pictogram.name}}</option>
+                                        {% else %}
+                                            <option value="{{pictogram.name}}" class="text-capitalize">{{pictogram.name}}</option>
+                                        {% endif %}
                                     {% endfor %}
                                 </select>
                             </div>
@@ -46,7 +50,11 @@
                                 <h6>Segundo pictograma</h6>
                                 <select name="secondPictogram">
                                     {% for pictogram in pictograms %}
-                                        <option value="pictogram.name" class="text-capitalize">{{pictogram.name}}</option>
+                                        {% if userPictograms and pictogram.name == userPictograms.1 %}
+                                            <option value="{{pictogram.name}}" class="text-capitalize" selected>{{pictogram.name}}</option>
+                                        {% else %}
+                                            <option value="{{ pictogram.name }}" class="text-capitalize">{{pictogram.name}}</option>
+                                        {% endif %}
                                     {% endfor %}
                                 </select>
                             </div>
@@ -54,7 +62,11 @@
                                 <h6>Tercer pictograma</h6>
                                 <select name="thirdPictogram">
                                     {% for pictogram in pictograms %}
-                                    <option value="pictogram.name" class="text-capitalize">{{pictogram.name}}</option>
+                                        {% if userPictograms and pictogram.name == userPictograms.2 %}
+                                            <option value="{{pictogram.name}}" class="text-capitalize" selected>{{pictogram.name}}</option>
+                                        {% else %}
+                                            <option value="{{pictogram.name}}" class="text-capitalize">{{pictogram.name}}</option>
+                                        {% endif %}
                                     {% endfor %}
                                 </select>
                             </div>
@@ -62,7 +74,11 @@
                                 <h6>Cuarto pictograma</h6>
                                 <select name="fourthPictogram">
                                     {% for pictogram in pictograms %}
-                                    <option value="pictogram.name" class="text-capitalize">{{pictogram.name}}</option>
+                                        {% if userPictograms and pictogram.name == userPictograms.3 %}
+                                            <option value="{{pictogram.name}}" class="text-capitalize" selected>{{pictogram.name}}</option>
+                                        {% else %}
+                                            <option value="{{pictogram.name}}" class="text-capitalize">{{pictogram.name}}</option>
+                                        {% endif %}
                                     {% endfor %}
                                 </select>
                             </div>
@@ -70,7 +86,11 @@
                                 <h6>Quinto pictograma</h6>
                                 <select name="fifthPictogram">
                                     {% for pictogram in pictograms %}
-                                    <option value="pictogram.name" class="text-capitalize">{{pictogram.name}}</option>
+                                        {% if userPictograms and pictogram.name == userPictograms.4 %}
+                                            <option value="{{pictogram.name}}" class="text-capitalize" selected>{{pictogram.name}}</option>
+                                        {% else %}
+                                            <option value="{{pictogram.name}}" class="text-capitalize">{{pictogram.name}}</option>
+                                        {% endif %}
                                     {% endfor %}
                                 </select>
                             </div>
@@ -78,11 +98,17 @@
                                 <h6>Sexto pictograma</h6>
                                 <select name="sixthPictogram">
                                     {% for pictogram in pictograms %}
-                                    <option value="pictogram.name" class="text-capitalize">{{pictogram.name}}</option>
+                                        {% if userPictograms and pictogram.name == userPictograms.5 %}
+                                            <option value="{{pictogram.name}}" class="text-capitalize" selected>{{pictogram.name}}</option>
+                                        {% else %}
+                                            <option value="{{pictogram.name}}" class="text-capitalize">{{pictogram.name}}</option>
+                                        {% endif %}
                                     {% endfor %}
                                 </select>
                             </div>
                         </div>
+
+
                         <hr>
                         <div class="row d-flex justify-content-center">
                             <div class="p-2">
@@ -92,7 +118,11 @@
                             </div>
                             <div class="p-2">
                                 <br>
-                                <a href="{% url 'tutorsUsersDeleteById' id=id%}" class="btn btn-danger" role="button">Cancelar</a>
+                                {% if userPictograms %}
+                                    <a href="{% url 'tutorsUserEdit' id=id %}" class="btn btn-danger" role="button">Cancelar</a>
+                                {% else %}
+                                    <a href="{% url 'tutorsUsersDeleteById' id=id %}" class="btn btn-danger" role="button">Cancelar</a>
+                                {% endif %}
                             </div>
                         </div>
                     </form>

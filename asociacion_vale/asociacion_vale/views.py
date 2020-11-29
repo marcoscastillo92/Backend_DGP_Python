@@ -52,7 +52,6 @@ def tutorsLogout(request):
 @csrf_exempt
 def tutorsGroup(request):
     if request.session.get('username', False):
-
         if request.method == 'GET':
             controller = Controller()
             return  controller.tutorGroups(request)
@@ -66,27 +65,43 @@ def tutorsUsers(request):
             return  controller.tutorUsers(request)
     return redirect('/')
 @csrf_exempt
-def groupsEdit(request):
+def groupsEdit(request, id):
     if request.session.get('username', False):
-        if request.method == 'GET':
-            controller = gController()
-            return controller.editGroup(request)
+        controller = gController()
+        return controller.editGroup(request, id)
     return redirect('/')
+
 @csrf_exempt
 def groupsEditConfirm(request):
     if request.session.get('username', False):
         if request.method == 'POST':
+           
             controller = gController()
             return controller.editConfirmGroup(request)
     return redirect('/')
-@csrf_exempt
-def groupsChat(request):
-    if request.session.get('username', False):
-        if request.method == 'GET':
-            controller = gController()
-            return controller.chatGroup(request)
 
+@csrf_exempt
+def groupsCreateConfirm(request):
+    if request.session.get('username', False):
+        if request.method == 'POST':
+            controller = gController()
+            return controller.createConfirmGroup(request)
     return redirect('/')
+
+@csrf_exempt
+def groupsPostMessage(request):
+    if request.session.get('username', False):
+        controller = gController()
+        return controller.postMessageGroup(request)
+    return redirect('/')
+
+@csrf_exempt
+def groupsGetChat(request, id):
+    if request.session.get('username', False):
+        controller = gController()
+        return controller.getChatGroup(request, id)
+    return redirect('/')
+
 @csrf_exempt
 def tutorsUsersEdit(request,id):
     if request.session.get('username', False):
@@ -129,3 +144,17 @@ def tutorsEditUsersPictograms(request):
         return controller.tutorsEditUsersPictograms(request)
     return redirect('/')
 
+@csrf_exempt
+def tutorsEditUserPassword(request, id):
+    if request.session.get('username', False):
+        controller = Controller()
+        return controller.tutorsEditUserPassword(request, id)
+    return redirect('/')
+
+@csrf_exempt
+def groupsCreate(request):
+    if request.session.get('username', False):
+        if request.method.POST:
+            controller = gController()
+            return controller.createGroup(request)
+    return redirect('/')

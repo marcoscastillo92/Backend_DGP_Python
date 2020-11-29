@@ -15,7 +15,7 @@
                 <h5 class="card-title">Editar Grupo</h5>
                   <hr/>
                   <p class="card-text">
-                      <form action="{% url 'groupsEditConfirm' %}" method="post" id="editForm">
+                      <form action="{% url 'groupsCreateConfirm' %}" method="post" id="editForm">
                         <div class="container">
                             <div class="row">
                               <div clas = "col">
@@ -25,12 +25,7 @@
                               </div>
                               <div clas = "col">
                                 <div class="editGroup_inputs">
-                                  {% if info %}
-                                    <input type="text" name="name" id="name" placeholder="Introduce el nombre del grupo" value="{{info.name}}">
-                                    <input type="hidden" name="identifier" id="identifier" value="{{info.identifier}}">
-                                  {% else %}
                                     <input type="text" name="name" id="name" placeholder="Introduce el nombre del grupo" >
-                                  {% endif %}
                                 </div>
                               </div>
                            

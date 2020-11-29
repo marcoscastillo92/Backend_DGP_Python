@@ -63,32 +63,31 @@ class Controller:
 
     def deleteGroup(self, request):
         if request.session.get('username', False):
-            groupIdentifier = request.POST.get('groupIdentifier')
+            groupIdentifier = request.POST.get('identifier')
             if groupIdentifier:
                 groupFromDB = Groups.objects.filter(identifier=groupIdentifier)
                 if groupFromDB:
                     groupFromDB.delete()
             return redirect('/tutors/groups')
 
-    def chatGroup(self, request):
-        if request.session.get('username', False):
+    def getChatGroup(self, request, id):
+        if request.method == 'GET':
             context = {}
             asociacion_valeController = ascController()
-            messages = asociacion_valeController.getMessagesTutors(request)
-            identifier = request.GET.get('identifier')
-            if identifier:
-                groupFromDB = Groups.objects.filter(identifier=identifier)
-                context['group'] = groupFromDB[0]
+            messages = asociacion_valeController.getMessagesTutors(id)
+            groupFromDB = Groups.objects.filter(identifier=id)
+            context['group'] = groupFromDB[0]
             if messages:
                 context['messages'] = messages
             context['tutor'] = request.session.get('username')
+            print(context)
             return render(request,'./tutors/chatGroup.html', context)
         else:
             return redirect('/tutors/groups')        
  
     def editConfirmGroup(self, request):
         if request.session.get('username', False):
-            nameGroup = request.POST.get('groupName')
+            nameGroup = request.POST.get('name')
             identifier = request.POST.get('identifier')
             usersInGroup = request.POST.getlist('listUsers')
             if identifier:
@@ -97,18 +96,79 @@ class Controller:
                     groupFromDB.name = nameGroup
                     groupFromDB.memberCount = len(usersInGroup)
                     groupFromDB.save()
-
-                    for user in usersInGroup:
-                        userFromDB = User.objects.filter(username=user)
+                    
+                    # NOTIFICACIONES
+                    # grupoInfo = groupFromDB
+                    # usuarios = groupFromDB.users 
+                    # 
+                    # for u in usuarios:
+                    #   for user in usersInGroup:
+                    #       if u == user:
+                    #           esta= True
+                    #   if !esta:
+                    #      sendNotificacion 
+                    # 
+                    groupFromDB.users.clear()
+                    for user in usersInGroup:   
+                        userFromDB = User.objects.get(id=user)
                         if userFromDB:
                             groupFromDB.users.add(userFromDB)
                     groupFromDB.save()
+               
                 return redirect('/tutors/groups')
 
-    def editGroup(self,request):
-        if request.GET.get('identifier',False):
-            id = request.GET.get('identifier',False)
-            group = Groups.objects.get(identifier= id)
+    def createConfirmGroup(self, request):
+        if request.session.get('username', False):
+            print(request.POST)
+            nameGroup = request.POST.get('name')
+            usersInGroup = request.POST.getlist('listUsers')
+            tutor = Tutor.objects.filter(username=request.session.get('username'))
+            newGroup = Groups(
+                name=nameGroup,
+                memberCount = len(usersInGroup)
+            )
+            newGroup.save()
+            newGroup.tutors.set(tutor)
+
+            for userId in usersInGroup:
+                userFromDB = User.objects.get(id=userId)
+                if userFromDB:
+                     newGroup.users.add(userFromDB)
+            return redirect('/tutors/groups')
+
+    def editGroup(self, request, id):
+        if request.method == 'GET':
+            group = Groups.objects.get(identifier=id)
+            usersInGroup = group.users.all()
+            context = {}
+            context['info'] = group
+            context['usersIn'] = usersInGroup
+            usersGroups = usersInGroup.values()
+            allUsers = list(User.objects.all().values())
+            usersOut = []
+            usersIn = []
+
+            for i in usersGroups:
+                usersIn.append(i)
+                
+            for i in allUsers:
+                usersOut.append(i)
+
+            context ['userOut'] = usersOut
+            context ['userIn'] = usersIn
+
+            for i in range(len(usersOut)):
+                for j in usersIn:
+                    for key , value in usersOut[i].items():
+                        if key=="username" and value == j['username']:
+                            usersOut.pop(i)
+                            break
+                break
+            return  render(request, './tutors/editGroup.html', context)
+
+    def editGroupOld(self, request, id):
+        if request.method == 'GET':
+            group = Groups.objects.get(identifier=id)
             usersInGroup = group.users.all()
             context = {}
             context['info'] = group
@@ -139,5 +199,10 @@ class Controller:
     def postMessageGroup(self, request):
         controller = ascController()
         if controller.postMessageTutor(request):
-            url = "/tutors/groups/chat?identifier=" + request.POST.get('identifier')
-            return redirect(url)    
+            return redirect('/tutors/groups/chat/get/'+ request.POST.get('identifier'))
+
+    def createGroup(self, request):
+        if request.method == 'GET':
+            usersFromDB = list(User.objects.all().order_by('name').values())
+            context = {"userOut" : usersFromDB}
+            return render(request, './tutors/createGroup.html', context)
