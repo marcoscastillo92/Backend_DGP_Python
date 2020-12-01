@@ -204,3 +204,12 @@ def tasksChat(request, identifier):
         elif request.method == 'POST':
             return controller.postChatTask(request, identifier)
     return redirect('/')
+
+
+@csrf_exempt
+def createCategory(request):
+    if request.session.get('username', False):
+        controller = Controller()
+        if request.method == 'POST':
+            return controller.createCategory(request)
+    return redirect('/')

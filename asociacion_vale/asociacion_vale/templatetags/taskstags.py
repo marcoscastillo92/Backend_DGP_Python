@@ -26,9 +26,10 @@ def getStatus(array):
                 <form action="/tasks/status" method="POST"><label><input type="hidden" id="taskId" name="taskId" value="{status.id}"><input type="checkbox" id="resuelto{user.id}" name="done" value="1" {checked}> Resuelto</label><input type="submit" value="Actualizar"></form>
             </div>
             <div class="col-sm">
-                <a href="/tutors/tasks/chat/{status.task.identifier}">Chat</a>
+                <a href="/tutors/tasks/chat/{status.task.identifier}"><img style="width: 50px;" src="/static/img/chat.png"> </a>
             </div>
         </div>
+        <hr/>
         '''
     html += '</div>'
     return mark_safe(html)

@@ -334,7 +334,8 @@ class Controller:
         taskForm = forms.TaskForm(request.POST or None, request.FILES or None, instance=infoTask)
         taskForm.fields['image'].required = False
         taskForm.fields['media'].required = False
-        context = {'task': infoTask, 'form': taskForm, 'taskStatus': taskStatus, 'ratings': ratings}
+        categoryForm = forms.CategoryForm()
+        context = {'task': infoTask, 'form': taskForm, 'taskStatus': taskStatus, 'ratings': ratings, 'categoryForm': categoryForm}
         if request.method == 'POST':
             # Guardar cambios
             if taskForm.is_valid():
@@ -369,3 +370,9 @@ class Controller:
     def postChatTask(self, request, identifier):
         message = Forum(body=request.POST.get('text'), )
         return redirect('taskChat', identifier=identifier)
+
+    def createCategory(self, request):
+        idTask = request.POST.get('taskId')
+        category = forms.CategoryForm(request.POST)
+        category.save()
+        return redirect('tutorTasksEdit', id=idTask)
