@@ -12,7 +12,7 @@ import json
 from users import forms as uForm
 from users.controller import Controller as uController
 from pyfcm import FCMNotification
-
+from notifications.controller import Controller as nController
 
 
 def handle_upload_image_task_form(f):
@@ -109,6 +109,15 @@ class Controller:
                     identifier=identifier
                 )
                 newForum.save()
+                ncon = nController()
+                if category == "group":
+                    group = Groups.objects.get(identifier=identifier)
+                    users = group.users.all()
+                    for user in users:
+                        if user.id != userFromDB.id:
+                            ncon.sendNotication(user.id,"messageGroup",group.name)
+
+
                 response = {"result": "success", "message": "El mensaje se ha almacenado correctamente"}
                 return JsonResponse(response, safe=False)
             else:
@@ -138,6 +147,20 @@ class Controller:
                 identifier = identifier
             )                
             newForum.save()
+            if category== "group":
+                group = Groups.objects.get(identifier=identifier)
+                users = group.users.all()
+                
+                for user in users:
+                    ncon = nController()
+                    ncon.sendNotication(user.id,"messageGroup",group.name)
+           
+            """ if category == "task":
+                task = Task.objects.get(identifier=identifier)
+                user = task.users.all()
+                user
+                ncon.sendNotication(userFromDB.id,"messageTask",task.name) """
+                
             return True
         else:
             return False

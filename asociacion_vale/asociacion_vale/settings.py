@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'tasks',
     'corsheaders',
     'ckeditor',
+    'notifications',
 ]
 
 MIDDLEWARE = [
