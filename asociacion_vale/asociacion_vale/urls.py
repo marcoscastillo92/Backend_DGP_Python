@@ -23,7 +23,6 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('tutors/home' , views.tutorsHome , name='home'),
     path('tutors/login' , views.tutorsLogin, name='login' ),
-    path('tutors/logout' , views.tutorsLogout , name='logout'),
     path('tutors/users' , views.tutorsUsers , name='users'),
     path('tutors/users/edit/<int:id>' , views.tutorsUsersEdit , name='tutorsUserEdit'),
     path('tutors/users/add' , views.tutorsUsersAdd , name='tutorsUsersAdd'),
@@ -54,4 +53,5 @@ urlpatterns = [
     path('tasks/', include('tasks.urls')),
     path('post-message', views.postMessage, name='postMessage'),
     path('get-messages', views.getMessages, name="getMessages"),
+    path('device-token', views.deviceToken, name="deviceToken"),
 ]

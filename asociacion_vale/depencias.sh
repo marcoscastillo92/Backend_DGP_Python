@@ -22,6 +22,7 @@ fi
 pip install django-referrer-policy
 python -m pip install Pillow
 pip install django-crum
+pip install pyfcm
 echo "from django.contrib.auth.models import User; User.objects.create_superuser('admin', 'admin@example.com', 'admin')" | python3 manage.py shell
 
 sudo python3 manage.py makemigrations

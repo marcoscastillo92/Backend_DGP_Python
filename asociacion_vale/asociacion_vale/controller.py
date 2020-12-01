@@ -1,3 +1,4 @@
+from django.http.response import HttpResponse
 from django.shortcuts import redirect, render
 from users.models import User, Pictograms
 from forums.models import Forum
@@ -269,6 +270,19 @@ class Controller:
             userFromDB.save()
             return redirect('/tutors/users')
 
+          #  user = User.objects.all().values('password')
+        """   
+            for uPass in user:
+                if uPass == password:
+                    coincide = True
+
+            if coincide:
+                context['error'] = "Los pictogramas estan en uso"
+                return render
+            else:
+                userFromDB.save()
+                return redirect('/tutors/users') """
+           
     
     def tutorsEditUserPassword(self, request, id):
         if request.method == 'GET':
@@ -369,3 +383,12 @@ class Controller:
     def postChatTask(self, request, identifier):
         message = Forum(body=request.POST.get('text'), )
         return redirect('taskChat', identifier=identifier)
+
+    def deviceToken(request):
+        token = request.META['HTTP_AUTHORIZATION']
+        tokenDevice = request.POST.get('token',False)
+        user = User.objects.get(token = token)
+        user['deviceToken'] = tokenDevice
+        user.save()
+        return HttpResponse(tokenDevice)
+        
