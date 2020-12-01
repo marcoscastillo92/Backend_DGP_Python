@@ -30,7 +30,8 @@ class User(models.Model):
     birthDate= models.DateTimeField(verbose_name=("Fecha de Nacimiento"), auto_now_add=True)
     token= models.CharField(max_length=300, default="null")
     gender= models.CharField(verbose_name=("Sexo"), max_length=6, choices=Gender.choices, default=Gender.male)
-    createdAt= models.DateTimeField(default=datetime.now, blank=True)
+    createdAt= models.DateTimeField(default=datetime.now, blank=True),
+    deviceToken = models.CharField(verbose_name=("TokenDispositivo"), default="", max_length=300)
  
     def __str__(self):
         return f"{self.username}"

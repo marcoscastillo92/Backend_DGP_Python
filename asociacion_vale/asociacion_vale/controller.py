@@ -384,11 +384,13 @@ class Controller:
         message = Forum(body=request.POST.get('text'), )
         return redirect('taskChat', identifier=identifier)
 
-    def deviceToken(request):
+    def deviceToken(self, request):
         token = request.META['HTTP_AUTHORIZATION']
-        tokenDevice = request.POST.get('token',False)
+        bodyUnicode = request.body.decode('utf-8')
+        params = json.loads(bodyUnicode)
+        tokenDevice = params['token']
         user = User.objects.get(token = token)
-        user['deviceToken'] = tokenDevice
+        user.deviceToken = tokenDevice
         user.save()
         return HttpResponse(tokenDevice)
         
