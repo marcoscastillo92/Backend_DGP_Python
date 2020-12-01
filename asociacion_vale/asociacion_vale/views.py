@@ -1,6 +1,8 @@
 from django.http.response import HttpResponse
 from django.shortcuts import redirect, render
 from .controller import Controller
+from groups.controller import Controller as gController
+from users.controller import Controller as uController
 from django.views.decorators.csrf import csrf_exempt
 import json
 
@@ -53,11 +55,113 @@ def tutorsLogout(request):
 
 @csrf_exempt
 def tutorsGroup(request):
-    if request.method == 'GET':
+    if request.session.get('username', False):
+        if request.method == 'GET':
+            controller = Controller()
+            return  controller.tutorGroups(request)
+    return redirect('/')
+@csrf_exempt
+def tutorsUsers(request):
+    if request.session.get('username', False):
+
+        if request.method == 'GET':
+            controller = Controller()
+            return  controller.tutorUsers(request)
+    return redirect('/')
+@csrf_exempt
+def groupsEdit(request, id):
+    if request.session.get('username', False):
+        controller = gController()
+        return controller.editGroup(request, id)
+    return redirect('/')
+
+@csrf_exempt
+def groupsEditConfirm(request):
+    if request.session.get('username', False):
+        if request.method == 'POST':
+           
+            controller = gController()
+            return controller.editConfirmGroup(request)
+    return redirect('/')
+
+@csrf_exempt
+def groupsCreateConfirm(request):
+    if request.session.get('username', False):
+        if request.method == 'POST':
+            controller = gController()
+            return controller.createConfirmGroup(request)
+    return redirect('/')
+
+@csrf_exempt
+def groupsPostMessage(request):
+    if request.session.get('username', False):
+        controller = gController()
+        return controller.postMessageGroup(request)
+    return redirect('/')
+
+@csrf_exempt
+def groupsGetChat(request, id):
+    if request.session.get('username', False):
+        controller = gController()
+        return controller.getChatGroup(request, id)
+    return redirect('/')
+
+@csrf_exempt
+def tutorsUsersEdit(request,id):
+    if request.session.get('username', False):
         controller = Controller()
-        return controller.tutorGroups(request)
+        return controller.tutorsUsersEdit(request, id)
+    return redirect('/')
 
+@csrf_exempt
+def tutorsUsersDelete(request):
+    if request.session.get('username', False):
+        controller = Controller()
+        return controller.tutorsUsersDelete(request)
+    return redirect('/')
 
+@csrf_exempt
+def tutorsUsersDeleteById(request, id):
+    if request.session.get('username', False):
+        controller = Controller()
+        return controller.tutorsUsersDeleteById(request, id)
+    return redirect('/')
+
+@csrf_exempt
+def tutorsUsersAdd(request):
+    if request.session.get('username', False):
+        controller = Controller()
+        return controller.tutorsUsersAdd(request)
+    return redirect('/')
+
+@csrf_exempt
+def tutorsUsersAddConfirm(request):
+    if request.session.get('username', False):
+        controller = Controller()
+        return controller.tutorsUsersAddConfirm(request)
+    return redirect('/')
+
+@csrf_exempt
+def tutorsEditUsersPictograms(request):
+    if request.session.get('username', False):
+        controller = Controller()
+        return controller.tutorsEditUsersPictograms(request)
+    return redirect('/')
+
+@csrf_exempt
+def tutorsEditUserPassword(request, id):
+    if request.session.get('username', False):
+        controller = Controller()
+        return controller.tutorsEditUserPassword(request, id)
+    return redirect('/')
+
+@csrf_exempt
+def groupsCreate(request):
+    if request.session.get('username', False):
+        if request.method == 'GET':
+            controller = gController()
+            return controller.createGroup(request)
+    return redirect('/')
 @csrf_exempt
 def tutorsTasks(request):
     if request.method == 'GET':

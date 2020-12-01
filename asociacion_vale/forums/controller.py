@@ -1,4 +1,3 @@
-from .models import MessageForum
 from .models import User
 from .models import Forum
 from django.http import JsonResponse

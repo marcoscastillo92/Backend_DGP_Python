@@ -1,0 +1,73 @@
+{% extends  "tutors/tutors.html" %}
+{% block otherScripts %}
+{% load static %}
+    <script type="text/javascript" src="{% static 'javascript/chat.js' %}"></script>
+{% endblock %}
+{% block main %}
+<style>
+    @media (min-width: 1200px) {
+        .container.list {
+            width: 70% !important;
+            height:  400px;
+        }
+    }
+    @media (min-width: 992px) {
+        .container.list {
+            width: 70% !important;
+            height:  400px;
+        }
+    }
+    @media (min-width: 768px) {
+        .container.list {
+                width: 70% !important;
+                height:  400px;
+        }
+    }
+    
+    .container.list{ width: 50% !important; height:  500px; overflow: auto;}
+    .container.list{
+        background-color: rgba(142, 242, 245, 0.288);
+    }
+    
+    
+</style>
+<div class="container list mb-2" style="height: 70px; overflow: hidden;" >
+    <div class= "row mt-3 mb-2 w-100 text-center ml-1">
+        <div class= "col-sm w-100">
+            <h2 style="color: ghostwhite;"><b>{{group.name}}</b></h2>
+        </div>
+    </div>
+</div>
+<div class="container list bg-light rounded" style="width: 300px;" id="chat">
+    {% for message in messages.mensajes %}
+    {% if tutor == message.emisor %}
+        <div class= "container w-50 bg-primary rounded m-2" style="float: right; color: white;">
+            <p class="row text-dark p-3 text-capitalize font-weight-bold" style="margin-bottom: -10px; margin-top: -10px;" id="{{ group.name }}">{{ message.emisor }} </p>
+            <p class="row p-3" style="margin-bottom: -20px; margin-top: -30px;" id="{{ group.name }}">{{ message.body }} </p>
+            <p class="row font-italic p-3 d-flex justify-content-end " style="margin-bottom: -10px; margin-top: -30px;">{{message.created|date:"H:m"}}</p>
+        </div>
+    {% else %}
+        <div class= "container w-50 bg-success rounded m-2" style="float: left; color: white;">
+            <p class="row text-dark p-3 text-capitalize  font-weight-bold" style="margin-bottom: -10px; margin-top: -10px;" id="{{ group.name }}">{{ message.emisor }} </p>
+            <p class="row p-3" style="margin-bottom: -20px; margin-top: -30px;" id="{{ group.name }}">{{ message.body }} </p>
+            <p class="row font-italic p-3 d-flex justify-content-end " style="margin-bottom: -10px; margin-top: -30px;">{{message.created|date:"H:m"}}</p>
+        </div>
+    {% endif %}
+    {% endfor %}       
+</div>
+<div id="mediaSection" class="container list p-3 mt-2" style="height: 50px; overflow: hidden;">
+    <img src="{% static 'img/archivos.png' %}" alt="Enviar Archivos">
+    <img src="{% static 'img/imagen.png' %}" alt="Enviar Imagen">
+    <img src="{% static 'img/mic.png' %}" alt="Enviar Audio">
+</div>
+<div id="newMessageSection" class="container list p-3" style="height: 100px;overflow: hidden; margin-bottom: 50px;">
+    <form action="{% url 'tutorsGroupsPostMessage' %}" method="POST">
+        <input type="hidden" name="mimeType" id="mimeType" value="txt">
+        <input type="text" style="font-size: medium; width: 92%; padding: 10px;" name="body" id="body" placeholder="Escribe tu mensaje">
+        <input type="hidden" name="identifier" id="identifier" value="{{group.identifier}}">
+        <input type="hidden" name="category" id="category" value="group">
+        <input type="image" style="height: 49px; float: right;" name="submit" src="{% static 'img/enviar.png' %}" alt="Submit">
+    </form>
+</div>
+    
+{% endblock %}

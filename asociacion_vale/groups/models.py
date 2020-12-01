@@ -14,6 +14,7 @@ class Groups(models.Model):
     users = models.ManyToManyField(User, verbose_name="Miembros", blank=True)
     createdAt = models.DateTimeField(auto_now_add=True, verbose_name="Creado en", blank=True)
     identifier = models.CharField(verbose_name=("Identificador"), default=secrets.token_hex(10), max_length=300)
+    tutors = models.ManyToManyField(Tutor, verbose_name="Tutores", blank=True , related_name='tutores')
     #Cada vez que se cree un grupo o una tarea se crea un Forum con un "identifier" asociado
     #Este "identifier" será fijo, todos lo smensajes asociados a un grupo o un tarea tendrán este "identifier"
 

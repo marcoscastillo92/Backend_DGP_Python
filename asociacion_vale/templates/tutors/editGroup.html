@@ -1,0 +1,103 @@
+{% extends  "tutors/tutors.html" %}
+{% block otherScripts %}
+{% load static %}
+    <link rel="stylesheet" href="{% static 'css/editGroup.css' %}">
+    <script type="text/javascript" src="{% static 'javascript/editGroup.js' %}"></script>  
+{% endblock %}
+{% block main %}
+    {% csrf_token %}
+    <div class="container d-flex justify-content-center">
+      <div class="row">
+        <div class="col-sm">
+        <br>
+            <div class="card" style="width: 50rem;">
+              <div class="card-body">
+                <h5 class="card-title">Editar Grupo</h5>
+                  <hr/>
+                  <p class="card-text">
+                      <form action="{% url 'groupsEditConfirm' %}" method="post" id="editForm">
+                        <div class="container">
+                            <div class="row">
+                              <div clas = "col">
+                                <p class="editGroup_sections">
+                                  Nombre:
+                                </p>
+                              </div>
+                              <div clas = "col">
+                                <div class="editGroup_inputs">
+                                  {% if info %}
+                                    <input type="text" name="name" id="name" placeholder="Introduce el nombre del grupo" value="{{info.name}}">
+                                    <input type="hidden" name="identifier" id="identifier" value="{{info.identifier}}">
+                                  {% else %}
+                                    <input type="text" name="name" id="name" placeholder="Introduce el nombre del grupo" >
+                                  {% endif %}
+                                </div>
+                              </div>
+                           
+                            </div>
+                            <br>
+                            <div class="row card-title">
+                              <div class="col">
+                                <p>Participantes:</p>
+                              </div>
+                            </div>
+                            <div class="card p-3">
+                              <div class="row card-body d-flex justify-content-center">
+                                <div class="col-5 text-center ">
+                                  <p class="editUser_sections">
+                                    Alumnos 
+                                  </p>
+                                  <div class= "col ">
+                                    <input type="text" id="myInputAlumnos" style=" margin-left: -15px; margin-bottom: 10px; padding: 10px; width: 255px;" onkeyup="searchAlumnos()" placeholder="Introduce un nombre...">
+                                  </div>
+                                  <select class="selctpicker w-100" id="alumnos" multiple data-live-search="true" id="list-tab" name="alumnos">
+                                    {% for user in userOut %}
+                                    <option class="p-3 border-bottom" value="{{user.id}}">{{user.name}}</option>
+                                    {% endfor %}
+                                  </select>
+                                </div>
+                                <div class="mt-5">
+                                    <img src="{% static 'img/add.png' %}" alt="Añadir"class="mt-5" width="55px" onclick="addUser()" class="btn"><br>
+                                    <img src="{% static 'img/add.png' %}" alt="Añadir" class="mt-2"  width="55px" onclick="removeUser()">
+                                </div>
+                                <div class="col-5">
+                                  <p class="editUser_sections text-center">
+                                    Miembros
+                                  </p>
+                                  <div class= "col ">
+                                    <input type="text" id="myInputMiembros" style=" margin-left: -15px; margin-bottom: 10px; padding: 10px; width: 255px;" onkeyup="searchMiembros()" placeholder="Introduce un nombre...">
+                                  </div>
+                                  <select class="selctpicker w-100" id="miembros" name="listUsers" multiple>
+                                    {% for user in userIn %}
+                                      <option class="p-3 border-bottom" value="{{ user.id }}">{{user.name}}</option>
+                                    {% endfor %}
+                                  </select>
+                                </div>
+                              </div>
+                            </div>
+                            
+                            
+                        </div>
+                                
+                            
+                            
+                        <hr>
+                        <div class="container">
+                          <div class="row">
+                            <div class="col">
+                              <input type="submit" onclick="selectMiembrosItems()" value="Confirmar" class="btn btn-success" role="button">
+                              <a href="{% url 'groups' %}" class="btn btn-danger" role="button">Volver atrás</a>
+                            </div>
+                          </div>
+                        </div>
+                    </form>
+                  </p>
+                
+              </div>
+            </div>
+        </div>
+        <div class="col-sm">
+        </div>
+      </div>
+    </div>
+{% endblock %}
