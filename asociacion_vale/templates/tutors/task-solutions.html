@@ -13,13 +13,12 @@
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
-              <div class="modal-body">
+              <div class="modal-body" style="overflow-y: scroll;">
                   <!-- meter aquí una lista con filtros y botones de modificar estado de tarea -->
                 {% getStatus taskStatus %}
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
               </div>
             </div>
           </div>

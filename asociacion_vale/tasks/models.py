@@ -147,10 +147,12 @@ def my_handler(sender, instance, **kwargs):
         identifier = tarea.identifier
         isForumCreated = Forum.objects.filter(identifier=identifier)
         if not isForumCreated:
+            request = CU.get_current_request()
+            tutor = Tutor.objects.get(username=request.session['username'])
             for user in tarea.users.all():
                 forum = Forum(
                     body = "Bienvenidos al chat de tarea",
-                    emisorTutor = CU.get_current_user(), #obtener el tutor en la sesión
+                    emisorTutor = tutor, #obtener el tutor en la sesión
                     emisorUser = None,
                     receptorTutor = None,
                     receptorUser = user,
@@ -162,7 +164,9 @@ def my_handler(sender, instance, **kwargs):
         # Por cada usuario que se asigne nuevo
         for pk in pk_set:
             user = User.objects.get(id=pk)
-            taskStatus = TaskStatus(user=user, task=tarea, tutor=CU.get_current_user())
+            request = CU.get_current_request()
+            tutor = Tutor.objects.get(username=request.session['username'])
+            taskStatus = TaskStatus(user=user, task=tarea, tutor=tutor)
             taskStatus.save()
             isProgressCreated = Progress.objects.filter(user=user, category__id=tarea.category.id)
             # Si no tiene progreso asignado el usuario asignado nuevo a esa categoría se crea
