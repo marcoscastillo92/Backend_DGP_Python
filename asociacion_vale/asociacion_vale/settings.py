@@ -144,8 +144,7 @@ STATIC_ROOT = ''
 
 STATIC_URL = '/static/'
 
-
-STATICFILES_DIRS = ( os.path.join('static/img'), )
+STATICFILES_DIRS = (os.path.join('static'), BASE_DIR)
 
 # CORS VARIABLES
 ALLOWED_HOSTS=['*']

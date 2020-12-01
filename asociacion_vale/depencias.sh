@@ -16,6 +16,7 @@ if [[ ! $(pip3 list|grep "django-ckeditor") ]]; then
 fi
 
 pip install django-referrer-policy
+python -m pip install Pillow
 echo "from django.contrib.auth.models import User; User.objects.create_superuser('admin', 'admin@example.com', 'admin')" | python3 manage.py shell
 
 sudo python3 manage.py makemigrations

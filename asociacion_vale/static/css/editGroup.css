@@ -1,0 +1,21 @@
+.editGroup_sections{
+    padding: 10px;
+    margin-left: 5px;}
+
+.editGroup_inputs{
+    width: 100%;
+}
+
+.editGroup_inputs input{
+    padding: 10px;
+    width: 100%;
+}
+
+.alumnos{
+    overflow: auto;
+    max-height: 214px;
+}
+
+#miembros{
+    height: 214px;
+}

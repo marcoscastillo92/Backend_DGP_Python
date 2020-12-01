@@ -1,0 +1,12 @@
+.editUser_sections{
+    padding: 10px;
+}
+
+.editUser_inputs{
+    width: 100%;
+}
+
+.editUser_inputs input{
+    padding: 10px;
+    width: 95%;
+}
