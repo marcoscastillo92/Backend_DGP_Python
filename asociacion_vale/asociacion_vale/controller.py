@@ -204,15 +204,16 @@ class Controller:
         pass
 
     def chatTask(self, request, identifier):
-        if request.session.get('username', False):
-            context = {}
-            messages = self.getMessagesTutors(request)
-            if identifier:
-                taskFromDB = Task.objects.filter(identifier=identifier)
-                context['task'] = taskFromDB[0]
-            if messages:
-                context['messages'] = messages
-            context['tutor'] = request.session.get('username')
-            return render(request, './tutors/task-chat.html', context)
-        else:
-            return redirect('/tutors/tasks')
+        context = {}
+        messages = self.getMessagesTutors(request)
+        if identifier:
+            taskFromDB = Task.objects.filter(identifier=identifier)
+            context['task'] = taskFromDB[0]
+        if messages:
+            context['messages'] = messages
+        context['tutor'] = request.session.get('username')
+        return render(request, './tutors/task-chat.html', context)
+
+    def postChatTask(self, request, identifier):
+        message = Forum(body=request.POST.get('text'), )
+        return redirect('taskChat', identifier=identifier)

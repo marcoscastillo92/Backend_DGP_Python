@@ -75,7 +75,7 @@
     <img src="{% static 'img/mic.png' %}" alt="Enviar Audio">
 </div>
 <div id="newMessageSection" class="container list p-3" style="height: 100px;overflow: hidden; margin-bottom: 50px;">
-    <form action="{% url 'taskPostChat' task.identifier %}" method="POST">
+    <form action="{% url 'taskChat' task.identifier %}" method="POST">
         {% load static %}
         <input type="hidden" name="mimeType" id="mimeType" value="txt">
         <input type="text" style="font-size: medium; width: 92%; padding: 10px;" name="body" id="body" placeholder="Escribe tu mensaje">

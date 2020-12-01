@@ -30,7 +30,6 @@ urlpatterns = [
     path('tutors/tasks/<int:id>', views.tutorsTasksDetail, name='tutorTasksEdit'),
     path('tutors/tasks/delete/<int:id>', views.tutorsTasksDelete, name='tutorTasksDelete'),
     path('tutors/tasks/chat/<str:identifier>', views.tasksChat, name='taskChat'),
-    path('tutors/tasks/chat/post-message/<str:identifier>', views.tasksChat, name='taskPostChat'),
     path('admin/', admin.site.urls),
     path('users/', include('users.urls')),
     path('groups/', include('groups.urls')),
