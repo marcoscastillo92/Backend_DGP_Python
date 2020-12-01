@@ -168,7 +168,7 @@ class Controller:
             arrayUsers = []
             for user in listUsers:
                 arrayUsers.append(user)
-        context['users'] = arrayUsers
+            context['users'] = arrayUsers
         if listGroups:
             arrayGroups = []
             for group in listGroups:
@@ -185,7 +185,7 @@ class Controller:
             arrayUsers = []
             for user in listUsers:
                 arrayUsers.append(user)
-        context['users'] = arrayUsers
+            context['users'] = arrayUsers
         return render(request,'./tutors/users.html', context)
             
 
