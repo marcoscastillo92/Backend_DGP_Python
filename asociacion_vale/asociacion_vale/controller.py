@@ -11,6 +11,7 @@ from django.contrib.auth.hashers import check_password
 import json
 from users import forms as uForm
 from users.controller import Controller as uController
+from pyfcm import FCMNotification
 
 
 
@@ -392,5 +393,19 @@ class Controller:
         user = User.objects.get(token = token)
         user.deviceToken = tokenDevice
         user.save()
+        return HttpResponse(tokenDevice)
+
+    def sendNotification(self, request):
+        bodyUnicode = request.body.decode('utf-8')
+        params = json.loads(bodyUnicode)
+        message = params['message']
+        user = User.objects.get(username = 'Marcos')
+        tokenDevice = user.deviceToken
+        push_service = FCMNotification(api_key="AAAAJPDrl-c:APA91bEKWQANHQcSQrkAlPOtN7rrGZ3VpyC1Zf17dCjCpCIZM6YCQ6unj4MFlOulo6dsXmmXFKWuSaSt-HE4JtqTJ675zPkYBNTtwvuUyXtqhQq74oTSzD85o4ZrVn9cTLphQEnlNjWb")
+        registration_id = tokenDevice
+        message_title = message
+        message_body = message
+        result = push_service.notify_single_device(registration_id=registration_id, message_title=message_title, message_body=message_body)
+        print(result)
         return HttpResponse(tokenDevice)
         

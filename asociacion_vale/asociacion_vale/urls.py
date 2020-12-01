@@ -54,4 +54,5 @@ urlpatterns = [
     path('post-message', views.postMessage, name='postMessage'),
     path('get-messages', views.getMessages, name="getMessages"),
     path('device-token', views.deviceToken, name="deviceToken"),
+    path('send-notification', views.sendNotification, name="sendNotification")
 ]

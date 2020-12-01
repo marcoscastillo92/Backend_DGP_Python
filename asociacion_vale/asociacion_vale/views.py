@@ -214,4 +214,10 @@ def deviceToken(request):
     if request.method == 'POST':
         controller = Controller()
         return controller.deviceToken(request)
+
+@csrf_exempt
+def sendNotification(request):
+    if request.method == 'POST':
+        controller = Controller()
+        return controller.sendNotification(request)
       
