@@ -154,7 +154,7 @@ def tutorsEditUserPassword(request, id):
 @csrf_exempt
 def groupsCreate(request):
     if request.session.get('username', False):
-        if request.method.POST:
+        if request.method == 'GET':
             controller = gController()
             return controller.createGroup(request)
     return redirect('/')
