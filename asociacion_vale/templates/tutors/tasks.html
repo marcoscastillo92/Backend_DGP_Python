@@ -1,0 +1,59 @@
+{% extends  "tutors/tutors.html" %}
+{% load static %}
+{% block main %}
+    <div class="container ">
+        <div class= "row mt-4  ">
+            <div class= "col-sm ">
+                <h2>Tareas</h2>
+            </div>
+            <div class= "col-sm">
+
+            </div>
+
+            <div class= "col-sm justify-content-end">
+                <div class= "row">
+                    <div class= "col-sm  justify-content-end">
+                        <button type="button" class="btn btn-light btn-outline-dark" style="width: 60px; float: right;" data-toggle="modal" data-target="#newTaskModal"><img style="width: 70%;" src="{% static 'img/mas.png' %}"></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% for task in tasks %}
+        <div class="container">
+          <div class="row align-items-center">
+            <div class="col-sm">
+              <a href="{% url 'tutorTasksEdit' id=task.id %}">
+                  <div class="card" style="width: 55rem;">
+                      <div class="card-body">
+                          <div class="row align-items-center">
+                            <div class="col-1">
+                              <img style="width: 50px;" class="card-img" src="{% static 'img/Logo.jpg' %}" alt="Card image cap">
+                            </div>
+                            <div class="col-sm">
+                              <h5 class="card-title">{{ task.title }}</h5>
+                          <h6 class="card-subtitle mb-2 text-muted">{{ task.shortDescription }}</h6>
+                            </div>
+                          </div>
+                      </div>
+                  </div>
+              </a>
+            </div>
+            <div class="col-sm">
+              <div class="row align-items-center">
+                <div class="col-sm">
+                    <a class="btn btn-light btn-outline-dark" href="{% url 'tutorTasksEdit' id=task.id  %}" role="button"><img style="width: 110%;" src="{% static 'img/editar.png' %}" /></a>
+                    <!--<button type="submit" style="float: right;" name="edit" onclick="add()"><img style="width: 110%;" src="{% static 'img/editar.png' %}" /></button>-->
+                </div>
+                <div class="col-sm">
+                    <a class="btn btn-light btn-outline-dark" href="{% url 'tutorTasksDelete' id=task.id  %}" role="button"><img style="width: 110%;" src="{% static 'img/eliminar.png' %}" /></a>
+                    <!--<button type="submit" style="float: right;" name="remove" onclick="add()"> <img style="width: 110%;" src="{% static 'img/eliminar.png' %}" /></button>-->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <br>
+    {% endfor %}
+    {% include "tutors/task-new.html" with form=form %}
+{% endblock %}

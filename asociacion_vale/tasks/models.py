@@ -4,16 +4,20 @@ from ckeditor.fields import RichTextField
 from users.models import User
 from forums.models import Forum
 from django.core.validators import MaxValueValidator, MinValueValidator
-from django.core.serializers import serialize
+import crum as CU
 from django.contrib.auth.models import User as Tutor
 import secrets
 from django.db.models.signals import m2m_changed
 from django.dispatch import receiver
 
+
 def taskImageDirectoryPath(instance, filename): 
-    return 'uploads/tasks/{0}/images/{1}'.format(instance.id, filename)
+    return 'static/uploads/tasks/{0}/images/{1}'.format(instance.id, filename)
+
+
 def taskMediaDirectoryPath(instance, filename): 
-    return 'uploads/tasks/{0}/media/{1}'.format(instance.id, filename)
+    return 'static/uploads/tasks/{0}/media/{1}'.format(instance.id, filename)
+
 
 class Category(models.Model):
     title= models.CharField(max_length=200, verbose_name="Título")
@@ -25,6 +29,7 @@ class Category(models.Model):
 
     def __str__(self):
         return self.title
+
 
 class Task(models.Model):
     title = models.CharField(verbose_name=("Título"), max_length=200)
@@ -83,6 +88,7 @@ class Task(models.Model):
             }
         return data
 
+
 class Rating(models.Model):
     task = models.ForeignKey(Task, verbose_name=("Tarea"), on_delete=models.CASCADE, null=True)
     user = models.ForeignKey(User, verbose_name=("Usuario"), on_delete=models.CASCADE, null=True)
@@ -100,6 +106,7 @@ class Rating(models.Model):
     def __str__(self):
         return f'{self.user} | {str(self.task).split("-")[0]} | Dificultad: {self.difficulty} | Utilidad: {self.utility} | Comentario: {self.text}'
 
+
 class Progress(models.Model):
     user = models.ForeignKey(User, verbose_name=("Usuario"), on_delete=models.CASCADE, null=True)
     category = models.ForeignKey(Category, verbose_name=("Categoría"), on_delete=models.CASCADE, null=True)
@@ -108,6 +115,7 @@ class Progress(models.Model):
 
     def __str__(self):
         return f'{str(self.user)} | {str(self.category)} - {self.done}/{self.total}'
+
 
 class TaskStatus(models.Model):
     user = models.ForeignKey(User, verbose_name=("Usuario"), on_delete=models.CASCADE, null=True)
@@ -129,6 +137,7 @@ class TaskStatus(models.Model):
             }
         return data
 
+
 @receiver(m2m_changed, sender=Task.users.through)
 def my_handler(sender, instance, **kwargs):
     pk_set = kwargs.pop('pk_set', None)
@@ -141,7 +150,7 @@ def my_handler(sender, instance, **kwargs):
             for user in tarea.users.all():
                 forum = Forum(
                     body = "Bienvenidos al chat de tarea",
-                    emisorTutor = Tutor.objects.get(id=1), #obtener el tutor en la sesión
+                    emisorTutor = CU.get_current_user(), #obtener el tutor en la sesión
                     emisorUser = None,
                     receptorTutor = None,
                     receptorUser = user,
@@ -153,7 +162,7 @@ def my_handler(sender, instance, **kwargs):
         # Por cada usuario que se asigne nuevo
         for pk in pk_set:
             user = User.objects.get(id=pk)
-            taskStatus = TaskStatus(user=user, task=tarea)
+            taskStatus = TaskStatus(user=user, task=tarea, tutor=CU.get_current_user())
             taskStatus.save()
             isProgressCreated = Progress.objects.filter(user=user, category__id=tarea.category.id)
             # Si no tiene progreso asignado el usuario asignado nuevo a esa categoría se crea

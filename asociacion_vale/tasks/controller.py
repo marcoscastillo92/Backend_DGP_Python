@@ -148,30 +148,20 @@ def getTaskStatus(request):
     return JsonResponse({"result":"error", "message":"No existe la tarea"}, safe=False)
 
 def setTaskStatus(request):
-    token = request.META['HTTP_AUTHORIZATION']
-    requestData = json.loads(request.body)
-    author = getUserByToken(token)
-    if not author:
-        response = {"result":"error", "message":"El usuario no existe"}
-        return JsonResponse(response, safe=False)
-    task = Task.objects.get(id=requestData.get('idTask'))
-    user = User.objects.get(id=requestData.get('idUser'))
-    if task:
-        taskStatus = TaskStatus.objects.get(user=user, task=task)
-        if taskStatus:
-            alreadyDone = taskStatus.done
-            substract = False
-            if taskStatus.done and not requestData.get('done'):
-                substract = True
-            taskStatus.done = bool(requestData.get('done'))
-            taskStatus.save(force_update=True)
-            progress = Progress.objects.get(user=user, category=task.category)
-            if progress:
-                if bool(requestData.get('done')) and not alreadyDone:
-                    progress.done = progress.done + 1
-                elif substract:
-                    progress.done = progress.done - 1
-                progress.save(force_update=True)
-            return JsonResponse({"status":taskStatus.serializeCustom()}, safe=False)
-        return JsonResponse({"result":"error", "message":"No hay estado para la tarea"}, safe=False)
-    return JsonResponse({"result":"error", "message":"No existe la tarea"}, safe=False)
+    taskStatus = TaskStatus.objects.get(id=request.POST.get('taskId'))
+    if taskStatus:
+        alreadyDone = taskStatus.done
+        substract = False
+        if taskStatus.done and not request.POST.get('done'):
+            substract = True
+        taskStatus.done = bool(request.POST.get('done'))
+        taskStatus.save()
+        progress = Progress.objects.get(user=taskStatus.user, category=taskStatus.task.category)
+        if progress:
+            if bool(request.POST.get('done')) and not alreadyDone:
+                progress.done = progress.done + 1
+            elif substract:
+                progress.done = progress.done - 1
+            progress.save(force_update=True)
+        return JsonResponse({"status": taskStatus.serializeCustom()}, safe=False)
+    return JsonResponse({"result": "error", "message": "No hay estado para la tarea"}, safe=False)

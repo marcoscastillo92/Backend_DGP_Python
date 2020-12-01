@@ -13,7 +13,6 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from asociacion_vale.views import tutorsLogin
 from django.contrib import admin
 from django.urls import path, include
 #from pictograms import views
@@ -40,6 +39,15 @@ urlpatterns = [
     path('tutors/groups/editConfirm' , views.groupsEditConfirm, name='groupsEditConfirm'),
     path('tutors/groups/create' , views.groupsCreate, name='tutorsGroupsCreate'),
     path('tutors/groups/createConfirm' , views.groupsCreateConfirm, name='groupsCreateConfirm'),
+    path('tutors/home', views.tutorsHome, name='tutorHome'),
+    path('tutors/groups', views.tutorsGroup, name='tutorGroups'),
+    path('tutors/login', views.tutorsLogin, name='tutorLogin'),
+    path('tutors/logout', views.tutorsLogout, name='tutorLogout'),
+    path('tutors/tasks', views.tutorsTasks, name='tutorTasks'),
+    path('tutors/tasks/create', views.tutorTasksCreate, name='tutorTasksCreate'),
+    path('tutors/tasks/<int:id>', views.tutorsTasksDetail, name='tutorTasksEdit'),
+    path('tutors/tasks/delete/<int:id>', views.tutorsTasksDelete, name='tutorTasksDelete'),
+    path('tutors/tasks/chat/<str:identifier>', views.tasksChat, name='taskChat'),
     path('admin/', admin.site.urls),
     path('users/', include('users.urls')),
     path('groups/', include('groups.urls')),

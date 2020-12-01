@@ -1,4 +1,3 @@
-
 """
 Django settings for asociacion_vale project.
 
@@ -18,7 +17,6 @@ from django.conf import global_settings
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
@@ -29,7 +27,6 @@ SECRET_KEY = 'f!ev+0ws(n*gb3a2js*kmt=z*^@va6%)(jq8+ujkbi7)z8gix0'
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -59,6 +56,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.locale.LocaleMiddleware',
+    'crum.CurrentRequestUserMiddleware',
 ]
 
 ROOT_URLCONF = 'asociacion_vale.urls'
@@ -75,12 +73,14 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
+            'builtins': [
+                'asociacion_vale.templatetags.taskstags'
+            ]
         },
     },
 ]
 
 WSGI_APPLICATION = 'asociacion_vale.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
@@ -91,7 +91,6 @@ DATABASES = {
         'NAME': 'asociacionvale',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -111,7 +110,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
@@ -120,8 +118,8 @@ LANGUAGE_CODE = 'es'
 _ = lambda s: s
 
 LANGUAGES = (
-('es', _('Español')),
-('en', _('English'))
+    ('es', _('Español')),
+    ('en', _('English'))
 )
 
 TIME_ZONE = 'UTC'
@@ -136,7 +134,7 @@ LOCALE_PATHS = (
     os.path.join(BASE_DIR, 'locale'),
 )
 
-#TEMPLATE_CONTEXT_PROCESSORS = global_settings.TEMPLATE_CONTEXT_PROCESSORS + ('django.core.context_processors.i18n',)
+# TEMPLATE_CONTEXT_PROCESSORS = global_settings.TEMPLATE_CONTEXT_PROCESSORS + ('django.core.context_processors.i18n',)
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
@@ -147,10 +145,10 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (os.path.join('static'), BASE_DIR)
 
 # CORS VARIABLES
-ALLOWED_HOSTS=['*']
+ALLOWED_HOSTS = ['*']
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ORIGIN_WHITELIST = (
-       'https://localhost:8000',
+    'https://localhost:8000',
 )
 CORS_ALLOW_HEADERS = [
     'accept',
