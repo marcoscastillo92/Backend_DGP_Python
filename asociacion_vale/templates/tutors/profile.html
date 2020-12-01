@@ -1,0 +1,46 @@
+{% extends  "tutors/tutors.html" %}
+{% block main %}
+    {% load static %}
+    
+    <div class="container ">
+        
+        <div class="row mt-4  ">
+            <a class="btn btn-dark m-1 w-20" href="http://localhost:8000/tutors/home">Atrás</a>
+            <div class="col-sm " style="color: white;">
+                <h2>Perfil</h2>
+            </div>
+            <div class="col-sm  justify-content-end">
+                <a class="btn btn-dark m-1 w-25" href="http://localhost:8000/tutors/home">Resultados</a>
+                <a class="btn btn-dark m-1 w-10" href="http://localhost:8000/tutors/home">Editar</a>
+                <a class="btn btn-dark m-1 w-10" href="http://localhost:8000/tutors/home">Borrar</a>
+            </div>
+        </div>
+    </div>
+    
+
+    <div class="container">
+        <div class="row align-items-center fila">
+            <div class="col-sm">
+                <div class="card-body">
+                    <div class="col-1">
+                        <img style="width: 200px; height:200px; border-radius: 700px;" class="card-img"
+                            src="{% static 'img/imagencarnet2.png' %}" alt="Card image cap">
+                    </div>
+                    <div class="col-sm " style="color: white;">
+                        <h5 class="card-title ml-5 p-2">{{ user.name }}</h5>
+                    </div>
+                    <div class="col-sm " style="color: white;">
+                        <h5 class="card-title ml-5 p-2">{{ user.username }}</h5>
+                    </div>
+                    <div class="col-sm " style="color: white;">
+                        <h5 class="card-title ml-5 p-2">{{ user.phoneNumber }}</h5>
+                    </div>
+                    <div class="col-sm " style="color: white;">
+                        <h5 class="card-title ml-5 p-2">{{ user.email }}</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -52,3 +52,12 @@ def tutorsGroup(request):
     if request.method == 'GET':
         controller = Controller()
         return  controller.tutorGroups(request)
+
+@csrf_exempt
+def tutorsProfile(request):
+    if request.method == 'GET':
+        if request.session.get('username', False):
+            controller = Controller()
+            return  controller.tutorProfile(request)
+        else:
+            return redirect('/')

@@ -124,3 +124,14 @@ class Controller:
         else:
             return render(request,'./tutors/groups.html')
             
+    def tutorProfile(self,request):
+        username = request.session.get('username')
+        usuario = 'luiser'
+        
+        tutor = Tutor.objects.get(username = username)
+        user = User.objects.get(username = usuario)
+        
+        context = {}
+        context['tutor'] = tutor
+        context['user'] = user
+        return render(request,'./tutors/profile.html', context)
