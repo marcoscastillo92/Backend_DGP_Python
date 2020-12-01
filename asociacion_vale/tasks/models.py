@@ -121,7 +121,7 @@ class TaskStatus(models.Model):
     user = models.ForeignKey(User, verbose_name=("Usuario"), on_delete=models.CASCADE, null=True)
     task = models.ForeignKey(Task, verbose_name=("Tarea"), on_delete=models.CASCADE, null=True)
     done = models.BooleanField(default=False)
-    comment = models.CharField(verbose_name=("Comentario"), max_length=800)
+    comment = models.CharField(verbose_name=("Comentario"), max_length=800, default="")
     tutor = models.ForeignKey(Tutor, verbose_name=("Tutor"), on_delete=models.CASCADE, null=True)
 
     def __str__(self):
