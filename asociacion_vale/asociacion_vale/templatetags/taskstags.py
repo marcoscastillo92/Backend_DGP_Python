@@ -6,8 +6,6 @@ register = Library()
 
 @register.simple_tag
 def getStatus(array):
-    if len(array) == 1:
-        array = [array]
     html = '<div class="container">'
     for value in array:
         user = array[value].get('user')
@@ -37,8 +35,6 @@ def getStatus(array):
 
 @register.simple_tag
 def getRatings(array):
-    if len(array) == 1:
-        array = [array]
     response = ''
     html = '<div class="container">'
     for value in array:
