@@ -80,7 +80,6 @@ class Controller:
             if messages:
                 context['messages'] = messages
             context['tutor'] = request.session.get('username')
-            print(context)
             return render(request,'./tutors/chatGroup.html', context)
         else:
             return redirect('/tutors/groups')        
