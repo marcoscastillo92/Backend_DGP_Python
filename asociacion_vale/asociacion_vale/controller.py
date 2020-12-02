@@ -49,13 +49,15 @@ class Controller:
                 if l.emisorUser_id:
                     user = User.objects.filter(id=l.emisorUser_id)
                     print(user[0].username)
-                    respuesta = {"body":l.body, "emisor_name": user[0].name, "emisor":user[0].username,  "created":l.createdAt, "identifier":l.identifier, "mimeType":l.mimeType.path, "tutor": False}
+                    respuesta = {"body":l.body, "emisor_name": user[0].name, "emisor":user[0].username,  "created":l.createdAt, "identifier":l.identifier, "tutor": False}
+                    respuesta['mimeType'] = l.mimeType.path if l.mimeType else ""
                     var.append(respuesta)
 
                 if l.emisorTutor_id:
                     user = Tutor.objects.filter(id=l.emisorTutor_id)
                     print(user[0].username)
-                    respuesta = {"body":l.body, "emisor_name": user[0].name, "emisor":user[0].username,  "created":l.createdAt, "identifier":l.identifier, "mimeType":l.mimeType.path, "tutor": True}
+                    respuesta = {"body":l.body, "emisor_name": user[0].first_name+" "+user[0].last_name, "emisor":user[0].username,  "created":l.createdAt, "identifier":l.identifier, "tutor": True}
+                    respuesta['mimeType'] = l.mimeType.path if l.mimeType else ""
                     var.append(respuesta)
             print(var)
             formatResponse = {"mensajes": var}
@@ -73,13 +75,15 @@ class Controller:
                 if l.emisorUser_id:
                     user = User.objects.filter(id = l.emisorUser_id)
                     print(user[0].username)
-                    respuesta = {"body":l.body, "emisor":user[0].username,  "created":l.createdAt, "identifier":l.identifier, "mimeType":l.mimeType.path}
+                    respuesta = {"body":l.body, "emisor":user[0].username,  "created":l.createdAt, "identifier":l.identifier}
+                    respuesta['mimeType'] = l.mimeType.path if l.mimeType else ""
                     var.append(respuesta)
 
                 if l.emisorTutor_id:
                     user = Tutor.objects.filter(id = l.emisorTutor_id)
                     print(user[0].username)
-                    respuesta = {"body":l.body, "emisor":user[0].username,  "created":l.createdAt, "identifier":l.identifier, "mimeType":l.mimeType.path}
+                    respuesta = {"body":l.body, "emisor":user[0].username,  "created":l.createdAt, "identifier":l.identifier}
+                    respuesta['mimeType'] = l.mimeType.path if l.mimeType else ""
                     var.append(respuesta)
             formatResponse = {"mensajes" : var}
             return formatResponse
@@ -94,7 +98,7 @@ class Controller:
             forum = Forum.objects.filter(identifier=identifier, category="welcomeMessage")  # mensaje creado por defecto
             if forum:
                 body = bodyData['body']
-                mimeType = bodyData['mimeType']
+                mimeType = bodyData['mimeType'] if bodyData['mimeType'] else ""
                 category = bodyData['category']
                 newForum = Forum(
                     body=body,
@@ -112,8 +116,6 @@ class Controller:
             else:
                 response = {"result": "error", "message": "El foro no existe"}
                 return JsonResponse(response, safe=False)
-            messagesForum = list(Forum.objects.filter(id=idForum).values())
-            return JsonResponse(messagesForum, safe=False)
         else:
             response = {"result": "error", "message": "El usuario no existe"}
             return JsonResponse(response, safe=False)
@@ -123,7 +125,7 @@ class Controller:
         forum = Forum.objects.filter(identifier = identifier, category="welcomeMessage") #mensaje creado por defecto
         if forum:
             body = request.POST.get('body')
-            mimeType = request.POST.get('mimeType')
+            mimeType = request.POST.get('mimeType') if request.POST.get('mimeType') else ""
             category = request.POST.get('category')
             newForum = Forum(
                 body = body,
@@ -357,7 +359,19 @@ class Controller:
 
     def chatTask(self, request, identifier):
         context = {}
-        messages = self.getMessagesTutors(request)
+        lista = Forum.objects.filter(identifier=identifier).values()
+        messagesTask = list(lista.order_by('createdAt'))
+        tutor = Tutor.objects.get(username=request.session.get('username'))
+        context['userId'] = userId
+        user = User.objects.get(id=userId)
+        messages = []
+        for message in messagesTask:
+            mimeType = message.get('mimeType') if message.get('mimeType') else ""
+            if message.get('emisorUser_id') == userId:
+                messages.append({"body": message.get('body'), "emisor": user.username, "created": message.get('createdAt'), "identifier": message.get('identifier'), "mimeType": mimeType})
+            elif message.get('emisorTutor_id') == tutor.id:
+                messages.append({"body": message.get('body'), "emisor": tutor.username, "created": message.get('createdAt'), "identifier": message.get('identifier'), "mimeType": mimeType})
+
         if identifier:
             taskFromDB = Task.objects.filter(identifier=identifier)
             context['task'] = taskFromDB[0]
@@ -366,6 +380,27 @@ class Controller:
         context['tutor'] = request.session.get('username')
         return render(request, './tutors/task-chat.html', context)
 
-    def postChatTask(self, request, identifier):
-        message = Forum(body=request.POST.get('text'), )
-        return redirect('taskChat', identifier=identifier)
+    def postChatTask(self, request, identifier, userId):
+        tutor = Tutor.objects.get(username=request.session.get('username', False))
+        user = User.objects.get(id=userId)
+        body = request.POST.get('body')
+        mimeType = request.FILES.get('mimeType') if request.FILES.get('mimeType') else ""
+        category = request.POST.get('category')
+        newForum = Forum(
+            body=body,
+            emisorTutor=tutor,
+            emisorUser=None,
+            receptorTutor=None,
+            receptorUser=user,
+            mimeType=mimeType,
+            category=category,
+            identifier=identifier
+        )
+        newForum.save()
+        return redirect('taskChat', identifier=identifier, userId=userId)
+
+    def createCategory(self, request):
+        idTask = request.POST.get('taskId')
+        category = forms.CategoryForm(request.POST)
+        category.save()
+        return redirect('tutorTasksEdit', id=idTask)

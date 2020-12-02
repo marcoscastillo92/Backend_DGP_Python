@@ -11,7 +11,7 @@ class Forum(models.Model):
     receptorTutor = models.ForeignKey(Tutor, on_delete=models.CASCADE, verbose_name="Receptor Tutor", related_name='receptorTutor')
     receptorUser = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Receptor Usuario", related_name='receptorUser')
     
-    mimeType = models.FileField(upload_to ='uploads/attach', default="null", verbose_name="Tipo de mensaje") 
+    mimeType = models.FileField(upload_to ='uploads/attach', blank=True, verbose_name="Tipo de mensaje")
     createdAt = models.DateTimeField(default=datetime.now, blank=True, verbose_name="Fecha de creacion")
     category = models.CharField(verbose_name=("Categoria Mensaje"), max_length=200)
     identifier = models.CharField(verbose_name=("Identificador"),max_length=300)

@@ -10,13 +10,14 @@ def getStatus(array):
     html = '<div class="container">'
     count = 0
     for value in array:
-        if value:
-            user = value[count].get('user')
-            status = value[count].get('status')
-            statusMsg = "Completado" if status.done else "En progreso"
-            checked = "checked" if status.done else ""
-            html += f'''
-            <div class="row align-items-center" id="resultados_{user.id}">
+        user = array[value].get('user')
+        status = array[value].get('status')
+        profileImage = user.profileImage.url if user.profileImage else "static/img/profile.png"
+        checked = "checked" if status.done else ""
+        statusMsg = "Completado" if status.done else "En progreso"
+        html += f'''
+        <div class="row align-items-center" id="resultados_{user.id}">
+                <img style="width: 50px;" src="/{profileImage}">
                 <div class="col-sm">
                     <img style="width: 50px;" src="/{user.profileImage.url}"> 
                 </div>
