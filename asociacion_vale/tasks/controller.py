@@ -1,7 +1,7 @@
 import json
 
 from django.http import JsonResponse
-from django.shortcuts import HttpResponse
+from django.shortcuts import HttpResponseRedirect
 
 from users.models import User
 from .models import Rating, Task, Progress, Category, TaskStatus
@@ -163,5 +163,5 @@ def setTaskStatus(request):
             elif substract:
                 progress.done = progress.done - 1
             progress.save(force_update=True)
-        return JsonResponse({"status": taskStatus.serializeCustom()}, safe=False)
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     return JsonResponse({"result": "error", "message": "No hay estado para la tarea"}, safe=False)
