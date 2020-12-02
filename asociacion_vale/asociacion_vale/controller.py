@@ -394,9 +394,20 @@ class Controller:
         return redirect('tutorTasksEdit', id=taskForm.instance.id)
         pass
 
-    def chatTask(self, request, identifier):
+    def chatTask(self, request, identifier, userId):
         context = {}
-        messages = self.getMessagesTutors(request)
+        lista = Forum.objects.filter(identifier=identifier).values()
+        messagesTask = list(lista.order_by('createdAt'))
+        tutor = Tutor.objects.get(username=request.session.get('username'))
+        context['userId'] = userId
+        user = User.objects.get(id=userId)
+        messages = []
+        for message in messagesTask:
+            if message.get('emisorUser_id') == userId:
+                messages.append({"body": message.get('body'), "emisor": user.username, "created": message.get('createdAt'), "identifier": message.get('identifier'), "mimeType": message.get('mimeType')})
+            elif message.get('emisorTutor_id') == tutor.id:
+                messages.append({"body": message.get('body'), "emisor": tutor.username, "created": message.get('createdAt'), "identifier": message.get('identifier'), "mimeType": message.get('mimeType')})
+
         if identifier:
             taskFromDB = Task.objects.filter(identifier=identifier)
             context['task'] = taskFromDB[0]
@@ -405,9 +416,24 @@ class Controller:
         context['tutor'] = request.session.get('username')
         return render(request, './tutors/task-chat.html', context)
 
-    def postChatTask(self, request, identifier):
-        message = Forum(body=request.POST.get('text'), )
-        return redirect('taskChat', identifier=identifier)
+    def postChatTask(self, request, identifier, userId):
+        tutor = Tutor.objects.get(username=request.session.get('username', False))
+        user = User.objects.get(id=userId)
+        body = request.POST.get('body')
+        mimeType = request.FILES.get('mimeType')
+        category = request.POST.get('category')
+        newForum = Forum(
+            body=body,
+            emisorTutor=tutor,
+            emisorUser=None,
+            receptorTutor=None,
+            receptorUser=user,
+            mimeType=mimeType,
+            category=category,
+            identifier=identifier
+        )
+        newForum.save()
+        return redirect('taskChat', identifier=identifier, userId=userId)
 
     def createCategory(self, request):
         idTask = request.POST.get('taskId')

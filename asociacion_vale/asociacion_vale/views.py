@@ -196,13 +196,13 @@ def tutorTasksCreate(request):
 
 
 @csrf_exempt
-def tasksChat(request, identifier):
+def tasksChat(request, identifier, userId):
     if request.session.get('username', False):
         controller = Controller()
         if request.method == 'GET':
-            return controller.chatTask(request, identifier)
+            return controller.chatTask(request, identifier, userId)
         elif request.method == 'POST':
-            return controller.postChatTask(request, identifier)
+            return controller.postChatTask(request, identifier, userId)
     return redirect('/')
 
 
