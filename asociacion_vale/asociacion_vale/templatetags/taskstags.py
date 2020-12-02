@@ -17,9 +17,8 @@ def getStatus(array):
         statusMsg = "Completado" if status.done else "En progreso"
         html += f'''
         <div class="row align-items-center" id="resultados_{user.id}">
-                <img style="width: 50px;" src="/{profileImage}">
                 <div class="col-sm">
-                    <img style="width: 50px;" src="/{user.profileImage.url}"> 
+                    <img style="width: 50px;" src="/{profileImage}">
                 </div>
                 <div class="col-sm">
                     <a href="/tutors/users/edit/{user.id}">{user.name}</a> <br> {statusMsg} 
