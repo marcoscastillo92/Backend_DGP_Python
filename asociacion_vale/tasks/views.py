@@ -63,3 +63,8 @@ def statusTask(request):
         return TaskController.getTaskStatus(request)
     if request.method == 'POST':
         return TaskController.setTaskStatus(request)
+
+@csrf_exempt
+def progressUser(request):
+    if request.method == 'GET':
+        return TaskController.getProgress(request)
