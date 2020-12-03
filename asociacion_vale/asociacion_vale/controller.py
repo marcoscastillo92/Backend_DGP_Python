@@ -7,6 +7,7 @@ from tasks import forms
 from django.http import JsonResponse
 from django.contrib.auth.models import User as Tutor
 from django.contrib.auth.hashers import check_password
+import secrets
 import json
 from users import forms as uForm
 from users.controller import Controller as uController
@@ -111,19 +112,23 @@ class Controller:
                     mimeType = bodyData['mimeType']
                     
                 category = bodyData['category']
+             
+               # print(bodyData)
+                if bodyData['base64']:
                 
-                print(bodyData)
-                if request.POST.get('base64'):
-                    format, imgEncodeString = image_data.split(';base64,')
-                    print("format", format)
+                    format, imgEncodeString = bodyData['base64'].split(';base64,')
                     ext = format.split('/')[-1]
-                    mimeType = ext
+                    mimeType = '.jpg'
                     img64Data = base64.b64decode(imgEncodeString) #other decoding fundctions failed
                     BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-                    preFileStr = os.path.join(BASE_DIR, "static/uploads/chat/groups/")
-                    poFileStr=str(request.user)+'_itemName_'+saveWearingName+'.jpg'
+                    preFileStr = "static/uploads/chat/groups/"
+                    poFileStr=str(userFromDB.username)+ secrets.token_hex(5)+mimeType
                     filename = preFileStr +poFileStr
 
+                    print(preFileStr)
+                    print(poFileStr)
+                   
+                    pathFile = filename
                     with open(filename, 'wb') as f:
                         f.write(img64Data)
 
