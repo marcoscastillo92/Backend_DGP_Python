@@ -82,30 +82,6 @@
                                     {% endfor %}
                                 </select>
                             </div>
-                            <div class="card p-2 m-2"  style="width: 18rem;">
-                                <h6>Quinto pictograma</h6>
-                                <select name="fifthPictogram">
-                                    {% for pictogram in pictograms %}
-                                        {% if userPictograms and pictogram.name == userPictograms.4 %}
-                                            <option value="{{pictogram.name}}" class="text-capitalize" selected>{{pictogram.name}}</option>
-                                        {% else %}
-                                            <option value="{{pictogram.name}}" class="text-capitalize">{{pictogram.name}}</option>
-                                        {% endif %}
-                                    {% endfor %}
-                                </select>
-                            </div>
-                            <div class="card p-2 m-2"  style="width: 18rem;">
-                                <h6>Sexto pictograma</h6>
-                                <select name="sixthPictogram">
-                                    {% for pictogram in pictograms %}
-                                        {% if userPictograms and pictogram.name == userPictograms.5 %}
-                                            <option value="{{pictogram.name}}" class="text-capitalize" selected>{{pictogram.name}}</option>
-                                        {% else %}
-                                            <option value="{{pictogram.name}}" class="text-capitalize">{{pictogram.name}}</option>
-                                        {% endif %}
-                                    {% endfor %}
-                                </select>
-                            </div>
                         </div>
 
 

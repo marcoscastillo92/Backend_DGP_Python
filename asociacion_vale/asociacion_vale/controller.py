@@ -66,7 +66,7 @@ class Controller:
 
                 if l.emisorTutor_id:
                     user = Tutor.objects.filter(id=l.emisorTutor_id)
-                    respuesta = {"body":l.body, "emisor_name": user[0].name, "emisor":user[0].username,  "created":l.createdAt, "identifier":l.identifier, "mimeType":l.mimeType, "tutor": True, "path":l.path}
+                    respuesta = {"body":l.body, "emisor_name": user[0].first_name, "emisor":user[0].username,  "created":l.createdAt, "identifier":l.identifier, "mimeType":l.mimeType, "tutor": True, "path":l.path}
                     var.append(respuesta)
             formatResponse = {"mensajes": var}
             return JsonResponse(formatResponse, safe=False)
@@ -100,12 +100,33 @@ class Controller:
             # {idForum:int,messageType: "string",body:"string", mimeType}
             identifier = bodyData['identifier']
             forum = Forum.objects.filter(identifier=identifier, category="welcomeMessage")  # mensaje creado por defecto
+            pathFile = None
+            body = ""
+            mimeType = ""
             if forum:
-                body = bodyData['body']
-                mimeType = bodyData['mimeType']
-                fileB64 = bodyData['file']
-
+                
+                if request.POST.get('body'):
+                    body = bodyData['body']
+                if request.POST.get('mimeType'):
+                    mimeType = bodyData['mimeType']
+                    
                 category = bodyData['category']
+                
+                print(bodyData)
+                if request.POST.get('base64'):
+                    format, imgEncodeString = image_data.split(';base64,')
+                    print("format", format)
+                    ext = format.split('/')[-1]
+                    mimeType = ext
+                    img64Data = base64.b64decode(imgEncodeString) #other decoding fundctions failed
+                    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+                    preFileStr = os.path.join(BASE_DIR, "static/uploads/chat/groups/")
+                    poFileStr=str(request.user)+'_itemName_'+saveWearingName+'.jpg'
+                    filename = preFileStr +poFileStr
+
+                    with open(filename, 'wb') as f:
+                        f.write(img64Data)
+
                 newForum = Forum(
                     body=body,
                     emisorTutor=None,
@@ -113,6 +134,7 @@ class Controller:
                     receptorTutor=forum[0].emisorTutor,  # obtener el tutor en la sesión,
                     receptorUser=None,
                     mimeType=mimeType,
+                    path = pathFile,
                     category=category,
                     identifier=identifier
                 )
@@ -262,14 +284,12 @@ class Controller:
 
     def tutorsEditUsersPictograms(self, request):
         if request.method == 'POST':
-            pictogramSize = 6
+            pictogramSize = 4
             userId = request.POST.get('id')
             firstPictogram = request.POST.get('firstPictogram')
             secondPictogram = request.POST.get('secondPictogram')
             thirdPictogram = request.POST.get('thirdPictogram')
             fourthPictogram = request.POST.get('fourthPictogram')
-            fifthPictogram = request.POST.get('fifthPictogram')
-            sixthPictogram = request.POST.get('sixthPictogram')
 
             arrayPictograms = [firstPictogram, secondPictogram, thirdPictogram, fourthPictogram, fifthPictogram, sixthPictogram]
             listPictograms = list(Pictograms.objects.all().values())
@@ -286,7 +306,7 @@ class Controller:
     
     def tutorsEditUserPassword(self, request, id):
         if request.method == 'GET':
-            pictogramsSize = 6
+            pictogramsSize = 4
             pictogramsFromDB= list(Pictograms.objects.all().values())
             userFromDB = User.objects.filter(id=id)
             userPassword = userFromDB[0].password
