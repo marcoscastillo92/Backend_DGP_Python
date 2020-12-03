@@ -153,7 +153,7 @@ class Controller:
     def postMessageTutor(self, request):
         identifier = request.POST.get('identifier')
         forum = Forum.objects.filter(identifier = identifier, category="welcomeMessage") #mensaje creado por defecto
-        mimeType = ".txt"
+        mimeType = ""
         pathFile = None
         if request.FILES:
             pathFile = self.uploadFileFromChat(request.FILES['file'])
@@ -291,7 +291,7 @@ class Controller:
             thirdPictogram = request.POST.get('thirdPictogram')
             fourthPictogram = request.POST.get('fourthPictogram')
 
-            arrayPictograms = [firstPictogram, secondPictogram, thirdPictogram, fourthPictogram, fifthPictogram, sixthPictogram]
+            arrayPictograms = [firstPictogram, secondPictogram, thirdPictogram, fourthPictogram ]
             listPictograms = list(Pictograms.objects.all().values())
             password = ""
             for index in range(0, pictogramSize):

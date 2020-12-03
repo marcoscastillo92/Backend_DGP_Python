@@ -1,0 +1,5 @@
+
+npm install
+npm install -g @ionic/cli
+ionic serve 
+localhost:8100/login
