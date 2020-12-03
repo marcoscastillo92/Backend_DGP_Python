@@ -32,39 +32,26 @@
     
 </style>
 <div class="container list mb-2" style="height: 70px; overflow: hidden;" >
-    <div class= "row mt-3 mb-2 ">
-        <div class= "col-sm">
+    <div class= "row mt-3 mb-2 w-100 text-center ml-1">
+        <div class= "col-sm w-100">
             <h2 style="color: ghostwhite;"><b>{{task.title}}</b></h2>
-        </div>
-        <div class= "col-sm">
-          
         </div>
     </div>
 </div>
 <div class="container list bg-light rounded" style="width: 300px;" id="chat">
-    {% for message in messages.mensajes %}
+    {% for message in messages %}
     {% if tutor == message.emisor %}
-        <div class= "row mt-4 ml-1 mr-1 h4" style="width: 100%;">
-            <p class="text-uppercase text-success" id="{{ task.title }}">{{ message.emisor }} </p>
+        <div class= "container w-50 bg-primary rounded m-2" style="float: right; color: white;">
+            <p class="row text-dark p-3 text-capitalize font-weight-bold" style="margin-bottom: -10px; margin-top: -10px;" id="{{ task.title }}">{{ message.emisor }} </p>
+            <p class="row p-3" style="margin-bottom: -20px; margin-top: -30px;" id="{{ task.title }}">{{ message.body }} </p>
+            <p class="row font-italic p-3 d-flex justify-content-end " style="margin-bottom: -10px; margin-top: -30px;">{{message.created|date:"H:m"}}</p>
         </div>
-        <div class= "row h5 ml-1 mr-1" style="width: 100%;">
-            <p class="" id="{{ task.title }}">{{ message.body }} </p>
-        </div>
-        <div class= "row ml-1 mr-1" style="width: 100%">
-            <small id="emailHelp" class="text-uppercase font-italic" >{{ message.created }}</small>
-        </div>
-        <hr>
     {% else %}
-        <div class= "row mt-4 ml-1 mr-1 h4" >
-            <p class="text-uppercase text-info" id="{{ task.title }}">{{ message.emisor }} </p>
+        <div class= "container w-50 bg-success rounded m-2" style="float: left; color: white;">
+            <p class="row text-dark p-3 text-capitalize  font-weight-bold" style="margin-bottom: -10px; margin-top: -10px;" id="{{ task.title }}">{{ message.emisor }} </p>
+            <p class="row p-3" style="margin-bottom: -20px; margin-top: -30px;" id="{{ task.title }}">{{ message.body }} </p>
+            <p class="row font-italic p-3 d-flex justify-content-end " style="margin-bottom: -10px; margin-top: -30px;">{{message.created|date:"H:m"}}</p>
         </div>
-        <div class= "row h5 ml-1 mr-1" >
-            <p id="{{ task.title }}">{{ message.body }} </p>
-        </div>
-        <div class= "row ml-1 mr-1">
-            <small id="emailHelp" class="font-italic " >{{ message.created }}</small>
-        </div>
-        <hr>
     {% endif %}
     {% endfor %}       
 </div>
@@ -75,8 +62,7 @@
     <img src="{% static 'img/mic.png' %}" alt="Enviar Audio">
 </div>
 <div id="newMessageSection" class="container list p-3" style="height: 100px;overflow: hidden; margin-bottom: 50px;">
-    <form action="{% url 'taskChat' task.identifier %}" method="POST">
-        {% load static %}
+    <form action="{% url 'taskChat' task.identifier userId %}" method="POST">
         <input type="hidden" name="mimeType" id="mimeType" value="txt">
         <input type="text" style="font-size: medium; width: 92%; padding: 10px;" name="body" id="body" placeholder="Escribe tu mensaje">
         <input type="hidden" name="identifier" id="identifier" value="{{task.identifier}}">
@@ -84,7 +70,4 @@
         <input type="image" style="height: 49px; float: right;" name="submit" src="{% static 'img/enviar.png' %}" alt="Submit">
     </form>
 </div>
-
-
-    
 {% endblock %}
