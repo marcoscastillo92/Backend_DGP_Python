@@ -250,16 +250,14 @@ class Controller:
 
     def tutorsEditUsersPictograms(self, request):
         if request.method == 'POST':
-            pictogramSize = 6
+            pictogramSize = 4
             userId = request.POST.get('id')
             firstPictogram = request.POST.get('firstPictogram')
             secondPictogram = request.POST.get('secondPictogram')
             thirdPictogram = request.POST.get('thirdPictogram')
             fourthPictogram = request.POST.get('fourthPictogram')
-            fifthPictogram = request.POST.get('fifthPictogram')
-            sixthPictogram = request.POST.get('sixthPictogram')
 
-            arrayPictograms = [firstPictogram, secondPictogram, thirdPictogram, fourthPictogram, fifthPictogram, sixthPictogram]
+            arrayPictograms = [firstPictogram, secondPictogram, thirdPictogram, fourthPictogram]
             listPictograms = list(Pictograms.objects.all().values())
             password = ""
             for index in range(0, pictogramSize):
@@ -274,7 +272,7 @@ class Controller:
     
     def tutorsEditUserPassword(self, request, id):
         if request.method == 'GET':
-            pictogramsSize = 6
+            pictogramsSize = 4
             pictogramsFromDB= list(Pictograms.objects.all().values())
             userFromDB = User.objects.filter(id=id)
             userPassword = userFromDB[0].password
