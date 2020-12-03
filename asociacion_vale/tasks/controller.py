@@ -147,6 +147,20 @@ def getTaskStatus(request):
         return JsonResponse({"result":"error", "message":"No hay estado para la tarea"}, safe=False)
     return JsonResponse({"result":"error", "message":"No existe la tarea"}, safe=False)
 
+def getProgress(request):
+    token = request.META['HTTP_AUTHORIZATION']
+    author = getUserByToken(token)
+    if not author:
+        response = {"result": "error", "message": "El usuario no existe"}
+        return JsonResponse(response, safe=False)
+    progress = Progress.objects.filter(user=author)
+    if progress:
+        response = []
+        for p in progress:
+            response.append(p.serializeCustom())
+        return JsonResponse({"categories": response}, safe=False)
+    return JsonResponse({"result": "error", "message": "No hay progresos para el usuario"}, safe=False)
+
 def setTaskStatus(request):
     taskStatus = TaskStatus.objects.get(id=request.POST.get('taskId'))
     if taskStatus:

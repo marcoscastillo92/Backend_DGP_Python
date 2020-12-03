@@ -35,9 +35,9 @@ class Task(models.Model):
     title = models.CharField(verbose_name=("Título"), max_length=200)
     shortDescription = models.CharField(verbose_name=("Descripción corta"), max_length=600)
     fullDescription = RichTextField(verbose_name=("Descripción completa"))
-    image = models.ImageField(verbose_name=("Icono"), upload_to=taskImageDirectoryPath, default='null')
+    image = models.ImageField(verbose_name=("Icono"), upload_to=taskImageDirectoryPath, blank=True)
     date = models.DateTimeField(verbose_name=("Fecha"), auto_now_add=True)
-    media = models.FileField(verbose_name=("Archivo"), upload_to=taskMediaDirectoryPath, default='null')
+    media = models.FileField(verbose_name=("Archivo"), upload_to=taskMediaDirectoryPath, blank=True)
     category = models.ForeignKey(Category, verbose_name=("Categoría"), on_delete=models.CASCADE, null=True)
     users = models.ManyToManyField(User, verbose_name="Asignada a", related_name="usuarios", blank=True)
     identifier = models.CharField(verbose_name=("Identificador"), default=secrets.token_hex(10), max_length=300)
@@ -77,9 +77,10 @@ class Task(models.Model):
                     "finishedComment": comment
                 },
                 "fullDescription": self.fullDescription.replace("\"", "	&quot;"),
-                "image": self.image.url,
-                "mediaDescription": self.media.path.replace("\\", "/").split("asociacion_vale/")[1],
+                "image": self.image.url if self.image else "",
+                "mediaDescription": self.media.path.replace("\\", "/").split("asociacion_vale/")[1] if self.media else "",
                 "category": str(self.category),
+                "date": str(self.createdAt),
                 "rating": {
                     "text": text,
                     "difficulty": difficulty,
@@ -116,6 +117,14 @@ class Progress(models.Model):
     def __str__(self):
         return f'{str(self.user)} | {str(self.category)} - {self.done}/{self.total}'
 
+    def serializeCustom(self):
+        data = {
+            "user": str(self.user),
+            "category": str(self.category),
+            "done": self.done,
+            "total": str(self.total)
+        }
+        return data
 
 class TaskStatus(models.Model):
     user = models.ForeignKey(User, verbose_name=("Usuario"), on_delete=models.CASCADE, null=True)

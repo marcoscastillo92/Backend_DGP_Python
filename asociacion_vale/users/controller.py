@@ -240,7 +240,8 @@ class Controller:
         if userFromDB:
             today = date.today()
             calculatedAge = today.year - userFromDB.birthDate.year - ((today.month, today.day) < (userFromDB.birthDate.month, userFromDB.birthDate.day))
-            response = {"user": {"name": userFromDB.name, "age": calculatedAge, "username": userFromDB.username, "genre": userFromDB.gender, "image": ""}}
+            response = {"user": {"name": userFromDB.name, "age": calculatedAge, "username": userFromDB.username, "genre": userFromDB.gender}}
+            response['user']['image'] = userFromDB.profileImage.url
             return JsonResponse(response, safe=False)
         else:
             response = {"result":"error", "message":"El usuario no existe"}
