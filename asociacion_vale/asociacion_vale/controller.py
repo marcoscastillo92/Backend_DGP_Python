@@ -1,3 +1,5 @@
+import os
+
 from django.shortcuts import redirect, render
 from users.models import User, Pictograms
 from forums.models import Forum
@@ -403,11 +405,15 @@ class Controller:
         user = User.objects.get(id=userId)
         messages = []
         for message in messagesTask:
-            mimeType = message.get('mimeType') if message.get('mimeType') else ""
+            file = message.get('mimeType') if message.get('mimeType') else ""
+            if file:
+                name, mimeType = os.path.splitext(file)
+            else:
+                mimeType = None
             if message.get('emisorUser_id') == userId:
-                messages.append({"body": message.get('body'), "emisor": user.username, "created": message.get('createdAt'), "identifier": message.get('identifier'), "mimeType": mimeType})
+                messages.append({"body": message.get('body'), "emisor": user.username, "created": message.get('createdAt'), "identifier": message.get('identifier'), "mimeType": mimeType, "file": file})
             elif message.get('emisorTutor_id') == tutor.id:
-                messages.append({"body": message.get('body'), "emisor": tutor.username, "created": message.get('createdAt'), "identifier": message.get('identifier'), "mimeType": mimeType})
+                messages.append({"body": message.get('body'), "emisor": tutor.username, "created": message.get('createdAt'), "identifier": message.get('identifier'), "mimeType": mimeType, "file": file})
 
         if identifier:
             taskFromDB = Task.objects.filter(identifier=identifier)
@@ -421,7 +427,7 @@ class Controller:
         tutor = Tutor.objects.get(username=request.session.get('username', False))
         user = User.objects.get(id=userId)
         body = request.POST.get('body')
-        mimeType = request.FILES.get('mimeType') if request.FILES.get('mimeType') else ""
+        mimeType = request.FILES.get('file') if request.FILES.get('file') else ""
         category = request.POST.get('category')
         newForum = Forum(
             body=body,
