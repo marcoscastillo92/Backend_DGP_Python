@@ -1,0 +1,54 @@
+{% extends  "tutors/tutors.html" %}
+{% load static %}
+{% block otherScripts %}
+<script type="text/javascript" src="{% static 'javascript/users.js' %}"></script>
+{% endblock %}
+
+{% block main %}
+<div class="container align-items-center" style="width: 59%;">
+    <div class="row mt-4 w-10">
+        <a class="btn btn-dark m-1 w-10" href="http://localhost:8000/tutors/users/profile/{{ user.id }}">Atrás</a>
+        <div class="col-sm" style="color: white; margin-right: -7%;">
+            <h2>Resultados de {{ user.name }}</h2>
+        </div>
+    </div>
+</div>
+
+{% if objetives %}
+    {% for progress in objetives %}
+    <div class="container pt-3 w-50">
+        <div class="card">
+            <div class="row fila">
+                <div class="col-sm">
+                    <div class="card-body">
+                        <div class="col-sm ">
+                            <h5 class="card-title p-2">{{ progress.category }}</h5>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-striped" role="progressbar"
+                                style="width: {{ progress.percent }}%" aria-valuenow="{{ progress.percent }}" aria-valuemin="0"
+                                aria-valuemax="100">{{ progress.percent }}%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+{% else %}
+    <div class="container pt-3 w-50">
+        <div class="card align-items-center">
+            <div class="row fila">
+                <div class="col-sm">
+                    <div class="card-body">
+                        <div class="col-sm ">
+                            <h5 class="card-title p-2">No hay objetivos para este usuario</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+{% endblock %}
