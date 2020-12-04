@@ -219,24 +219,22 @@ def tutorsUsersProfile(request, id):
         if request.session.get('username', False):
             controller = Controller()
             return  controller.tutorProfile(request, id)
-        else:
-            return redirect('/')
+    return redirect('/')
 
 @csrf_exempt
 def tutorsUsersProfileTutor(request):
     if request.method == 'GET':
         if request.session.get('username', False):
             controller = Controller()
-        else:
             return  controller.tutorsUsersProfileTutor(request)
-            return redirect('/')
+    return redirect('/')
 
 @csrf_exempt
 def tutorsUsersProfileEdit(request,id):
     if request.session.get('username', False):
         controller = Controller()
-    return redirect('/')
         return controller.tutorsUsersProfileEdit(request, id)
+    return redirect('/')
 
 @csrf_exempt
 def tutorsUsersResults(request,id):

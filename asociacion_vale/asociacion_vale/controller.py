@@ -436,3 +436,57 @@ class Controller:
         )
         newForum.save()
         return redirect('taskChat', identifier=identifier, userId=userId)
+
+    def tutorProfile(self, request, id):
+        username = request.session.get('username')
+        
+        tutor = list(Tutor.objects.filter(username = username).values())
+        user = list(User.objects.filter(id = id ).values())
+        
+        context = {}
+        context['tutor'] = tutor[0]
+        context['user'] = user[0] 
+        context['id'] = int(id)
+        
+        return render(request,'./tutors/profile.html', context)
+
+    def tutorsUsersProfileEdit(self,request,id):
+        infoUser = User.objects.get(id=id)
+        userForm = uForm.UserForm(request.POST or None, request.FILES or None, instance=infoUser)
+        userForm.fields['profileImage'].required = False
+        #userForm.fields['media'].required = False
+        context = {'task': infoUser, 'form': userForm , 'id' : id}
+        if request.method == 'POST':
+            # Guardar cambios
+            if userForm.is_valid():
+                userForm.save()
+                context['response']='success'
+                return render(request, 'tutors/editUserProfile.html', context)
+        return render(request, 'tutors/editUserProfile.html', context)
+
+    def tutorsUsersProfileTutor(self, request):
+        username = request.session.get('username')
+        
+        user = list(Tutor.objects.filter(username = username).values())
+        
+        context = {}
+        context['user'] = user[0]
+        
+        return render(request,'./tutors/profileTutor.html', context)
+    
+    def tutorsUsersResults(self,request,id):
+        user = User.objects.get(id = id )
+
+        taskProgress = (Progress.objects.filter(user = user).values())
+
+        progress = []
+        for p in taskProgress:
+            category = Category.objects.get(id = p.get("category_id"))
+            progress.append({"category": str(category), "percent": int(p.get("done")/p.get("total")*100)})
+        
+        context = {}
+        context['user'] = user
+        context['id'] = int(id)
+        context['objetives'] = progress
+        
+        return render(request,'./tutors/results.html', context)
