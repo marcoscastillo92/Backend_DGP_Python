@@ -25,7 +25,9 @@ urlpatterns = [
     path('tutors/login' , views.tutorsLogin, name='login' ),
     path('tutors/logout' , views.tutorsLogout , name='logout'),
     path('tutors/users' , views.tutorsUsers , name='users'),
+    path('tutors/tutor' , views.tutorsUsersProfileTutor , name='tutor'),
     path('tutors/users/edit/<int:id>' , views.tutorsUsersEdit , name='tutorsUserEdit'),
+    path('tutors/users/editProfile/<int:id>' , views.tutorsUsersProfileEdit , name='tutorsUsersProfileEdit'),
     path('tutors/users/add' , views.tutorsUsersAdd , name='tutorsUsersAdd'),
     path('tutors/users/add/confirm' , views.tutorsUsersAddConfirm , name='tutorsUsersAddConfirm'),
     path('tutors/users/tutorsEditUsersPictograms' , views.tutorsEditUsersPictograms , name='tutorsEditUsersPictograms'),
@@ -55,4 +57,6 @@ urlpatterns = [
     path('tasks/', include('tasks.urls')),
     path('post-message', views.postMessage, name='postMessage'),
     path('get-messages', views.getMessages, name="getMessages"),
+    path('tutors/users/profile/<int:id>' , views.tutorsUsersProfile , name='tutorsUsersProfile'),
+    path('tutors/users/profile/<int:id>/results' , views.tutorsUsersResults , name='tutorsUsersResults'),
 ]
