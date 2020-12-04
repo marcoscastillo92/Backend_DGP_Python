@@ -50,13 +50,15 @@ class Controller:
                 if l.emisorUser_id:
                     user = User.objects.filter(id=l.emisorUser_id)
                     print(user[0].username)
-                    respuesta = {"body":l.body, "emisor_name": user[0].name, "emisor":user[0].username,  "created":l.createdAt, "identifier":l.identifier, "mimeType":l.mimeType.path, "tutor": False}
+                    respuesta = {"body":l.body, "emisor_name": user[0].name, "emisor":user[0].username,  "created":l.createdAt, "identifier":l.identifier, "tutor": False}
+                    respuesta['mimeType'] = l.mimeType.path if l.mimeType else ""
                     var.append(respuesta)
 
                 if l.emisorTutor_id:
                     user = Tutor.objects.filter(id=l.emisorTutor_id)
                     print(user[0].username)
-                    respuesta = {"body":l.body, "emisor_name": user[0].name, "emisor":user[0].username,  "created":l.createdAt, "identifier":l.identifier, "mimeType":l.mimeType.path, "tutor": True}
+                    respuesta = {"body":l.body, "emisor_name": user[0].first_name+" "+user[0].last_name, "emisor":user[0].username,  "created":l.createdAt, "identifier":l.identifier, "tutor": True}
+                    respuesta['mimeType'] = l.mimeType.path if l.mimeType else ""
                     var.append(respuesta)
             print(var)
             formatResponse = {"mensajes": var}
@@ -68,23 +70,25 @@ class Controller:
     def getMessagesTutors(self, id):
             lista = Forum.objects.filter(identifier=id)
             myList = list(lista.order_by('createdAt'))
-            
+
             var = []
             for l in myList:
                 if l.emisorUser_id:
                     user = User.objects.filter(id = l.emisorUser_id)
                     print(user[0].username)
-                    respuesta = {"body":l.body, "emisor":user[0].username,  "created":l.createdAt, "identifier":l.identifier, "mimeType":l.mimeType.path}
+                    respuesta = {"body":l.body, "emisor":user[0].username,  "created":l.createdAt, "identifier":l.identifier}
+                    respuesta['mimeType'] = l.mimeType.path if l.mimeType else ""
                     var.append(respuesta)
 
                 if l.emisorTutor_id:
                     user = Tutor.objects.filter(id = l.emisorTutor_id)
                     print(user[0].username)
-                    respuesta = {"body":l.body, "emisor":user[0].username,  "created":l.createdAt, "identifier":l.identifier, "mimeType":l.mimeType.path}
+                    respuesta = {"body":l.body, "emisor":user[0].username,  "created":l.createdAt, "identifier":l.identifier}
+                    respuesta['mimeType'] = l.mimeType.path if l.mimeType else ""
                     var.append(respuesta)
             formatResponse = {"mensajes" : var}
             return formatResponse
-    
+
     def postMessage(self, request):
         token = request.META['HTTP_AUTHORIZATION']
         userFromDB = self.getUserByToken(token)
@@ -95,7 +99,7 @@ class Controller:
             forum = Forum.objects.filter(identifier=identifier, category="welcomeMessage")  # mensaje creado por defecto
             if forum:
                 body = bodyData['body']
-                mimeType = bodyData['mimeType']
+                mimeType = bodyData['mimeType'] if bodyData['mimeType'] else ""
                 category = bodyData['category']
                 newForum = Forum(
                     body=body,
@@ -113,8 +117,6 @@ class Controller:
             else:
                 response = {"result": "error", "message": "El foro no existe"}
                 return JsonResponse(response, safe=False)
-            messagesForum = list(Forum.objects.filter(id=idForum).values())
-            return JsonResponse(messagesForum, safe=False)
         else:
             response = {"result": "error", "message": "El usuario no existe"}
             return JsonResponse(response, safe=False)
@@ -124,18 +126,18 @@ class Controller:
         forum = Forum.objects.filter(identifier = identifier, category="welcomeMessage") #mensaje creado por defecto
         if forum:
             body = request.POST.get('body')
-            mimeType = request.POST.get('mimeType')
+            mimeType = request.POST.get('mimeType') if request.POST.get('mimeType') else ""
             category = request.POST.get('category')
             newForum = Forum(
                 body = body,
                 emisorTutor = forum[0].emisorTutor,
                 emisorUser = None,
-                receptorTutor = None, 
+                receptorTutor = None,
                 receptorUser = None,
                 mimeType = mimeType,
                 category = category,
                 identifier = identifier
-            )                
+            )
             newForum.save()
             return True
         else:
@@ -175,7 +177,7 @@ class Controller:
             for group in listGroups:
                 arrayGroups.append(group)
             context['groups'] = arrayGroups
-        
+
         return render(request,'./tutors/groups.html', context)
 
     def tutorUsers(self,request):
@@ -188,7 +190,7 @@ class Controller:
                 arrayUsers.append(user)
             context['users'] = arrayUsers
         return render(request,'./tutors/users.html', context)
-            
+
 
     def tutorsUsersEdit(self,request,id):
         infoUser = User.objects.get(id=id)
@@ -216,7 +218,7 @@ class Controller:
             if userForm.is_valid():
                 userForm.save()
                 return render(request, 'tutors/addUser.html', context)
-                
+
     def tutorsUsersAddConfirm(self, request):
         userForm = uForm.UserForm(request.POST or None, request.FILES or None)
         #userForm.fields['media'].required = False
@@ -239,7 +241,7 @@ class Controller:
             if userFromDB:
                 userFromDB.delete()
                 return redirect('/tutors/users')
-        
+
     def tutorsUsersDeleteById(self, request, id):
         if request.method == 'GET':
             userFromDB = User.objects.filter(id=id)
@@ -249,31 +251,29 @@ class Controller:
 
     def tutorsEditUsersPictograms(self, request):
         if request.method == 'POST':
-            pictogramSize = 6
+            pictogramSize = 4
             userId = request.POST.get('id')
             firstPictogram = request.POST.get('firstPictogram')
             secondPictogram = request.POST.get('secondPictogram')
             thirdPictogram = request.POST.get('thirdPictogram')
             fourthPictogram = request.POST.get('fourthPictogram')
-            fifthPictogram = request.POST.get('fifthPictogram')
-            sixthPictogram = request.POST.get('sixthPictogram')
 
-            arrayPictograms = [firstPictogram, secondPictogram, thirdPictogram, fourthPictogram, fifthPictogram, sixthPictogram]
+            arrayPictograms = [firstPictogram, secondPictogram, thirdPictogram, fourthPictogram]
             listPictograms = list(Pictograms.objects.all().values())
             password = ""
             for index in range(0, pictogramSize):
                 for pictogram in listPictograms:
                     if pictogram['name'] == arrayPictograms[index]:
-                        password += pictogram['key'] 
+                        password += pictogram['key']
             userFromDB = User.objects.get(id=userId)
             userFromDB.password = password
             userFromDB.save()
             return redirect('/tutors/users')
 
-    
+
     def tutorsEditUserPassword(self, request, id):
         if request.method == 'GET':
-            pictogramsSize = 6
+            pictogramsSize = 4
             pictogramsFromDB= list(Pictograms.objects.all().values())
             userFromDB = User.objects.filter(id=id)
             userPassword = userFromDB[0].password
@@ -292,7 +292,7 @@ class Controller:
             context = {'id':id, 'pictograms': pictogramsFromDB, 'userPictograms': userPictogramConfig}
             return render(request, 'tutors/addUserPictograms.html', context)
 
-    
+
     def tutorTasks(self, request):
         tutor = Tutor.objects.filter(username=request.session.get('username'))[0]
         taskStatus = TaskStatus.objects.filter(tutor=tutor)
@@ -303,7 +303,8 @@ class Controller:
         taskForm = forms.TaskForm(request.POST or None, request.FILES or None)
         taskForm.fields['image'].required = False
         taskForm.fields['media'].required = False
-        context = {'tutor': tutor, 'tasks': tasks, 'form': taskForm}
+        users = User.objects.all()
+        context = {'tutor': tutor, 'tasks': tasks, 'form': taskForm, 'users': users}
         return render(request, './tutors/tasks.html', context)
 
     def tutorTasksDetail(self, request, id):
@@ -335,12 +336,44 @@ class Controller:
         taskForm = forms.TaskForm(request.POST or None, request.FILES or None, instance=infoTask)
         taskForm.fields['image'].required = False
         taskForm.fields['media'].required = False
-        context = {'task': infoTask, 'form': taskForm, 'taskStatus': taskStatus, 'ratings': ratings}
+        categoryForm = forms.CategoryForm()
+        allUsers = list(User.objects.all().values())
+        usersOut = []
+        usersIn = []
+
+        for i in allUsers:
+            usersOut.append(i)
+
+        if request.method == 'GET':
+            for i in infoTask.users.all():
+                usersIn.append(i)
+
         if request.method == 'POST':
             # Guardar cambios
             if taskForm.is_valid():
                 taskForm.save()
-                return render(request, 'tutors/task-detail.html', context)
+                usersInTask = request.POST.getlist('listUsers')
+                for i in usersInTask:
+                    userToAdd = User.objects.get(id=int(i))
+                    if userToAdd not in usersIn:
+                        usersIn.append(userToAdd)
+
+        for i in range(len(usersOut)):
+            for j in usersIn:
+                if usersOut[i].get('username') == j.username:
+                    usersOut.pop(i)
+            break
+
+        if request.method == 'POST':
+            if taskForm.is_valid():
+                for user in usersIn:
+                    if user not in taskForm.instance.users.all():
+                        taskForm.instance.users.add(user)
+                for user in usersOut:
+                    if user in taskForm.instance.users.all():
+                        taskForm.instance.users.remove(user)
+        context = {'task': infoTask, 'form': taskForm, 'taskStatus': taskStatus, 'ratings': ratings,
+                   'categoryForm': categoryForm, 'users': usersOut, 'usersIn': usersIn}
         return render(request, 'tutors/task-detail.html', context)
 
     def tutorTasksDelete(self, request, id):
@@ -353,12 +386,30 @@ class Controller:
         taskForm.fields['image'].required = False
         taskForm.fields['media'].required = False
         taskForm.save()
-        return redirect('tutorTasks')
+        usersInTask = request.POST.getlist('listUsers')
+        for user in usersInTask:
+            userFromDB = User.objects.get(id=int(user))
+            if userFromDB:
+                taskForm.instance.users.add(userFromDB)
+        taskForm.instance.save()
+        return redirect('tutorTasksEdit', id=taskForm.instance.id)
         pass
 
-    def chatTask(self, request, identifier):
+    def chatTask(self, request, identifier, userId):
         context = {}
-        messages = self.getMessagesTutors(request)
+        lista = Forum.objects.filter(identifier=identifier).values()
+        messagesTask = list(lista.order_by('createdAt'))
+        tutor = Tutor.objects.get(username=request.session.get('username'))
+        context['userId'] = userId
+        user = User.objects.get(id=userId)
+        messages = []
+        for message in messagesTask:
+            mimeType = message.get('mimeType') if message.get('mimeType') else ""
+            if message.get('emisorUser_id') == userId:
+                messages.append({"body": message.get('body'), "emisor": user.username, "created": message.get('createdAt'), "identifier": message.get('identifier'), "mimeType": mimeType})
+            elif message.get('emisorTutor_id') == tutor.id:
+                messages.append({"body": message.get('body'), "emisor": tutor.username, "created": message.get('createdAt'), "identifier": message.get('identifier'), "mimeType": mimeType})
+
         if identifier:
             taskFromDB = Task.objects.filter(identifier=identifier)
             context['task'] = taskFromDB[0]
@@ -367,60 +418,21 @@ class Controller:
         context['tutor'] = request.session.get('username')
         return render(request, './tutors/task-chat.html', context)
 
-    def postChatTask(self, request, identifier):
-        message = Forum(body=request.POST.get('text'), )
-        return redirect('taskChat', identifier=identifier)
-
-    def tutorProfile(self, request, id):
-        username = request.session.get('username')
-        
-        tutor = list(Tutor.objects.filter(username = username).values())
-        user = list(User.objects.filter(id = id ).values())
-        
-        context = {}
-        context['tutor'] = tutor[0]
-        context['user'] = user[0] 
-        context['id'] = int(id)
-        
-        return render(request,'./tutors/profile.html', context)
-
-    def tutorsUsersProfileEdit(self,request,id):
-        infoUser = User.objects.get(id=id)
-        userForm = uForm.UserForm(request.POST or None, request.FILES or None, instance=infoUser)
-        userForm.fields['profileImage'].required = False
-        #userForm.fields['media'].required = False
-        context = {'task': infoUser, 'form': userForm , 'id' : id}
-        if request.method == 'POST':
-            # Guardar cambios
-            if userForm.is_valid():
-                userForm.save()
-                context['response']='success'
-                return render(request, 'tutors/editUserProfile.html', context)
-        return render(request, 'tutors/editUserProfile.html', context)
-
-    def tutorsUsersProfileTutor(self, request):
-        username = request.session.get('username')
-        
-        user = list(Tutor.objects.filter(username = username).values())
-        
-        context = {}
-        context['user'] = user[0]
-        
-        return render(request,'./tutors/profileTutor.html', context)
-    
-    def tutorsUsersResults(self,request,id):
-        user = User.objects.get(id = id )
-
-        taskProgress = (Progress.objects.filter(user = user).values())
-
-        progress = []
-        for p in taskProgress:
-            category = Category.objects.get(id = p.get("category_id"))
-            progress.append({"category": str(category), "percent": int(p.get("done")/p.get("total")*100)})
-        
-        context = {}
-        context['user'] = user
-        context['id'] = int(id)
-        context['objetives'] = progress
-        
-        return render(request,'./tutors/results.html', context)
+    def postChatTask(self, request, identifier, userId):
+        tutor = Tutor.objects.get(username=request.session.get('username', False))
+        user = User.objects.get(id=userId)
+        body = request.POST.get('body')
+        mimeType = request.FILES.get('mimeType') if request.FILES.get('mimeType') else ""
+        category = request.POST.get('category')
+        newForum = Forum(
+            body=body,
+            emisorTutor=tutor,
+            emisorUser=None,
+            receptorTutor=None,
+            receptorUser=user,
+            mimeType=mimeType,
+            category=category,
+            identifier=identifier
+        )
+        newForum.save()
+        return redirect('taskChat', identifier=identifier, userId=userId)
