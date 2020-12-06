@@ -356,6 +356,7 @@ class Controller:
     def tutorTasks(self, request):
         tutor = Tutor.objects.filter(username=request.session.get('username'))[0]
         taskStatus = TaskStatus.objects.filter(tutor=tutor)
+        categoryForm = forms.CategoryForm()
         tasks = []
         for status in taskStatus:
             if not status.task in tasks:
@@ -364,7 +365,7 @@ class Controller:
         taskForm.fields['image'].required = False
         taskForm.fields['media'].required = False
         users = User.objects.all()
-        context = {'tutor': tutor, 'tasks': tasks, 'form': taskForm, 'users': users}
+        context = {'tutor': tutor, 'tasks': tasks, 'form': taskForm, 'users': users, 'categoryForm': categoryForm}
         return render(request, './tutors/tasks.html', context)
 
     def tutorTasksDetail(self, request, id):
