@@ -12,3 +12,5 @@ asociacion_vale/groups/migrations/__pycache__/
 asociacion_vale/uploads/
 
 asociacion_vale/.idea/
+
+asociacion_vale/static/uploads
