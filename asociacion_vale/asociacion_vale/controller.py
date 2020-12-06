@@ -1,8 +1,10 @@
+import os
+
 from django.shortcuts import redirect, render
 from users.models import User, Pictograms
 from forums.models import Forum
 from groups.models import Groups
-from tasks.models import Task, TaskStatus, Rating
+from tasks.models import Task, TaskStatus, Progress, Category, Rating
 from tasks import forms
 from django.http import JsonResponse
 from django.contrib.auth.models import User as Tutor
@@ -78,7 +80,7 @@ class Controller:
     def getMessagesTutors(self, id):
             lista = Forum.objects.filter(identifier=id)
             myList = list(lista.order_by('createdAt'))
-            
+
             var = []
             for l in myList:
                 if l.emisorUser_id:
@@ -149,8 +151,6 @@ class Controller:
             else:
                 response = {"result": "error", "message": "El foro no existe"}
                 return JsonResponse(response, safe=False)
-            messagesForum = list(Forum.objects.filter(id=idForum).values())
-            return JsonResponse(messagesForum, safe=False)
         else:
             response = {"result": "error", "message": "El usuario no existe"}
             return JsonResponse(response, safe=False)
@@ -170,13 +170,13 @@ class Controller:
                 body = body,
                 emisorTutor = forum[0].emisorTutor,
                 emisorUser = None,
-                receptorTutor = None, 
+                receptorTutor = None,
                 receptorUser = None,
                 path = pathFile,
                 mimeType = mimeType,
                 category = category,
                 identifier = identifier
-            )                
+            )
             newForum.save()
             return True
         else:
@@ -215,7 +215,7 @@ class Controller:
             for group in listGroups:
                 arrayGroups.append(group)
             context['groups'] = arrayGroups
-        
+
         return render(request,'./tutors/groups.html', context)
 
     def tutorUsers(self,request):
@@ -228,7 +228,7 @@ class Controller:
                 arrayUsers.append(user)
             context['users'] = arrayUsers
         return render(request,'./tutors/users.html', context)
-            
+
 
     def tutorsUsersEdit(self,request,id):
         infoUser = User.objects.get(id=id)
@@ -256,7 +256,7 @@ class Controller:
             if userForm.is_valid():
                 userForm.save()
                 return render(request, 'tutors/addUser.html', context)
-                
+
     def tutorsUsersAddConfirm(self, request):
         userForm = uForm.UserForm(request.POST or None, request.FILES or None)
         #userForm.fields['media'].required = False
@@ -279,7 +279,7 @@ class Controller:
             if userFromDB:
                 userFromDB.delete()
                 return redirect('/tutors/users')
-        
+
     def tutorsUsersDeleteById(self, request, id):
         if request.method == 'GET':
             userFromDB = User.objects.filter(id=id)
@@ -302,13 +302,13 @@ class Controller:
             for index in range(0, pictogramSize):
                 for pictogram in listPictograms:
                     if pictogram['name'] == arrayPictograms[index]:
-                        password += pictogram['key'] 
+                        password += pictogram['key']
             userFromDB = User.objects.get(id=userId)
             userFromDB.password = password
             userFromDB.save()
             return redirect('/tutors/users')
 
-    
+
     def tutorsEditUserPassword(self, request, id):
         if request.method == 'GET':
             pictogramsSize = 4
@@ -328,7 +328,7 @@ class Controller:
             context = {'id':id, 'pictograms': pictogramsFromDB, 'userPictograms': userPictogramConfig}
             return render(request, 'tutors/addUserPictograms.html', context)
 
-    
+
     def tutorTasks(self, request):
         tutor = Tutor.objects.filter(username=request.session.get('username'))[0]
         taskStatus = TaskStatus.objects.filter(tutor=tutor)
@@ -339,7 +339,8 @@ class Controller:
         taskForm = forms.TaskForm(request.POST or None, request.FILES or None)
         taskForm.fields['image'].required = False
         taskForm.fields['media'].required = False
-        context = {'tutor': tutor, 'tasks': tasks, 'form': taskForm}
+        users = User.objects.all()
+        context = {'tutor': tutor, 'tasks': tasks, 'form': taskForm, 'users': users}
         return render(request, './tutors/tasks.html', context)
 
     def tutorTasksDetail(self, request, id):
@@ -371,12 +372,44 @@ class Controller:
         taskForm = forms.TaskForm(request.POST or None, request.FILES or None, instance=infoTask)
         taskForm.fields['image'].required = False
         taskForm.fields['media'].required = False
-        context = {'task': infoTask, 'form': taskForm, 'taskStatus': taskStatus, 'ratings': ratings}
+        categoryForm = forms.CategoryForm()
+        allUsers = list(User.objects.all().values())
+        usersOut = []
+        usersIn = []
+
+        for i in allUsers:
+            usersOut.append(i)
+
+        if request.method == 'GET':
+            for i in infoTask.users.all():
+                usersIn.append(i)
+
         if request.method == 'POST':
             # Guardar cambios
             if taskForm.is_valid():
                 taskForm.save()
-                return render(request, 'tutors/task-detail.html', context)
+                usersInTask = request.POST.getlist('listUsers')
+                for i in usersInTask:
+                    userToAdd = User.objects.get(id=int(i))
+                    if userToAdd not in usersIn:
+                        usersIn.append(userToAdd)
+
+        for i in range(len(usersOut)):
+            for j in usersIn:
+                if usersOut[i].get('username') == j.username:
+                    usersOut.pop(i)
+            break
+
+        if request.method == 'POST':
+            if taskForm.is_valid():
+                for user in usersIn:
+                    if user not in taskForm.instance.users.all():
+                        taskForm.instance.users.add(user)
+                for user in usersOut:
+                    if user in taskForm.instance.users.all():
+                        taskForm.instance.users.remove(user)
+        context = {'task': infoTask, 'form': taskForm, 'taskStatus': taskStatus, 'ratings': ratings,
+                   'categoryForm': categoryForm, 'users': usersOut, 'usersIn': usersIn}
         return render(request, 'tutors/task-detail.html', context)
 
     def tutorTasksDelete(self, request, id):
@@ -389,12 +422,34 @@ class Controller:
         taskForm.fields['image'].required = False
         taskForm.fields['media'].required = False
         taskForm.save()
-        return redirect('tutorTasks')
+        usersInTask = request.POST.getlist('listUsers')
+        for user in usersInTask:
+            userFromDB = User.objects.get(id=int(user))
+            if userFromDB:
+                taskForm.instance.users.add(userFromDB)
+        taskForm.instance.save()
+        return redirect('tutorTasksEdit', id=taskForm.instance.id)
         pass
 
-    def chatTask(self, request, identifier):
+    def chatTask(self, request, identifier, userId):
         context = {}
-        messages = self.getMessagesTutors(request)
+        lista = Forum.objects.filter(identifier=identifier).values()
+        messagesTask = list(lista.order_by('createdAt'))
+        tutor = Tutor.objects.get(username=request.session.get('username'))
+        context['userId'] = userId
+        user = User.objects.get(id=userId)
+        messages = []
+        for message in messagesTask:
+            file = message.get('mimeType') if message.get('mimeType') else ""
+            if file:
+                name, mimeType = os.path.splitext(file)
+            else:
+                mimeType = None
+            if message.get('emisorUser_id') == userId:
+                messages.append({"body": message.get('body'), "emisor": user.username, "created": message.get('createdAt'), "identifier": message.get('identifier'), "mimeType": mimeType, "file": file})
+            elif message.get('emisorTutor_id') == tutor.id:
+                messages.append({"body": message.get('body'), "emisor": tutor.username, "created": message.get('createdAt'), "identifier": message.get('identifier'), "mimeType": mimeType, "file": file})
+
         if identifier:
             taskFromDB = Task.objects.filter(identifier=identifier)
             context['task'] = taskFromDB[0]
@@ -403,6 +458,75 @@ class Controller:
         context['tutor'] = request.session.get('username')
         return render(request, './tutors/task-chat.html', context)
 
-    def postChatTask(self, request, identifier):
-        message = Forum(body=request.POST.get('text'), )
-        return redirect('taskChat', identifier=identifier)
+    def postChatTask(self, request, identifier, userId):
+        tutor = Tutor.objects.get(username=request.session.get('username', False))
+        user = User.objects.get(id=userId)
+        body = request.POST.get('body')
+        mimeType = request.FILES.get('file') if request.FILES.get('file') else ""
+        category = request.POST.get('category')
+        newForum = Forum(
+            body=body,
+            emisorTutor=tutor,
+            emisorUser=None,
+            receptorTutor=None,
+            receptorUser=user,
+            mimeType=mimeType,
+            category=category,
+            identifier=identifier
+        )
+        newForum.save()
+        return redirect('taskChat', identifier=identifier, userId=userId)
+
+    def tutorProfile(self, request, id):
+        username = request.session.get('username')
+        
+        tutor = list(Tutor.objects.filter(username = username).values())
+        user = list(User.objects.filter(id = id ).values())
+        
+        context = {}
+        context['tutor'] = tutor[0]
+        context['user'] = user[0] 
+        context['id'] = int(id)
+        
+        return render(request,'./tutors/profile.html', context)
+
+    def tutorsUsersProfileEdit(self,request,id):
+        infoUser = User.objects.get(id=id)
+        userForm = uForm.UserForm(request.POST or None, request.FILES or None, instance=infoUser)
+        userForm.fields['profileImage'].required = False
+        #userForm.fields['media'].required = False
+        context = {'task': infoUser, 'form': userForm , 'id' : id}
+        if request.method == 'POST':
+            # Guardar cambios
+            if userForm.is_valid():
+                userForm.save()
+                context['response']='success'
+                return render(request, 'tutors/editUserProfile.html', context)
+        return render(request, 'tutors/editUserProfile.html', context)
+
+    def tutorsUsersProfileTutor(self, request):
+        username = request.session.get('username')
+        
+        user = list(Tutor.objects.filter(username = username).values())
+        
+        context = {}
+        context['user'] = user[0]
+        
+        return render(request,'./tutors/profileTutor.html', context)
+    
+    def tutorsUsersResults(self,request,id):
+        user = User.objects.get(id = id )
+
+        taskProgress = (Progress.objects.filter(user = user).values())
+
+        progress = []
+        for p in taskProgress:
+            category = Category.objects.get(id = p.get("category_id"))
+            progress.append({"category": str(category), "percent": int(p.get("done")/p.get("total")*100)})
+        
+        context = {}
+        context['user'] = user
+        context['id'] = int(id)
+        context['objetives'] = progress
+        
+        return render(request,'./tutors/results.html', context)

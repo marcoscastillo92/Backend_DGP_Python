@@ -11,7 +11,7 @@
             <div class="card-body d-flex justify-content-center" >
                 <div class="row" > 
                     <div class="card p-2 m-2" style="width: 12rem;">
-                        <a href="/tutors/groups" style="text-decoration: none;">
+                        <a href="{% url 'groups' %}" style="text-decoration: none;">
                             <img src="{% static 'img/groups.png' %}" class="card-img-top p-2" alt="Imagen de Grupos">
                             <hr>
                             <div class="card-body text-center" style="margin-top: -20px;">
@@ -20,7 +20,7 @@
                         </a>
                     </div>
                     <div class="card p-2 m-2" style="width: 12rem;">
-                        <a href="/tutors/users" style="text-decoration: none;">
+                        <a href="{% url 'users' %}" style="text-decoration: none;">
                             <img src="{% static 'img/users.png' %}" class="card-img-top p-2" alt="Imagen de Usuarios">
                             <hr>
                             <div class="card-body text-center" style="margin-top: -20px;">
@@ -29,7 +29,7 @@
                         </a>
                     </div>
                     <div class="card p-2 m-2" style="width: 12rem;">
-                        <a href="#" style="text-decoration: none;">
+                        <a href="{% url 'tutor' %}" style="text-decoration: none;">
                             <img src="{% static 'img/userProfile.png' %}" class="card-img-top p-2" alt="Imagen de Perfil">
                             <hr>
                             <div class="card-body text-center" style="margin-top: -20px;">

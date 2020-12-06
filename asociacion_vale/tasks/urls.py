@@ -10,4 +10,5 @@ urlpatterns = [
     path('delete/<int:id>', views.deleteTask, name='deleteTask'),
     path('randomTask', views.randomTask, name='randomTask'),
     path('status', views.statusTask, name='statusTask'),
+    path('progress', views.progressUser, name='progress'),
 ]
