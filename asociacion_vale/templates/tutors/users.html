@@ -9,13 +9,30 @@
             <div class= "col " style="color: white;">
                 <h2>Usuarios</h2>
                 <input type="text" id="myInput" style=" padding: 10px; width: 262px;" onkeyup="myFunction()" placeholder="Busca por nombre...">
-                <a class="btn w-10 mb-1 p-2" style="margin-left: 40%; border-color: rgb(0, 255, 42); border-radius: 1000px; border-style: solid;" href="http://localhost:8000/tutors/users/add" >
+                <a class="btn w-10 mb-1 p-2" style="margin-left: 40%; border-color: rgb(0, 255, 42); border-style: solid; border-radius: 100px;" href="http://localhost:8000/tutors/users/add" >
                   <img src="{% static 'img/addUser.png' %}" alt="Añadir Usuario" width="50px"><span style="color: white; padding: 10px; font-size: 18px;">Crear Perfil</span>
                 </a>
             </div>
         </div>
         
     </div>
+    {% if not users %}
+    <div class="container mt-2" style="width: 60%; margin-right: 420px;">
+      <div class="card ">
+          <div class="row fila">
+              <div class="col">
+                  <div class="card-body">
+                      <div class="row mt-2 w-100 d-flex justify-content-center">
+                        <h3 class="p-2">No hay ningún usuario creado</h3>
+                      </div>
+                      
+                  </div>
+              </div>
+          </div>
+        </div>
+    </div>
+    {% endif %}
+
     <div id = "myUL">
     {% for user in users %}
         <div class="container">

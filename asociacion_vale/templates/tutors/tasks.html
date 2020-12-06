@@ -21,6 +21,22 @@
             </div>
         </div>
     </div>
+    {% if not tasks %}
+    <div class="container mt-2" style="width: 60%; margin-right: 420px;">
+      <div class="card ">
+          <div class="row fila">
+              <div class="col">
+                  <div class="card-body">
+                      <div class="row mt-2 w-100 d-flex justify-content-center">
+                        <h3 class="p-2">No hay ningún usuario creado</h3>
+                      </div>
+                      
+                  </div>
+              </div>
+          </div>
+        </div>
+    </div>
+    {% endif %}
     <div id="myUL">
         {% for task in tasks %}
             <div class="container">

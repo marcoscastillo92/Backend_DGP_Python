@@ -29,9 +29,9 @@
     <header>
         
         <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-            <a class="navbar-brand" href="#">
+            <a class="navbar-brand" href="{% url 'home' %}">
               {% load static %}
-              <img src="{% static '/img/Logo.jpg' %}" alt="Asociacion Vale Logo" style="width:40px;">
+              <img src="{% static '/img/logo.png' %}" alt="Asociacion Vale Logo" style="width:75px;">
             </a>
             
             {% block nav %}{% endblock %}
