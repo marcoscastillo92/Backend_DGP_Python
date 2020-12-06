@@ -23,7 +23,6 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('tutors/home' , views.tutorsHome , name='home'),
     path('tutors/login' , views.tutorsLogin, name='login' ),
-    path('tutors/logout' , views.tutorsLogout , name='logout'),
     path('tutors/users' , views.tutorsUsers , name='users'),
     path('tutors/tutor' , views.tutorsUsersProfileTutor , name='tutor'),
     path('tutors/users/edit/<int:id>' , views.tutorsUsersEdit , name='tutorsUserEdit'),
@@ -59,4 +58,6 @@ urlpatterns = [
     path('get-messages', views.getMessages, name="getMessages"),
     path('tutors/users/profile/<int:id>' , views.tutorsUsersProfile , name='tutorsUsersProfile'),
     path('tutors/users/profile/<int:id>/results' , views.tutorsUsersResults , name='tutorsUsersResults'),
+    path('device-token', views.deviceToken, name="deviceToken"),
+    path('send-notification', views.sendNotification, name="sendNotification")
 ]

@@ -1,5 +1,4 @@
-import os
-
+from django.http.response import HttpResponse
 from django.shortcuts import redirect, render
 from users.models import User, Pictograms
 from forums.models import Forum
@@ -16,6 +15,8 @@ from users.controller import Controller as uController
 import os
 import base64
 from django.core.files.base import ContentFile
+from pyfcm import FCMNotification
+from notifications.controller import Controller as nController
 
 
 def handle_upload_image_task_form(f):
@@ -146,6 +147,15 @@ class Controller:
                     identifier=identifier
                 )
                 newForum.save()
+                ncon = nController()
+                if category == "group":
+                    group = Groups.objects.get(identifier=identifier)
+                    users = group.users.all()
+                    for user in users:
+                        if user.id != userFromDB.id:
+                            ncon.sendNotication(user.id,"messageGroup",group.name)
+
+
                 response = {"result": "success", "message": "El mensaje se ha almacenado correctamente"}
                 return JsonResponse(response, safe=False)
             else:
@@ -178,6 +188,20 @@ class Controller:
                 identifier = identifier
             )
             newForum.save()
+            if category== "group":
+                group = Groups.objects.get(identifier=identifier)
+                users = group.users.all()
+                
+                for user in users:
+                    ncon = nController()
+                    ncon.sendNotication(user.id,"messageGroup",group.name)
+           
+            """ if category == "task":
+                task = Task.objects.get(identifier=identifier)
+                user = task.users.all()
+                user
+                ncon.sendNotication(userFromDB.id,"messageTask",task.name) """
+                
             return True
         else:
             return False
@@ -530,3 +554,28 @@ class Controller:
         context['objetives'] = progress
         
         return render(request,'./tutors/results.html', context)
+
+    def deviceToken(self, request):
+        token = request.META['HTTP_AUTHORIZATION']
+        bodyUnicode = request.body.decode('utf-8')
+        params = json.loads(bodyUnicode)
+        tokenDevice = params['token']
+        user = User.objects.get(token = token)
+        user.deviceToken = tokenDevice
+        user.save()
+        return HttpResponse(tokenDevice)
+
+    def sendNotification(self, request):
+        bodyUnicode = request.body.decode('utf-8')
+        params = json.loads(bodyUnicode)
+        message = params['message']
+        user = User.objects.get(username = 'Marcos')
+        tokenDevice = user.deviceToken
+        push_service = FCMNotification(api_key="AAAAJPDrl-c:APA91bEKWQANHQcSQrkAlPOtN7rrGZ3VpyC1Zf17dCjCpCIZM6YCQ6unj4MFlOulo6dsXmmXFKWuSaSt-HE4JtqTJ675zPkYBNTtwvuUyXtqhQq74oTSzD85o4ZrVn9cTLphQEnlNjWb")
+        registration_id = tokenDevice
+        message_title = message
+        message_body = message
+        result = push_service.notify_single_device(registration_id=registration_id, message_title=message_title, message_body=message_body)
+        print(result)
+        return HttpResponse(tokenDevice)
+        

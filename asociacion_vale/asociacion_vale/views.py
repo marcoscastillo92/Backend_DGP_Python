@@ -24,12 +24,16 @@ def getMessages(request):
 
 @csrf_exempt
 def index(request):
-    if request.method == 'GET':
-        return render(request, './tutors/index.html')
+    if request.session.get('username', False):
+            return redirect('/tutors/home')
+    else:
+            
+        if request.method == 'GET':
+            return render(request, './tutors/index.html')
 
 
 @csrf_exempt
-def tutorsLogin(request):
+def tutorsLogin(request):   
     if request.method == 'POST':
         controller = Controller()
         return controller.tutorLogin(request)
@@ -46,11 +50,11 @@ def tutorsHome(request):
 
 @csrf_exempt
 def tutorsLogout(request):
-    if request.method == 'GET':
-        # Borro la cookie de usurname que es la que me dice si estoy logueado
-        del request.session['username']
-        request.session.modified = True
-        return redirect('/')
+    
+    # Borro la cookie de usurname que es la que me dice si estoy logueado
+    del request.session['username']
+    request.session.modified = True
+    return redirect('/')
 
 
 @csrf_exempt
@@ -242,3 +246,16 @@ def tutorsUsersResults(request,id):
         controller = Controller()
         return controller.tutorsUsersResults(request, id)
     return redirect('/')
+
+@csrf_exempt
+def deviceToken(request):
+    if request.method == 'POST':
+        controller = Controller()
+        return controller.deviceToken(request)
+
+@csrf_exempt
+def sendNotification(request):
+    if request.method == 'POST':
+        controller = Controller()
+        return controller.sendNotification(request)
+      
