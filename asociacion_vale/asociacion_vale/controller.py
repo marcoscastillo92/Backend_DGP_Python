@@ -246,11 +246,11 @@ class Controller:
         context = {}
         listUsers = list(User.objects.all().order_by('name').values())
 
+        arrayUsers = []
         if listUsers:
-            arrayUsers = []
             for user in listUsers:
                 arrayUsers.append(user)
-            context['users'] = arrayUsers
+        context['users'] = arrayUsers
         return render(request,'./tutors/users.html', context)
 
 

@@ -67,17 +67,19 @@
                         <img style="width: 200px; height:200px; border-radius: 700px; margin-left: 25%;" class="card-img" src="{% static user.profileImage %}"
                             alt="Card image cap">
                     {% endif %}
-                    <div class="col-sm ">
-                        <h5 class="card-title ml-5 p-2">Nombre: {{ user.name }}</h5>
-                    </div>
-                    <div class="col-sm ">
-                        <h5 class="card-title ml-5 p-2">Nombre de usuario: {{ user.username }}</h5>
-                    </div>
-                    <div class="col-sm ">
-                        <h5 class="card-title ml-5 p-2">Número de Teléfono: {{ user.phoneNumber }}</h5>
-                    </div>
-                    <div class="col-sm ">
-                        <h5 class="card-title ml-5 p-2">Email: {{ user.email }}</h5>
+                    <div class="mt-3 p-2">
+                        <div class="col-sm ">
+                            <h4 class="card-title ml-5 p-2"><b>Nombre:</b> <span style="font-size: 20px;">{{ user.name }}</span></h4>
+                        </div>
+                        <div class="col-sm ">
+                            <h4 class="card-title ml-5 p-2"><b>Nombre de usuario:</b> <span style="font-size: 20px;"></span>{{ user.username }}</span></h4>
+                        </div>
+                        <div class="col-sm ">
+                            <h4 class="card-title ml-5 p-2"><b>Número de Teléfono:</b> <span style="font-size: 20px;"></span>{{ user.phoneNumber }}</span></h4>
+                        </div>
+                        <div class="col-sm ">
+                            <h4 class="card-title ml-5 p-2"><b>Email:</b> <span style="font-size: 20px;"></span>{{ user.email }}</span></h4>
+                        </div>
                     </div>
                 </div>
             </div>
