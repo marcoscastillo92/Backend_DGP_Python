@@ -1,4 +1,4 @@
-from django.http.response import HttpResponse
+from django.http.response import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render
 from users.models import User, Pictograms
 from forums.models import Forum
@@ -579,4 +579,8 @@ class Controller:
         result = push_service.notify_single_device(registration_id=registration_id, message_title=message_title, message_body=message_body)
         print(result)
         return HttpResponse(tokenDevice)
-        
+
+    def createCategory(self, request):
+        category = forms.CategoryForm(request.POST)
+        category.save()
+        return HttpResponseRedirect('/tutors/tasks')
