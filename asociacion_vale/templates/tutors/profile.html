@@ -1,0 +1,88 @@
+{% extends  "tutors/tutors.html" %}
+{% load static %}
+{% block otherScripts %}
+<script type="text/javascript" src="{% static 'javascript/users.js' %}"></script>
+{% endblock %}
+
+{% block main %}
+<div class="container align-items-center" style="width: 59%;">
+    <div class="row mt-4 w-10">
+        <a class="btn btn-dark m-1 w-10" href="http://localhost:8000/tutors/users">Atrás</a>
+        <div class="col-sm" style="color: white; margin-right: -7%;">
+            <h2>Perfil</h2>
+        </div>
+        <div class="col-sm align-items-end">
+            <a class="btn btn-dark m-1 w-30" href="http://localhost:8000/tutors/users/profile/{{ user.id }}/results">Resultados</a>
+            <a class="btn btn-dark m-1 w-10" href="http://localhost:8000/tutors/users/editProfile/{{ user.id }}">Editar Perfil</a>
+            <button type="button" class="deleteProfile btn btn-dark m-1 w-10" data-toggle="modal" data-id="{{user.id}}"
+                data-name="{{user.name}}" data-target="#deleteProfileModal" data-created="{{user.createdAt}}">Borrar Perfil</button>
+            
+            <div class="modal fade" id="deleteProfileModal" tabindex="-1" role="dialog" aria-labelledby="deleteProfileModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteProfileModalLabel">Borrar Perfil</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form method="POST" action="{% url 'tutorsUsersDelete' %}">
+                                <p class="text-center">¿Realmente quiere borrar al usuario?</p>
+                                <div class="form-group">
+                                    <label for="recipient-name" class="col-form-label">Nombre:</label>
+                                    <input type="text" class="form-control" id="recipient-name" readonly>
+                                </div>
+                                <div class="form-group">
+                                    <label for="message-text" class="col-form-label">Creado el:</label>
+                                    <input type="text" class="form-control" id="recipient-createdAt" readonly>
+                                    <input type="hidden" name="id" id="recipient-id">
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-dark" data-dismiss="modal">Volver</button>
+                                    <button type="submit" class="btn btn-danger">Borrar</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="container pt-3 w-50">
+    <div class="card align-items-center">
+        <div class="row fila">
+            <div class="col-sm">
+                <div class="card-body">
+                    {% if user.profileImage == "null" %}
+                    <div class="col-1"  style="margin-left: 25%;">
+                        <img style="width: 200px; height:200px; border-radius: 700px; margin-left: 25%;" class="card-img" src="{% static '/img/profile.png' %}"
+                            alt="Card image cap">
+                    </div>
+                    {% else %}
+                        <img style="width: 200px; height:200px; border-radius: 700px; margin-left: 25%;" class="card-img" src="{% static user.profileImage %}"
+                            alt="Card image cap">
+                    {% endif %}
+                    <div class="col-sm ">
+                        <h5 class="card-title ml-5 p-2">Nombre: {{ user.name }}</h5>
+                    </div>
+                    <div class="col-sm ">
+                        <h5 class="card-title ml-5 p-2">Nombre de usuario: {{ user.username }}</h5>
+                    </div>
+                    <div class="col-sm ">
+                        <h5 class="card-title ml-5 p-2">Número de Teléfono: {{ user.phoneNumber }}</h5>
+                    </div>
+                    <div class="col-sm ">
+                        <h5 class="card-title ml-5 p-2">Email: {{ user.email }}</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
