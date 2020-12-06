@@ -6,18 +6,12 @@
 {% block main %}
     <div class="container ">
         <div class= "row mt-4">
-            <div class= "col-1" style="color: white; display: block;">
-                <h2 style="">Tareas</h2>
-            </div>
-            <div class= "col-sm">
-                <input type="text" id="myInput" style="float: left; padding: 10px; width: 262px; border-radius: 10px;" onkeyup="myFunction()" placeholder="Busca por nombre...">
-            </div>
-            <div class= "col-sm justify-content-end">
-                <div class= "row">
-                    <div class= "col-sm  justify-content-end">
-                        <button type="button" class="btn btn-light btn-outline-dark" style="width: 60px; float: right;" data-toggle="modal" data-target="#newTaskModal"><img style="width: 70%;" src="{% static 'img/mas.png' %}"></button>
-                    </div>
-                </div>
+            <div class= "col" style="color: white;">
+                <h2>Tareas</h2>
+                <input type="text" id="myInput" style="float: left; padding: 10px; width: 262px;" onkeyup="myFunction()" placeholder="Busca por nombre...">
+                <a class="btn w-10 mb-1 p-2" role="button" data-toggle="modal" data-target="#newTaskModal" style="margin-left: 40%; border-color: rgb(0, 255, 42); border-style: solid;" href="#" >
+                    <img src="{% static 'img/mas.png' %}" alt="Añadir tarea" width="50px"><span style="color: white; padding: 10px; font-size: 18px;">Crear</span>
+                </a>
             </div>
         </div>
     </div>
@@ -41,17 +35,17 @@
         {% for task in tasks %}
             <div class="container">
               <div class="row align-items-center fila">
-                <div class="col-sm">
+                <div class="col">
                   <a href="{% url 'tutorTasksEdit' id=task.id %}">
                       <div class="card" style="width: 55rem;">
                           <div class="card-body">
                               <div class="row align-items-center">
                                 <div class="col-1">
-                                  <img style="width: 50px;" class="card-img" src="{% static 'img/Logo.jpg' %}" alt="Card image cap">
+                                  <img style="width: 50px;" class="card-img" src="{% static task.image.url %}" alt="Card image cap">
                                 </div>
                                 <div class="col-sm">
-                                  <h5 class="card-title">{{ task.title }}</h5>
-                              <h6 class="card-subtitle mb-2 text-muted">{{ task.shortDescription }}</h6>
+                                  <h3 class="card-title">{{ task.title }}</h3>
+                              <h5 class="card-subtitle mb-2 text-muted">{{ task.shortDescription }}</h5>
                                 </div>
                               </div>
                           </div>
@@ -60,11 +54,15 @@
                 </div>
                 <div class="col-sm">
                   <div class="row align-items-center">
-                    <div class="col-sm">
-                        <a class="btn btn-light btn-outline-dark" href="{% url 'tutorTasksEdit' id=task.id  %}" role="button"><img style="width: 110%;" src="{% static 'img/editar.png' %}" /></a>
+                    <div class="col-6">
+                        <a class="btn w-10 mb-1 p-2" role="button" style="margin-left: 40%; border-color: rgb(238, 255, 0); border-style: solid;" href="{% url 'tutorTasksEdit' id=task.id  %}" >
+                            <img src="{% static 'img/editar.png' %}" alt="Editar tarea" width="50px"><span style="color: white; padding: 10px; font-size: 18px;">Editar</span>
+                        </a>
                     </div>
-                    <div class="col-sm">
-                        <button type="button" class="btn btn-light btn-outline-dark deleteTask" data-toggle="modal" data-target="#deleteTaskModal" data-title="{{ task.title }}" data-id="{{ task.id }}"><img style="width: 110%;" src="{% static 'img/eliminar.png' %}" /></button>
+                    <div class="col-6">
+                        <a class="btn w-10 mb-1 p-2" role="button" data-toggle="modal" data-target="#deleteTaskModal" data-title="{{ task.title }}" data-id="{{ task.id }}" style="margin-left: 40%; border-color: rgb(255, 0, 0); border-style: solid;" href="#" >
+                            <img src="{% static 'img/eliminar.png' %}" alt="Eliminar tarea" width="50px"><span style="color: white; padding: 10px; font-size: 18px;">Eliminar</span>
+                        </a>
                     </div>
                   </div>
                 </div>

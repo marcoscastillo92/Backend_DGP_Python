@@ -9,7 +9,9 @@
       <div class="row">
         <div class="col align-self-start">
             <br>
-            <a href="{% url 'tutorTasks' %}" class="btn btn-secondary" role="button">Volver atrás</a>
+            <a class="btn mt-4" href="{% url 'tutorTasks' %}">
+                <img src="{% static 'img/atras.png' %}" alt="Volver atrás" width="45px">
+            </a>
         </div>
         <div class="col">
         <br>
@@ -105,13 +107,19 @@
         <div class="col">
             <br>
             <div style="float:right; display: inline-block;">
-                <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#statusModal">Resoluciones</button>
+                <a class="btn w-10 mb-1 p-2" role="button" data-toggle="modal" data-target="#statusModal" style="margin-left: 40%; border-color: rgb(255, 255, 255); border-style: solid;" href="#" >
+                    <img src="{% static 'img/resoluciones.png' %}" alt="Resoluciones" width="50px"><span style="color: white; padding: 10px; font-size: 18px;">Resoluciones</span>
+                </a>
                 <br>
                 <br>
-                <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#ratingModal">Valoraciones</button>
+                <a class="btn w-10 mb-1 p-2" role="button" data-toggle="modal" data-target="#ratingModal" style="margin-left: 40%; border-color: rgb(248, 222, 61); border-style: solid;" href="#" >
+                    <img src="{% static 'img/rating.png' %}" alt="Valoraciones" width="50px"><span style="color: white; padding: 10px; font-size: 18px;">Valoraciones</span>
+                </a>
                 <br>
                 <br>
-                <a class="btn btn-light btn-outline-dark" href="{% url 'tutorTasksDelete' id=task.id  %}" role="button"><img style="width: 50%;" src="{% static 'img/eliminar.png' %}" /></a>
+                <a class="btn w-10 mb-1 p-2" role="button" style="margin-left: 40%; border-color: rgb(255, 0, 0); border-style: solid;" href="{% url 'tutorTasksDelete' id=task.id  %}" >
+                    <img src="{% static 'img/eliminar.png' %}" alt="Eliminar tarea" width="50px"><span style="color: white; padding: 10px; font-size: 18px;">Eliminar</span>
+                </a>
             </div>
         </div>
       </div>
