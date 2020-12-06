@@ -9,8 +9,8 @@
             <div class= "col" style="color: white;">
                 <h2>Grupos</h2>
                 <input type="text" class="mb-1" id="myInput" style="float: rigleftht; padding: 10px; width: 262px;" onkeyup="myFunction()" placeholder="Busca por nombre...">
-                <a class="btn w-10 mb-1 p-2" style="margin-left: 40%; border-color: rgb(0, 255, 42); border-style: solid; border-radius: 100px;" href="{% url 'tutorsGroupsCreate' %}" >
-                  <img src="{% static 'img/addGroup.png' %}" alt="Añadir Grupo" width="50px"><span style="color: white; padding: 10px; font-size: 18px;">Crear Perfil</span>
+                <a class="btn w-10 mb-1 p-2" style="margin-left: 40%; border-color: rgb(0, 255, 42); border-style: solid; " href="{% url 'tutorsGroupsCreate' %}" >
+                  <img src="{% static 'img/addGroup.png' %}" alt="Añadir Grupo" width="50px"><span style="color: white; padding: 10px; font-size: 18px;">Crear Grupo</span>
                 </a>
             </div>
         </div>
@@ -61,8 +61,8 @@
                                 </div>
                             </div>
                             <div class="col-sm">
-                              <h5 class="card-title ml-5 p-2" >{{ group.name }}</h5>
-                            <h6 class="card-subtitle mb-2 text-muted ml-5 p-2">Creado el {{ group.createdAt }}</h6>
+                              <h2 class="card-title ml-5 p-2" >{{ group.name }}</h2>
+                              <h5 class="card-subtitle mb-2 text-muted ml-5 p-2">Creado el {{ group.createdAt }}</h5>
                             </div>
                           </div>
                       </div>
@@ -71,11 +71,11 @@
             </div>
             <div class="col-sm">
               <div class="row align-items-center">
-                <a class="btn m-1 w-100 p-2" style="border-color: rgb(238, 255, 0); border-radius: 1000px; border-style: solid;" href="{% url 'tutorsGroupsEdit' id=group.identifier %}" >
+                <a class="btn m-1 w-100 p-2" style="border-color: rgb(238, 255, 0); border-style: solid;" href="{% url 'tutorsGroupsEdit' id=group.identifier %}" >
                   <img src="{% static 'img/editGroup.png' %}" alt="Editar Grupo"  width="27%"> <span style="color: white; padding: 10px; font-size: 18px;">Editar Grupo</span>
                 </a>
                 
-                <button type="button" class="deleteGroup  btn m-1 w-100 p-2" style="border-color: rgb(255, 0, 0); border-radius: 1000px; border-style: solid;" data-toggle="modal" data-id="{{ group.identifier }}" data-participants="{{ group.memberCount }}" data-name="{{ group.name }}" data-target="#deleteGroupModal" data-created="{{ group.createdAt }}">
+                <button type="button" class="deleteGroup  btn m-1 w-100 p-2" style="border-color: rgb(255, 0, 0); border-style: solid;" data-toggle="modal" data-id="{{ group.identifier }}" data-participants="{{ group.memberCount }}" data-name="{{ group.name }}" data-target="#deleteGroupModal" data-created="{{ group.createdAt }}">
                   <img src="{% static 'img/deleteGroup.png' %}" alt="Borrar Grupo" width="27%"> <span style="color: white; padding: 10px; font-size: 18px;">Borrar Grupo</span>
                 </button>
 

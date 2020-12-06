@@ -9,8 +9,8 @@
             <div class= "col" style="color: white;">
                 <h2>Tareas</h2>
                 <input type="text" id="myInput" style="float: left; padding: 10px; width: 262px;" onkeyup="myFunction()" placeholder="Busca por nombre...">
-                <a class="btn w-10 mb-1 p-2" role="button" data-toggle="modal" data-target="#newTaskModal" style="margin-left: 40%; border-color: rgb(0, 255, 42); border-style: solid;" href="#" >
-                    <img src="{% static 'img/mas.png' %}" alt="Añadir tarea" width="50px"><span style="color: white; padding: 10px; font-size: 18px;">Crear</span>
+                <a class="btn w-10 mb-3 p-2" role="button" data-toggle="modal" data-target="#newTaskModal" style="margin-left: 40%; border-color: rgb(0, 255, 42); border-style: solid;" href="#" >
+                    <img src="{% static 'img/mas.png' %}" alt="Añadir tarea" width="50px"><span style="color: white; padding: 10px; font-size: 18px;">Crear Tarea</span>
                 </a>
             </div>
         </div>
@@ -22,7 +22,7 @@
               <div class="col">
                   <div class="card-body">
                       <div class="row mt-2 w-100 d-flex justify-content-center">
-                        <h3 class="p-2">No hay ningún usuario creado</h3>
+                        <h3 class="p-2">No hay ninguna tarea creada</h3>
                       </div>
                       
                   </div>
@@ -35,17 +35,21 @@
         {% for task in tasks %}
             <div class="container">
               <div class="row align-items-center fila">
-                <div class="col">
-                  <a href="{% url 'tutorTasksEdit' id=task.id %}">
+                <div class="col-9" style="margin-right: 10px;">
+                  <a href="{% url 'tutorTasksEdit' id=task.id %}" style="text-decoration: none;">
                       <div class="card" style="width: 55rem;">
                           <div class="card-body">
                               <div class="row align-items-center">
                                 <div class="col-1">
+                                {% if task.image %}
                                   <img style="width: 50px;" class="card-img" src="{% static task.image.url %}" alt="Card image cap">
+                                {% else %}
+                                  <img style="width: 50px;" class="card-img" src="{% static 'img/resoluciones.png' %}" alt="Card image cap">
+                                {% endif %}
                                 </div>
                                 <div class="col-sm">
-                                  <h3 class="card-title">{{ task.title }}</h3>
-                              <h5 class="card-subtitle mb-2 text-muted">{{ task.shortDescription }}</h5>
+                                  <h2 class="card-title">{{ task.title }}</h2>
+                                  <h5 class="card-subtitle mb-2 text-muted">{{ task.shortDescription }}</h5>
                                 </div>
                               </div>
                           </div>
@@ -54,12 +58,12 @@
                 </div>
                 <div class="col-sm">
                   <div class="row align-items-center">
-                    <div class="col-6">
+                    <div class="col-5">
                         <a class="btn w-10 mb-1 p-2" role="button" style="margin-left: 40%; border-color: rgb(238, 255, 0); border-style: solid;" href="{% url 'tutorTasksEdit' id=task.id  %}" >
                             <img src="{% static 'img/editar.png' %}" alt="Editar tarea" width="50px"><span style="color: white; padding: 10px; font-size: 18px;">Editar</span>
                         </a>
                     </div>
-                    <div class="col-6">
+                    <div class="col-4">
                         <a class="btn w-10 mb-1 p-2" role="button" data-toggle="modal" data-target="#deleteTaskModal" data-title="{{ task.title }}" data-id="{{ task.id }}" style="margin-left: 40%; border-color: rgb(255, 0, 0); border-style: solid;" href="#" >
                             <img src="{% static 'img/eliminar.png' %}" alt="Eliminar tarea" width="50px"><span style="color: white; padding: 10px; font-size: 18px;">Eliminar</span>
                         </a>

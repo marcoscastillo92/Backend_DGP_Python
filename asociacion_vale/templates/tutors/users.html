@@ -9,7 +9,7 @@
             <div class= "col " style="color: white;">
                 <h2>Usuarios</h2>
                 <input type="text" id="myInput" style=" padding: 10px; width: 262px;" onkeyup="myFunction()" placeholder="Busca por nombre...">
-                <a class="btn w-10 mb-1 p-2" style="margin-left: 40%; border-color: rgb(0, 255, 42); border-style: solid; border-radius: 100px;" href="http://localhost:8000/tutors/users/add" >
+                <a class="btn w-10 mb-1 p-2" style="margin-left: 40%; border-color: rgb(0, 255, 42); border-style: solid; " href="http://localhost:8000/tutors/users/add" >
                   <img src="{% static 'img/addUser.png' %}" alt="Añadir Usuario" width="50px"><span style="color: white; padding: 10px; font-size: 18px;">Crear Perfil</span>
                 </a>
             </div>
@@ -32,7 +32,6 @@
         </div>
     </div>
     {% endif %}
-
     <div id = "myUL">
     {% for user in users %}
         <div class="container">
@@ -43,8 +42,8 @@
                       <div class="card-body">
                           <div class="row align-items-center">
                             <div class="col-1">
-                              {% if user.profileImage == "null" %}
-                                <img style="width: 100px; height:100px; border-radius: 700px;" class="card-img" src="{% static '/img/profile.png' %}" alt="Card image cap">
+                              {% if user.profileImage == "" %}
+                                <img style="width: 100px; height:100px; border-radius: 700px;" class="card-img" src="{% static 'img/perfil.png' %}" alt="Card image cap">
                               {% else %}
                                 <img style="width: 100px; height:100px; border-radius: 700px;" class="card-img" src="{% static user.profileImage %}" alt="Card image cap">
                               {% endif %}
@@ -60,11 +59,11 @@
             </div>
             <div class="col-sm">
               <div class="row align-items-center">
-                <a class="btn m-1 w-100 p-2" style="border-color: rgb(238, 255, 0); border-radius: 1000px; border-style: solid;" href="http://localhost:8000/tutors/users/edit/{{ user.id }}" >
+                <a class="btn m-1 w-100 p-2" style="border-color: rgb(238, 255, 0); border-style: solid;" href="http://localhost:8000/tutors/users/edit/{{ user.id }}" >
                   <img src="{% static 'img/editUser.png' %}" alt="Editar Usuario" width="27%"> <span style="color: white; padding: 10px; font-size: 18px;">Editar Perfil</span>
                 </a>
                 
-                <button type="button" class="deleteProfile btn m-1 w-100 p-2" style="border-color: rgb(255, 0, 0); border-radius: 1000px; border-style: solid;" data-toggle="modal" data-id="{{user.id}}" data-name="{{user.name}}" data-target="#deleteProfileModal" data-created="{{user.createdAt}}">
+                <button type="button" class="deleteProfile btn m-1 w-100 p-2" style="border-color: rgb(255, 0, 0); border-style: solid;" data-toggle="modal" data-id="{{user.id}}" data-name="{{user.name}}" data-target="#deleteProfileModal" data-created="{{user.createdAt}}">
                   <img src="{% static 'img/deleteUser.png' %}" alt="Borrar Usuario" width="27%"> <span style="color: white; padding: 10px; font-size: 18px;">Borrar Perfil</span>
                 </button>
 

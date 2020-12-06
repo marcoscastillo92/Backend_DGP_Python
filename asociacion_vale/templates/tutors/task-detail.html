@@ -93,10 +93,9 @@
                                 </tr>
                             {% endfor %}
                                 <tr>
-                                    <td></td>
-                                    <td>
-                                        <input type="submit" value="Enviar" onclick="selectMiembrosItems()" class="btn btn-success" role="button">
-                                    </td>
+                                  <td>
+                                    <input type="submit" value="Enviar" onclick="selectMiembrosItems()" class="btn btn-success" role="button">
+                                  </td>
                                 </tr>
                         </table>
                     </form>
@@ -117,7 +116,7 @@
                 </a>
                 <br>
                 <br>
-                <a class="btn w-10 mb-1 p-2" role="button" style="margin-left: 40%; border-color: rgb(255, 0, 0); border-style: solid;" href="{% url 'tutorTasksDelete' id=task.id  %}" >
+                <a class="btn w-10 mb-1 p-2" role="button" style="width: 145px; margin-left: 40%; border-color: rgb(255, 0, 0); border-style: solid;" href="{% url 'tutorTasksDelete' id=task.id  %}" >
                     <img src="{% static 'img/eliminar.png' %}" alt="Eliminar tarea" width="50px"><span style="color: white; padding: 10px; font-size: 18px;">Eliminar</span>
                 </a>
             </div>

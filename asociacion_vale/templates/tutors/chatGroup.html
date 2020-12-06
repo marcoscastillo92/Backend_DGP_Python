@@ -120,7 +120,12 @@
 </div>-->
 <div id="newMessageSection" class="container list p-3" style="height: 100px;overflow: hidden; margin-bottom: 50px;">
     <form action="{% url 'tutorsGroupsPostMessage' %}" method="POST" enctype="multipart/form-data">
-        <input type="file" id="file" name="file" src="{static 'img/pdf.png'}" accept=".pdf, .docx , .txt ,.zip, .rar, .mp3, .mp4 , .wav, .mp4, .jpg, .png">
+        <label for="file">
+            <img src="{% static 'img/archivos.png' %}" alt="Enviar Archivos">
+            <img src="{% static 'img/imagen.png' %}" alt="Enviar Imagen">
+            <img src="{% static 'img/mic.png' %}" alt="Enviar Audio">
+        </label>
+        <input type="file" id="file" name="file" src="{static 'img/pdf.png'}" accept=".pdf, .docx , .txt ,.zip, .rar, .mp3, .mp4 , .wav, .mp4, .jpg, .png" style="display: none;">
         <input type="hidden" name="mimeType" id="mimeType" value="txt">
         <input type="text" style="font-size: medium; width: 92%; padding: 10px;" name="body" id="body" placeholder="Escribe tu mensaje">
         <input type="hidden" name="identifier" id="identifier" value="{{group.identifier}}">
