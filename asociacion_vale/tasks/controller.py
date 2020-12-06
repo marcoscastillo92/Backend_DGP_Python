@@ -1,7 +1,7 @@
 import json
 
 from django.http import JsonResponse
-from django.shortcuts import HttpResponse
+from django.shortcuts import HttpResponseRedirect
 
 from users.models import User
 from .models import Rating, Task, Progress, Category, TaskStatus
@@ -82,6 +82,8 @@ def getTask(request, id):
     task = Task.objects.get(id=id)
     response = {}
     append_value(response, 'task', task.serializeCustom(token))
+    if not task:
+        response = {"task": {}}
     return JsonResponse(response)
 
 def getAllTasks(request):
@@ -95,6 +97,8 @@ def getAllTasks(request):
     response = {}
     for task in tasks:
         append_value(response, 'tasks', task.serializeCustom(token))
+    if not tasks:
+        response = {"tasks": []}
     return JsonResponse(response)
 
 def saveRandomTask(request):
@@ -147,6 +151,20 @@ def getTaskStatus(request):
         return JsonResponse({"result":"error", "message":"No hay estado para la tarea"}, safe=False)
     return JsonResponse({"result":"error", "message":"No existe la tarea"}, safe=False)
 
+def getProgress(request):
+    token = request.META['HTTP_AUTHORIZATION']
+    author = getUserByToken(token)
+    if not author:
+        response = {"result": "error", "message": "El usuario no existe"}
+        return JsonResponse(response, safe=False)
+    progress = Progress.objects.filter(user=author)
+    if progress:
+        response = []
+        for p in progress:
+            response.append(p.serializeCustom())
+        return JsonResponse({"categories": response}, safe=False)
+    return JsonResponse({"result": "error", "message": "No hay progresos para el usuario"}, safe=False)
+
 def setTaskStatus(request):
     taskStatus = TaskStatus.objects.get(id=request.POST.get('taskId'))
     if taskStatus:
@@ -163,5 +181,5 @@ def setTaskStatus(request):
             elif substract:
                 progress.done = progress.done - 1
             progress.save(force_update=True)
-        return JsonResponse({"status": taskStatus.serializeCustom()}, safe=False)
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     return JsonResponse({"result": "error", "message": "No hay estado para la tarea"}, safe=False)

@@ -200,13 +200,51 @@ def tutorTasksCreate(request):
 
 
 @csrf_exempt
-def tasksChat(request, identifier):
+def tasksChat(request, identifier, userId):
     if request.session.get('username', False):
         controller = Controller()
         if request.method == 'GET':
-            return controller.chatTask(request, identifier)
+            return controller.chatTask(request, identifier, userId)
         elif request.method == 'POST':
-            return controller.postChatTask(request, identifier)
+            return controller.postChatTask(request, identifier, userId)
+    return redirect('/')
+
+@csrf_exempt
+def createCategory(request):
+    if request.session.get('username', False):
+        controller = Controller()
+        if request.method == 'POST':
+            return controller.createCategory(request)
+    return redirect('/')
+
+@csrf_exempt
+def tutorsUsersProfile(request, id):
+    if request.method == 'GET':
+        if request.session.get('username', False):
+            controller = Controller()
+            return  controller.tutorProfile(request, id)
+    return redirect('/')
+
+@csrf_exempt
+def tutorsUsersProfileTutor(request):
+    if request.method == 'GET':
+        if request.session.get('username', False):
+            controller = Controller()
+            return  controller.tutorsUsersProfileTutor(request)
+    return redirect('/')
+
+@csrf_exempt
+def tutorsUsersProfileEdit(request,id):
+    if request.session.get('username', False):
+        controller = Controller()
+        return controller.tutorsUsersProfileEdit(request, id)
+    return redirect('/')
+
+@csrf_exempt
+def tutorsUsersResults(request,id):
+    if request.session.get('username', False):
+        controller = Controller()
+        return controller.tutorsUsersResults(request, id)
     return redirect('/')
 
 @csrf_exempt

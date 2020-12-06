@@ -26,7 +26,7 @@ class User(models.Model):
     username= models.CharField(verbose_name=("Nombre de Usuario"), max_length=150)
     password= models.CharField(verbose_name=("Contraseña"), max_length=150)
     phoneNumber= models.CharField(verbose_name=("Número de Teléfono"), max_length=150)
-    profileImage= models.ImageField(verbose_name=("Imagen de Perfil"), upload_to=user_directory_path, default='null')
+    profileImage= models.ImageField(verbose_name=("Imagen de Perfil"), upload_to=user_directory_path, blank=True)
     birthDate= models.DateTimeField(verbose_name=("Fecha de Nacimiento"), auto_now_add=True)
     token= models.CharField(max_length=300, default="null")
     gender= models.CharField(verbose_name=("Sexo"), max_length=6, choices=Gender.choices, default=Gender.male)

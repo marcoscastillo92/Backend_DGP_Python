@@ -1,3 +1,8 @@
+{% load static %}
+{% block otherScripts %}
+    <script type="text/javascript" src="{% static 'javascript/editGroup.js' %}"></script>
+{% endblock %}
+{% csrf_token %}
 <div class="container">
   <div class="row align-items-center">
     <div class="col-sm">
@@ -5,8 +10,8 @@
     </div>
     <div class="col-sm">
         <div class="modal fade" id="newTaskModal" tabindex="-1" role="dialog" aria-labelledby="newTaskModalLabel" aria-hidden="true">
-          <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content" style="width: 37rem;">
+          <div class="modal-dialog" style="width: 45rem;" role="document">
+            <div class="modal-content" style="width: 45rem;">
               <div class="modal-header">
                 <h5 class="modal-title" id="newTaskModalLabel">Nueva tarea</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -14,7 +19,7 @@
                 </button>
               </div>
               <div class="modal-body">
-                <div class="card" style="width: 35rem;">
+                <div class="card" style="width: 42rem;">
                   <div class="card-body">
                       <p class="card-text">
                           <form action="{% url 'tutorTasksCreate' %}" method="post" enctype="multipart/form-data">
@@ -25,8 +30,51 @@
                                             {{ field.label_tag }}
                                         </td>
                                         <td>
-                                            {{ field.errors }}
-                                            {{ field }}
+                                            {% if field != form.users %}
+                                                {{ field.errors }}
+                                                {{ field }}
+                                            {% else %}
+                                                <div class="container">
+                                                    <div class="row card-title">
+                                                      <div class="col">
+                                                      </div>
+                                                    </div>
+                                                    <div class="card p-3">
+                                                      <div class="row card-body d-flex justify-content-center">
+                                                        <div class="col-5 text-center ">
+                                                          <p class="editUser_sections">
+                                                            Alumnos
+                                                          </p>
+                                                          <div class= "col ">
+                                                            <input type="text" id="myInputAlumnos" style=" margin-left: -15px; margin-bottom: 10px; padding: 10px; width: 150px;" onkeyup="searchAlumnos()" placeholder="Introduce un nombre...">
+                                                          </div>
+                                                          <select class="selctpicker w-100" id="alumnos" multiple data-live-search="true" id="list-tab" name="alumnos">
+                                                            {% for user in users %}
+                                                            <option class="p-3 border-bottom" value="{{user.id}}">{{user.name}}</option>
+                                                            {% endfor %}
+                                                          </select>
+                                                        </div>
+                                                        <div class="mt-5">
+                                                            <img src="{% static 'img/add.png' %}" alt="Añadir"class="mt-5" width="55px" onclick="addUser()" class="btn"><br>
+                                                            <img src="{% static 'img/add.png' %}" alt="Añadir" class="mt-2"  width="55px" onclick="removeUser()">
+                                                        </div>
+                                                        <div class="col-5">
+                                                          <p class="editUser_sections text-center">
+                                                            Participantes
+                                                          </p>
+                                                          <div class= "col ">
+                                                            <input type="text" id="myInputMiembros" style=" margin-left: -15px; margin-bottom: 10px; padding: 10px; width: 150px;" onkeyup="searchMiembros()" placeholder="Introduce un nombre...">
+                                                          </div>
+                                                          <select class="selctpicker w-100" id="miembros" name="listUsers" multiple>
+                                                            {% for user in userIn %}
+                                                              <option class="p-3 border-bottom" value="{{ user.id }}">{{user.name}}</option>
+                                                            {% endfor %}
+                                                          </select>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                </div>
+                                            {% endif %}
                                         </td>
                                         <td>
                                             {% if field.help_text %}
@@ -38,7 +86,7 @@
                                     <tr>
                                         <td></td>
                                         <td>
-                                            <input type="submit" value="Enviar">
+                                            <input type="submit" onclick="selectMiembrosItems()" value="Enviar" class="btn btn-success" role="button">
                                         </td>
                                     </tr>
                             </table>
