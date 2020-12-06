@@ -6,16 +6,30 @@
 
 {% block main %}
 <div class="container align-items-center" style="width: 59%;">
-    <div class="row mt-4 w-10">
-        <a class="btn btn-dark m-1 w-10" href="http://localhost:8000/tutors/users">Atrás</a>
-        <div class="col-sm" style="color: white; margin-right: -7%;">
-            <h2>Perfil</h2>
+    <div class="row mt-4">
+        <a class="btn mt-4" href="http://localhost:8000/tutors/users">
+            <img src="{% static 'img/atras.png' %}" alt="Volver atrás" width="45px">
+        </a>
+        <div class="col mt-4" style="color: white; margin-right: -7%;">
+            <h1>Perfil</h1>
         </div>
-        <div class="col-sm align-items-end">
-            <a class="btn btn-dark m-1 w-30" href="http://localhost:8000/tutors/users/profile/{{ user.id }}/results">Resultados</a>
-            <a class="btn btn-dark m-1 w-10" href="http://localhost:8000/tutors/users/editProfile/{{ user.id }}">Editar Perfil</a>
-            <button type="button" class="deleteProfile btn btn-dark m-1 w-10" data-toggle="modal" data-id="{{user.id}}"
-                data-name="{{user.name}}" data-target="#deleteProfileModal" data-created="{{user.createdAt}}">Borrar Perfil</button>
+        <div class="row w-50" style="margin-right: 7%;">
+            <div class="col">
+                <a class="btn w-10 p-2" style="border-color: rgb(0, 204, 255); border-radius: 1000px; border-style: solid;" href="http://localhost:8000/tutors/users/profile/{{ user.id }}/results">
+                    <img src="{% static 'img/resultsUser.png' %}" alt="Resultados de Usuario" width="50%"><p style="color: white;">Resultados</p>
+                </a>
+            </div>
+            <div class="col">
+                <a class="btn w-10 p-2" style="border-color: rgb(238, 255, 0); border-radius: 1000px; border-style: solid;" href="http://localhost:8000/tutors/users/editProfile/{{ user.id }}">
+                    <img src="{% static 'img/editUser.png' %}" alt="Editar Usuario" width="50%"><p style="color: white;">Editar</p>
+                </a>
+            </div>
+            <div class="col">
+                <button type="button" class="deleteProfile btn w-10 p-2" style="border-color: rgb(255, 0, 0); border-radius: 1000px; border-style: solid;" data-toggle="modal" data-id="{{user.id}}"
+                    data-name="{{user.name}}" data-target="#deleteProfileModal" data-created="{{user.createdAt}}">
+                    <img src="{% static 'img/deleteUser.png' %}" alt="Borrar Usuario" width="50%"><p style="color: white;">Borrar</p>
+                </button>
+            </div>
             
             <div class="modal fade" id="deleteProfileModal" tabindex="-1" role="dialog" aria-labelledby="deleteProfileModalLabel"
                 aria-hidden="true">
@@ -72,13 +86,13 @@
                             <h4 class="card-title ml-5 p-2"><b>Nombre:</b> <span style="font-size: 20px;">{{ user.name }}</span></h4>
                         </div>
                         <div class="col-sm ">
-                            <h4 class="card-title ml-5 p-2"><b>Nombre de usuario:</b> <span style="font-size: 20px;"></span>{{ user.username }}</span></h4>
+                            <h4 class="card-title ml-5 p-2"><b>Nombre de usuario:</b> <span style="font-size: 20px;">{{ user.username }}</span></h4>
                         </div>
                         <div class="col-sm ">
-                            <h4 class="card-title ml-5 p-2"><b>Número de Teléfono:</b> <span style="font-size: 20px;"></span>{{ user.phoneNumber }}</span></h4>
+                            <h4 class="card-title ml-5 p-2"><b>Número de Teléfono:</b> <span style="font-size: 20px;">{{ user.phoneNumber }}</span></h4>
                         </div>
                         <div class="col-sm ">
-                            <h4 class="card-title ml-5 p-2"><b>Email:</b> <span style="font-size: 20px;"></span>{{ user.email }}</span></h4>
+                            <h4 class="card-title ml-5 p-2"><b>Email:</b> <span style="font-size: 20px;">{{ user.email }}</span></h4>
                         </div>
                     </div>
                 </div>

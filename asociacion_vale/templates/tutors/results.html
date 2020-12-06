@@ -7,9 +7,11 @@
 {% block main %}
 <div class="container align-items-center" style="width: 59%;">
     <div class="row mt-4 w-10">
-        <a class="btn btn-dark m-1 w-10" href="http://localhost:8000/tutors/users/profile/{{ user.id }}">Atrás</a>
+        <a class="btn w-10" href="http://localhost:8000/tutors/users/profile/{{ user.id }}">
+            <img src="{% static 'img/atras.png' %}" alt="Volver atrás" width="45px">
+        </a>
         <div class="col-sm" style="color: white; margin-right: -7%;">
-            <h2>Resultados de {{ user.name }}</h2>
+            <h1>Resultados de {{ user.name }}</h1>
         </div>
     </div>
 </div>
@@ -21,8 +23,8 @@
             <div class="row fila">
                 <div class="col-sm">
                     <div class="card-body">
-                        <div class="col-sm ">
-                            <h5 class="card-title p-2">{{ progress.category }}</h5>
+                        <div class="col">
+                            <h5 class="p-2 text-uppercase">{{ progress.category }}</h5>
                         </div>
                         <div class="progress">
                             <div class="progress-bar progress-bar-striped" role="progressbar"

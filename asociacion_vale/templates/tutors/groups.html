@@ -6,19 +6,12 @@
 {% block main %}
     <div class="container ">
         <div class= "row mt-4  ">
-            <div class= "col-sm " style="color: white;">
+            <div class= "col" style="color: white;">
                 <h2>Grupos</h2>
-                <input type="text" class="mb-1" id="myInput" style="float: rigleftht; padding: 10px; width: 262px; border-radius: 10px;" onkeyup="myFunction()" placeholder="Busca por nombre...">
-
-            </div>
-            
-         
-            <div class= "col-sm justify-content-end mb-2">
-                <div class= "row">
-                    <div class= "col-sm  justify-content-end">
-                      <a class="btn btn-dark m-1 w-100" href="{% url 'tutorsGroupsCreate' %}" >Crear Grupo</a>
-                    </div>
-                </div>
+                <input type="text" class="mb-1" id="myInput" style="float: rigleftht; padding: 10px; width: 262px;" onkeyup="myFunction()" placeholder="Busca por nombre...">
+                <a class="btn btn-light w-10 mb-1" style="margin-left: 48%;" href="{% url 'tutorsGroupsCreate' %}" >
+                  <img src="{% static 'img/addGroup.png' %}" alt="Añadir Grupo" width="50px">
+                </a>
             </div>
         </div>
         
@@ -62,10 +55,13 @@
             </div>
             <div class="col-sm">
               <div class="row align-items-center">
-                <a class="btn btn-dark m-1 w-100" href="{% url 'groupsGetChat' id=group.identifier %}" >Chat de Grupo</a>
-                <a class="btn btn-dark m-1 w-100" href="{% url 'tutorsGroupsEdit' id=group.identifier %}" >Editar Grupo</a>
+                <a class="btn btn-warning m-1 w-100" href="{% url 'tutorsGroupsEdit' id=group.identifier %}" >
+                  <img src="{% static 'img/editGroup.png' %}" alt="Editar Grupo" width="27%">
+                </a>
                 
-                <button type="button" class="deleteGroup btn btn-dark m-1 w-100" data-toggle="modal" data-id="{{ group.identifier }}" data-participants="{{ group.memberCount }}" data-name="{{ group.name }}" data-target="#deleteGroupModal" data-created="{{ group.createdAt }}">Borrar Grupo</button>
+                <button type="button" class="deleteGroup btn btn-danger m-1 w-100" data-toggle="modal" data-id="{{ group.identifier }}" data-participants="{{ group.memberCount }}" data-name="{{ group.name }}" data-target="#deleteGroupModal" data-created="{{ group.createdAt }}">
+                  <img src="{% static 'img/deleteGroup.png' %}" alt="Borrar Grupo" width="27%">
+                </button>
 
                 <div class="modal fade" id="deleteGroupModal" tabindex="-1" role="dialog" aria-labelledby="deleteGroupModalLabel" aria-hidden="true">
                   <div class="modal-dialog" role="document">

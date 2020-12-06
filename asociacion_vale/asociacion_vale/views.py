@@ -206,7 +206,7 @@ def tasksChat(request, identifier, userId):
         if request.method == 'GET':
             return controller.chatTask(request, identifier, userId)
         elif request.method == 'POST':
-            return controller.postChatTask(request, identifier, userId)
+            return controller.postMessage(request)
     return redirect('/')
 
 @csrf_exempt
