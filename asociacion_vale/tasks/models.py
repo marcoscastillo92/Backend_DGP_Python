@@ -9,6 +9,7 @@ from django.contrib.auth.models import User as Tutor
 import secrets
 from django.db.models.signals import m2m_changed
 from django.dispatch import receiver
+from notifications.controller import Controller as nController
 
 
 def taskImageDirectoryPath(instance, filename): 
@@ -191,6 +192,9 @@ def my_handler(sender, instance, **kwargs):
             else:
                 isProgressCreated[0].total = isProgressCreated[0].total + 1
                 isProgressCreated[0].save()
+            # Notificar al usuario de la nueva asignación a la tarea
+            ncon = nController()
+            ncon.sendNotication(user.id, "task")
     elif action == 'pre_remove':
         for pk in pk_set:
             user = User.objects.get(id=pk)

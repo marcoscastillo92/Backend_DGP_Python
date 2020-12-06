@@ -52,7 +52,7 @@ def rateTask(request):
         return JsonResponse(response, safe=False)
 
     bodyData = json.loads(request.body)
-    idTask = bodyData['id_tarea']
+    idTask = bodyData['id_task']
     newRating = False
     try:
         rating = Rating.objects.get(task__id=idTask, user__token=token)
@@ -61,14 +61,14 @@ def rateTask(request):
 
     if not newRating:
         text = bodyData['text'] if bodyData['text'] else rating.text 
-        difficulty = bodyData['dificultad'] if bodyData['dificultad'] else rating.difficulty 
-        utility = bodyData['utilidad'] if bodyData['utilidad'] else rating.utility 
+        difficulty = bodyData['difficulty'] if bodyData['difficulty'] else rating.difficulty
+        utility = bodyData['utility'] if bodyData['utility'] else rating.utility
         rating.text = text
         rating.difficulty = difficulty
         rating.utility = utility
         rating.save()
     else:
-        rating = Rating(task=Task.objects.get(id=idTask),user=User.objects.get(token=token),text=bodyData['text'],utility=bodyData['utilidad'],difficulty=bodyData['dificultad'])
+        rating = Rating(task=Task.objects.get(id=idTask),user=User.objects.get(token=token),text=bodyData['text'],utility=bodyData['utility'],difficulty=bodyData['difficulty'])
         rating.save()
     return JsonResponse(json.loads('{"status":"success", "message":"mensaje valorado correctamente"}'))
 

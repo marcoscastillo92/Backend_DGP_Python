@@ -205,13 +205,6 @@ class Controller:
                 for user in users:
                     ncon = nController()
                     ncon.sendNotication(user.id,"messageGroup",group.name)
-           
-            """ if category == "task":
-                task = Task.objects.get(identifier=identifier)
-                user = task.users.all()
-                user
-                ncon.sendNotication(userFromDB.id,"messageTask",task.name) """
-                
             return True
         else:
             return False
@@ -508,6 +501,9 @@ class Controller:
             identifier = identifier
         )
         newForum.save()
+        ncon = nController()
+        task = Task.objects.get(identifier=identifier)
+        ncon.sendNotication(user.id, "messageTask", None, task.title)
         return redirect('taskChat', identifier=identifier, userId=userId)
 
     def tutorProfile(self, request, id):
