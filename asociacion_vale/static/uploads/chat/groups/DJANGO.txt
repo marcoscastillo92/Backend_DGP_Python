@@ -1,0 +1,61 @@
+****************PLANTILAS***********************
+Para meter en un string una variable --> " %s (donde la quieras quieras)"%variable
+Para aceptar un parametro en una vista:
+	-->pasarlo como argumento despues del request
+	-->en el fichero url done se indica la url el parametro se pone entre <>
+	Ej.edades/<int:agno>
+Para plantillas:
+	-->Se crea un objeto Template 
+		plt = Template(doc_externo.read())
+	-->Se crea el contexto si tiene contenido dinamico
+		ctxt = Context()
+	--> rederizar el objeto Template
+		documento = plt.render(ctxt)
+
+En una vista se haria asi
+	//Importar from django.template import Template,Context
+	doc_externo = open(path al documento html)
+	plt = Template(doc_externo.read())
+	doc_externo.close()
+	ctx = Context() //si esta vacio significa que no tiene contenido dinamico
+	documento = plt.render(ctx)
+	return Httpresponse(documento)
+
+Al contesto se le pasan parametros en forma de pare clave valor
+{clavel : valor , clave: valor}
+
+Y desde el documento html se accede con {{ clave }}
+Si la clave es un objeto {{ clave.campo }}
+Si es una lista y se quiere acceder un campo {{ calve.index(entero) }}
+Si se quiere recorrer la lista:
+	{% for l in lista %}
+		<p>l</p>
+	{% endfor %}
+
+La sintaxis es la misma que en Twig
+Para aplicar un filtro {{ clave | filtro}}
+para consultar mirar en la doc de django buscar template filters
+
+Para que por defecto coja las plantillas de la misma carpeta se hace asi:
+	import django.template import loader
+	//ya no hace falta abrir el archivo html open(...)
+	en settings.py En la lista de templates en DIRS incluir la ruta
+	de la carpeta de templates
+	doc_externo = loader.get_template("documento.html')
+	...
+	documento = doc_externo.render(Se le pasa el diccionario directamente sin 
+	crear contexto )
+
+Shortcuts
+
+	from django.shorcuts import render
+	Con esto para renderizar la pagina solo basta con
+	return render(request, "nombrePlantilla.hmtl, Diccionario_contexto)
+
+Para incrustar plantillas:
+	{% include "nombre_plantilla.htm%}
+
+
+*******PERMISOS******
+
+El usuario activo puede acceder a las urls que requieran autenticacion
