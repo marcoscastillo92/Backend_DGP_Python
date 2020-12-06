@@ -40,6 +40,13 @@ class Controller:
                 destination.write(chunk)
         return fileName
 
+    def uploadFileFromTaskChat(self, f):
+        fileName = 'static/uploads/chat/tasks/'+f.name
+        with open(fileName, 'wb+') as destination:
+            for chunk in f.chunks():
+                destination.write(chunk)
+        return fileName
+
     def getUserByToken(self, token):
         authorQS = User.objects.filter(token=token)
         if authorQS:
@@ -55,8 +62,9 @@ class Controller:
             identifier = request.GET.get('identifier')
             category = request.GET.get('category')
             if category == 'task':
-                lista = Forum.objects.filter(identifier=identifier, emisorUser=userFromDB) | Forum.objects.filter(
-                    identifier=identifier, receptorUser=userFromDB)
+                task = Task.objects.get(id=identifier)
+                lista = Forum.objects.filter(identifier=task.identifier, emisorUser=userFromDB) | Forum.objects.filter(
+                    identifier=task.identifier, receptorUser=userFromDB)
             elif category == 'group':
                 lista = Forum.objects.filter(identifier=identifier)
             myList = list(lista.order_by('createdAt').reverse())
@@ -102,22 +110,24 @@ class Controller:
         if userFromDB:
             bodyData = json.loads(request.body)
             # {idForum:int,messageType: "string",body:"string", mimeType}
-            identifier = bodyData['identifier']
+            if bodyData['category'] == "task":
+                identifier = Task.objects.get(id=bodyData['identifier']).identifier
+            else:
+                identifier = bodyData['identifier']
             forum = Forum.objects.filter(identifier=identifier, category="welcomeMessage")  # mensaje creado por defecto
             pathFile = None
             body = ""
             mimeType = ""
             if forum:
-                
-                if request.POST.get('body'):
+                if bodyData['body']:
                     body = bodyData['body']
-                if request.POST.get('mimeType'):
+                if bodyData['mimeType']:
                     mimeType = bodyData['mimeType']
                     
                 category = bodyData['category']
              
                # print(bodyData)
-                if bodyData['base64']:
+                if 'base64' in bodyData:
                 
                     format, imgEncodeString = bodyData['base64'].split(';base64,')
                     ext = format.split('/')[-1]
@@ -465,15 +475,10 @@ class Controller:
         user = User.objects.get(id=userId)
         messages = []
         for message in messagesTask:
-            file = message.get('mimeType') if message.get('mimeType') else ""
-            if file:
-                name, mimeType = os.path.splitext(file)
-            else:
-                mimeType = None
             if message.get('emisorUser_id') == userId:
-                messages.append({"body": message.get('body'), "emisor": user.username, "created": message.get('createdAt'), "identifier": message.get('identifier'), "mimeType": mimeType, "file": file})
+                messages.append({"body": message.get('body'), "emisor": user.username, "created": message.get('createdAt'), "identifier": message.get('identifier'), "mimeType": message.get('mimeType'), "path": message.get('path')})
             elif message.get('emisorTutor_id') == tutor.id:
-                messages.append({"body": message.get('body'), "emisor": tutor.username, "created": message.get('createdAt'), "identifier": message.get('identifier'), "mimeType": mimeType, "file": file})
+                messages.append({"body": message.get('body'), "emisor": tutor.username, "created": message.get('createdAt'), "identifier": message.get('identifier'), "mimeType": message.get('mimeType'), "path": message.get('path')})
 
         if identifier:
             taskFromDB = Task.objects.filter(identifier=identifier)
@@ -487,17 +492,20 @@ class Controller:
         tutor = Tutor.objects.get(username=request.session.get('username', False))
         user = User.objects.get(id=userId)
         body = request.POST.get('body')
-        mimeType = request.FILES.get('file') if request.FILES.get('file') else ""
         category = request.POST.get('category')
+        if request.FILES:
+            pathFile = self.uploadFileFromTaskChat(request.FILES['file'])
+            filename, mimeType = os.path.splitext(pathFile)
         newForum = Forum(
-            body=body,
-            emisorTutor=tutor,
-            emisorUser=None,
-            receptorTutor=None,
-            receptorUser=user,
-            mimeType=mimeType,
-            category=category,
-            identifier=identifier
+            body = body,
+            emisorTutor = tutor,
+            emisorUser = None,
+            receptorTutor = None,
+            receptorUser = user,
+            path = pathFile,
+            mimeType = mimeType,
+            category = category,
+            identifier = identifier
         )
         newForum.save()
         return redirect('taskChat', identifier=identifier, userId=userId)

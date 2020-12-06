@@ -41,8 +41,7 @@ class Task(models.Model):
     category = models.ForeignKey(Category, verbose_name=("Categoría"), on_delete=models.CASCADE, null=True)
     users = models.ManyToManyField(User, verbose_name="Asignada a", related_name="usuarios", blank=True)
     identifier = models.CharField(verbose_name=("Identificador"), default=secrets.token_hex(10), max_length=300)
-    createdAt= models.DateTimeField(default=datetime.now, blank=True)
-
+    createdAt = models.DateTimeField(default=datetime.now, verbose_name="Creado en", blank=True)
     
     def save(self, *args, **kwargs):
         if self.category is None:

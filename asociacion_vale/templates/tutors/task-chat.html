@@ -43,36 +43,36 @@
     {% if tutor == message.emisor %}
         <div class= "container w-50 bg-primary rounded m-2" style="float: right; color: white;">
             <p class="row text-dark p-3 text-capitalize font-weight-bold" style="margin-bottom: -10px; margin-top: -10px;" id="{{ task.title }}">{{ message.emisor }} </p>
-            {% if message.file %}
+            {% if message.path %}
                 <div id="file-{{ message.id }}" style="margin-bottom: 5px; width: 50px;">
                     {% if message.mimeType == ".pdf" %}
-                        <a href="{% static message.file %}" target="_blank" class="d-flex justify-content-center">
+                        <a href="{% static message.path %}" target="_blank" class="d-flex justify-content-center">
                             <img src="{% static 'img/pdf.png' %}" class="m-2" alt="Archivo PDF" width="50%">
                         </a>
                     {% elif message.mimeType == ".txt" %}
-                    <a href="{% static message.file %}" target="_blank"  class="d-flex justify-content-center">
+                    <a href="{% static message.path %}" target="_blank"  class="d-flex justify-content-center">
                         <img src="{% static 'img/txt.png' %}" class="m-2 "  alt="Archivo TXT" width="50%">
                     </a>
                     {% elif message.mimeType == ".docx" %}
-                    <a href="{% static message.file %}" target="_blank" class="d-flex justify-content-center">
+                    <a href="{% static message.path %}" target="_blank" class="d-flex justify-content-center">
                         <img src="{% static 'img/docx.png' %}" class="m-2" alt="Archivo DOCX" width="50%">
                     </a>
                     {% elif message.mimeType == ".png" or message.mimeType == ".jpg" %}
-                        <a href="{% static message.file %}" target="_blank">
-                            <img src="{% static message.file %}" class="m-2" alt="Archivo Imagen" width="100%">
+                        <a href="{% static message.path %}" target="_blank">
+                            <img src="{% static message.path %}" class="m-2" alt="Archivo Imagen" width="100%">
                         </a>
                     {% elif message.mimeType == ".mp3" or message.mimeType == ".wav" %}
-                        <audio src="{% static message.file %}" class="m-2" preload="auto" controls></audio>
+                        <audio src="{% static message.path %}" class="m-2" preload="auto" controls></audio>
                     {% elif message.mimeType == ".zip"%}
-                    <a href="{% static message.file %}" class="d-flex justify-content-center">
+                    <a href="{% static message.path %}" class="d-flex justify-content-center">
                         <img src="{% static 'img/zip.png' %}" class="m-2" alt="Archivo Zip" width="50%">
                     </a>
                     {% elif message.mimeType == ".rar"%}
-                    <a href="{% static message.file %}"class="d-flex justify-content-center">
+                    <a href="{% static message.path %}"class="d-flex justify-content-center">
                         <img src="{% static 'img/rar.png' %}" class="m-2" alt="Archivo Rar" width="50%">
                     </a>
                     {% elif message.mimeType == ".mp4"%}
-                        <video src= "{% static message.file %}"  width="320" controls></video>
+                        <video src= "{% static message.path %}"  width="320" controls></video>
                     {% endif %}
                 </div>
             {% endif %}
@@ -82,36 +82,36 @@
     {% else %}
         <div class= "container w-50 bg-success rounded m-2" style="float: left; color: white;">
             <p class="row text-dark p-3 text-capitalize  font-weight-bold" style="margin-bottom: -10px; margin-top: -10px;" id="{{ task.title }}">{{ message.emisor }} </p>
-            {% if message.file %}
+            {% if message.path %}
                 <div id="file-{{ message.id }}">
                     {% if message.mimeType == ".pdf" %}
-                        <a href="{% static message.file %}" target="_blank" class="d-flex justify-content-center">
+                        <a href="{% static message.path %}" target="_blank" class="d-flex justify-content-center">
                             <img src="{% static 'img/pdf.png' %}" class="m-2" alt="Archivo PDF" width="50%">
                         </a>
                     {% elif message.mimeType == ".txt" %}
-                    <a href="{% static message.file %}" target="_blank"  class="d-flex justify-content-center">
+                    <a href="{% static message.path %}" target="_blank"  class="d-flex justify-content-center">
                         <img src="{% static 'img/txt.png' %}" class="m-2 "  alt="Archivo TXT" width="50%">
                     </a>
                     {% elif message.mimeType == ".docx" %}
-                    <a href="{% static message.file %}" target="_blank" class="d-flex justify-content-center">
+                    <a href="{% static message.path %}" target="_blank" class="d-flex justify-content-center">
                         <img src="{% static 'img/docx.png' %}" class="m-2" alt="Archivo DOCX" width="50%">
                     </a>
                     {% elif message.mimeType == ".png" or message.mimeType == ".jpg" %}
-                        <a href="{% static message.file %}" target="_blank">
-                            <img src="{% static message.file %}" class="m-2" alt="Archivo Imagen" width="100%">
+                        <a href="{% static message.path %}" target="_blank">
+                            <img src="{% static message.path %}" class="m-2" alt="Archivo Imagen" width="100%">
                         </a>
                     {% elif message.mimeType == ".mp3" or message.mimeType == ".wav" %}
-                        <audio src="{% static message.file %}" class="m-2" preload="auto" controls></audio>
+                        <audio src="{% static message.path %}" class="m-2" preload="auto" controls></audio>
                     {% elif message.mimeType == ".zip"%}
-                    <a href="{% static message.file %}" class="d-flex justify-content-center">
+                    <a href="{% static message.path %}" class="d-flex justify-content-center">
                         <img src="{% static 'img/zip.png' %}" class="m-2" alt="Archivo Zip" width="50%">
                     </a>
                     {% elif message.mimeType == ".rar"%}
-                    <a href="{% static message.file %}"class="d-flex justify-content-center">
+                    <a href="{% static message.path %}"class="d-flex justify-content-center">
                         <img src="{% static 'img/rar.png' %}" class="m-2" alt="Archivo Rar" width="50%">
                     </a>
                     {% elif message.mimeType == ".mp4"%}
-                        <video src= "{% static message.file %}"  width="320" controls></video>
+                        <video src= "{% static message.path %}"  width="320" controls></video>
                     {% endif %}
                     <p class="row p-3" style="margin-bottom: -20px; margin-top: -30px;" id="{{ task.title }}">{{ message.body }} </p>
                     <p class="row font-italic p-3 d-flex justify-content-end " style="margin-bottom: -10px; margin-top: -30px;">{{message.created|date:"H:m"}}</p>

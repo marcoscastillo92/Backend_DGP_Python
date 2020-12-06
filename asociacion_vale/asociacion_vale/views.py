@@ -1,5 +1,7 @@
 from django.http.response import HttpResponse
 from django.shortcuts import redirect, render
+
+from users.models import User
 from .controller import Controller
 from groups.controller import Controller as gController
 from users.controller import Controller as uController
@@ -206,7 +208,11 @@ def tasksChat(request, identifier, userId):
         if request.method == 'GET':
             return controller.chatTask(request, identifier, userId)
         elif request.method == 'POST':
-            return controller.postMessage(request)
+            user = User.objects.filter(username=request.session.get('username'))
+            if user:
+                return controller.postMessage(request)
+            else:
+                return controller.postChatTask(request, identifier, userId)
     return redirect('/')
 
 @csrf_exempt
