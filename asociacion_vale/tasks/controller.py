@@ -82,6 +82,8 @@ def getTask(request, id):
     task = Task.objects.get(id=id)
     response = {}
     append_value(response, 'task', task.serializeCustom(token))
+    if not task:
+        response = {"task": {}}
     return JsonResponse(response)
 
 def getAllTasks(request):
@@ -95,6 +97,8 @@ def getAllTasks(request):
     response = {}
     for task in tasks:
         append_value(response, 'tasks', task.serializeCustom(token))
+    if not tasks:
+        response = {"tasks": []}
     return JsonResponse(response)
 
 def saveRandomTask(request):
