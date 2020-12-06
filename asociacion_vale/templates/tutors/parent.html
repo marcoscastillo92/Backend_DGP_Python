@@ -14,6 +14,13 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
     {% block scripts %}{% endblock %}
   </head>
+  <style>
+    body {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+  </style>
   <body>
     <!-- Optional JavaScript; choose one of the two! -->
 
@@ -33,33 +40,20 @@
           {% block header %}{% endblock %}
         
     </header>
-    <main>
+    <main style= "flex:1;">
         {% block main %}{% endblock %}
     </main>
-    <style>
    
-   .push {
-    height: 155px; /* .push must be the same height as .footer */
-}
-      footer{
-        background: #ffab62;
-        width: 100%;
- 
-        position: relative;
-        bottom: 0;
-        left: 0;
-      }
-    </style> <div class="push"></div>
-</div>
 
-    <footer class="footer bg-dark text-light text-center mt-3 p-2">
-      <em class="p-1">
-        Desarrollado por 6 + 1 Solutions
-      </em>
-      <br>
-      <em class="p-1 mb-2" style="margin-top: -15px;">
-        All rights reserved 2020
-      </em>
-    </footer>
+    
   </body>
+  <footer class="page-footer bg-dark text-light text-center mt-5 p-2">
+    <em class="p-1">
+      Desarrollado por 6 + 1 Solutions
+    </em>
+    <br>
+    <em class="p-1 mb-2" style="margin-top: -15px;">
+      All rights reserved 2020
+    </em>
+  </footer>
 </html>

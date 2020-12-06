@@ -5,19 +5,13 @@
 {% endblock %}
 {% block main %}
     <div class="container ">
-        <div class= "row mt-4  ">
-            <div class= "col-sm " style="color: white;">
+        <div class= "row mt-4">
+            <div class= "col " style="color: white;">
                 <h2>Usuarios</h2>
-                <input type="text" id="myInput" class="mb-2" style=" padding: 10px; width: 262px; border-radius: 10px;" onkeyup="myFunction()" placeholder="Busca por nombre...">
-
-            </div>
-            <div class= "col-sm justify-content-end mb-2">
-                <div class= "row">
-                  
-                    <div class= "col-sm  justify-content-end">
-                      <a class="btn btn-dark m-1 w-100" href="http://localhost:8000/tutors/users/add" >Crear Perfil</a>
-                    </div>
-                </div>
+                <input type="text" id="myInput" style=" padding: 10px; width: 262px;" onkeyup="myFunction()" placeholder="Busca por nombre...">
+                <a class="btn btn-light w-10 mb-1" style="margin-left: 48%;" href="http://localhost:8000/tutors/users/add" >
+                  <img src="{% static 'img/addUser.png' %}" alt="Añadir Usuario" width="50px">
+                </a>
             </div>
         </div>
         
@@ -49,12 +43,13 @@
             </div>
             <div class="col-sm">
               <div class="row align-items-center">
-                <button type="button" class="btn btn-dark m-1 w-100" data-toggle="modal" data-target="#exampleModal">
-                  Ver Progresos
-                </button>
-                <a class="btn btn-dark m-1 w-100" href="http://localhost:8000/tutors/users/editProfile/{{ user.id }}" >Editar Perfil</a>
+                <a class="btn btn-warning m-1 w-100" href="http://localhost:8000/tutors/users/edit/{{ user.id }}" >
+                  <img src="{% static 'img/editUser.png' %}" alt="Editar Usuario" width="27%">
+                </a>
                 
-                <button type="button" class="deleteProfile btn btn-dark m-1 w-100" data-toggle="modal" data-id="{{user.id}}" data-name="{{user.name}}" data-target="#deleteProfileModal" data-created="{{user.createdAt}}">Borrar Perfil</button>
+                <button type="button" class="deleteProfile btn btn-danger m-1 w-100" data-toggle="modal" data-id="{{user.id}}" data-name="{{user.name}}" data-target="#deleteProfileModal" data-created="{{user.createdAt}}">
+                  <img src="{% static 'img/deleteUser.png' %}" alt="Borrar Usuario" width="27%">
+                </button>
 
                 <div class="modal fade" id="deleteProfileModal" tabindex="-1" role="dialog" aria-labelledby="deleteProfileModalLabel" aria-hidden="true">
                   <div class="modal-dialog" role="document">
