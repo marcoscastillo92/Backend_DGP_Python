@@ -174,12 +174,12 @@ def setTaskStatus(request):
             substract = True
         taskStatus.done = bool(request.POST.get('done'))
         taskStatus.save()
-        progress = Progress.objects.get(user=taskStatus.user, category=taskStatus.task.category)
+        progress = Progress.objects.filter(user=taskStatus.user, category=taskStatus.task.category)
         if progress:
             if bool(request.POST.get('done')) and not alreadyDone:
-                progress.done = progress.done + 1
+                progress[0].done = progress[0].done + 1
             elif substract:
-                progress.done = progress.done - 1
-            progress.save(force_update=True)
+                progress[0].done = progress[0].done - 1
+            progress[0].save(force_update=True)
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     return JsonResponse({"result": "error", "message": "No hay estado para la tarea"}, safe=False)

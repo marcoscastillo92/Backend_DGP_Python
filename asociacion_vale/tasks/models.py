@@ -199,11 +199,11 @@ def my_handler(sender, instance, **kwargs):
         for pk in pk_set:
             user = User.objects.get(id=pk)
             taskStatus = TaskStatus.objects.get(user=user, task=tarea)
-            progress = Progress.objects.get(user=user, category__id=tarea.category.id)
+            progress = Progress.objects.filter(user=user, category__id=tarea.category.id)
             if progress:
-                progress.total = progress.total - 1
+                progress[0].total = progress[0].total - 1
                 # Comprobar si está completada para restar a las completadas 1 también
                 if taskStatus.done:
-                    progress.done = progress.done - 1
+                    progress[0].done = progress[0].done - 1
                 taskStatus.delete()
-                progress.save()
+                progress[0].save()
