@@ -486,6 +486,8 @@ class Controller:
         user = User.objects.get(id=userId)
         body = request.POST.get('body')
         category = request.POST.get('category')
+        pathFile = ""
+        mimeType = ""
         if request.FILES:
             pathFile = self.uploadFileFromTaskChat(request.FILES['file'])
             filename, mimeType = os.path.splitext(pathFile)
@@ -503,7 +505,7 @@ class Controller:
         newForum.save()
         ncon = nController()
         task = Task.objects.get(identifier=identifier)
-        ncon.sendNotication(user.id, "messageTask", None, task.title)
+        # ncon.sendNotication(user.id, "messageTask", None, task.title)
         return redirect('taskChat', identifier=identifier, userId=userId)
 
     def tutorProfile(self, request, id):

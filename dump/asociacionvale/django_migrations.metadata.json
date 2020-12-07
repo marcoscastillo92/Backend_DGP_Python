@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":2,"key":{"_id":1},"name":"_id_","ns":"asociacionvale.django_migrations"},{"v":2,"unique":true,"key":{"id":1},"name":"__primary_key__","ns":"asociacionvale.django_migrations"}],"uuid":"9dfc7e1d9b034820a90cc33ecf38a04b"}
