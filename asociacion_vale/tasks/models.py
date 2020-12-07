@@ -19,6 +19,9 @@ def taskImageDirectoryPath(instance, filename):
 def taskMediaDirectoryPath(instance, filename): 
     return 'static/uploads/tasks/{0}/media/{1}'.format(instance.id, filename)
 
+def generateIdentifier():
+    return secrets.token_hex(10)
+
 
 class Category(models.Model):
     title= models.CharField(max_length=200, verbose_name="Título")
@@ -41,7 +44,7 @@ class Task(models.Model):
     media = models.FileField(verbose_name=("Archivo"), upload_to=taskMediaDirectoryPath, blank=True)
     category = models.ForeignKey(Category, verbose_name=("Categoría"), on_delete=models.CASCADE, null=True)
     users = models.ManyToManyField(User, verbose_name="Asignada a", related_name="usuarios", blank=True)
-    identifier = models.CharField(verbose_name=("Identificador"), default=secrets.token_hex(10), max_length=300)
+    identifier = models.CharField(verbose_name=("Identificador"), default=generateIdentifier, max_length=300)
     createdAt = models.DateTimeField(default=datetime.now, verbose_name="Creado en", blank=True)
     
     def save(self, *args, **kwargs):
