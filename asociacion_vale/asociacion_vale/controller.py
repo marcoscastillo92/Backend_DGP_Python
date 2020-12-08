@@ -34,7 +34,10 @@ def handle_upload_file_from_chat_group(f):
 class Controller:
 
     def uploadFileFromChat(self, f):
-        fileName = 'static/uploads/chat/groups/'+f.name
+        directory = 'static/uploads/chat/groups/'
+        fileName = directory+f.name
+        if not os.path.exists(directory):
+            os.makedirs(directory)
         with open(fileName, 'wb+') as destination:
             for chunk in f.chunks():
                 destination.write(chunk)
