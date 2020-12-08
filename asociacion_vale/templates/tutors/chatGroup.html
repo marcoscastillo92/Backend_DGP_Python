@@ -121,9 +121,9 @@
 <div id="newMessageSection" class="container list p-3" style="height: 100px;overflow: hidden; margin-bottom: 50px;">
     <form action="{% url 'tutorsGroupsPostMessage' %}" method="POST" enctype="multipart/form-data">
         <label for="file">
-            <img src="{% static 'img/archivos.png' %}" alt="Enviar Archivos">
-            <img src="{% static 'img/imagen.png' %}" alt="Enviar Imagen">
-            <img src="{% static 'img/mic.png' %}" alt="Enviar Audio">
+            <img src="{% static 'img/archivos.png' %}" alt="Enviar Archivos" style="margin-right: 20px;">
+            <img src="{% static 'img/imagen.png' %}" alt="Enviar Imagen" style="margin-right: 20px;">
+            <img src="{% static 'img/mic.png' %}" alt="Enviar Audio" style="margin-right: 20px;">
         </label>
         <input type="file" id="file" name="file" src="{static 'img/pdf.png'}" accept=".pdf, .docx , .txt ,.zip, .rar, .mp3, .mp4 , .wav, .mp4, .jpg, .png" style="display: none;">
         <input type="hidden" name="mimeType" id="mimeType" value="txt">
