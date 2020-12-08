@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('messageTitle', models.CharField(max_length=300)),
                 ('messageBody', models.CharField(max_length=300, verbose_name='Cuerpo')),
-                ('apiKey', models.CharField(default='AAAAJPDrl-c:APA91bEKWQANHQcSQrkAlPOtN7rrGZ3VpyC1Zf17dCjCpCIZM6YCQ6unj4MFlOulo6dsXmmXFKWuSaSt-HE4JtqTJ675zPkYBNTtwvuUyXtqhQq74oTSzD85o4ZrVn9cTLphQEnlNjWb', max_length=300, verbose_name='ApiKey')),
+                ('apiKey', models.CharField(default='', max_length=300, verbose_name='ApiKey')),
                 ('user', models.ManyToManyField(blank=True, related_name='Usuarios', to='users.User', verbose_name='Usuarios')),
             ],
         ),

@@ -1,5 +1,7 @@
 from django.http.response import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render
+
+from asociacion_vale.settings import API_KEY
 from users.models import User, Pictograms
 from forums.models import Forum
 from groups.models import Groups
@@ -387,20 +389,14 @@ class Controller:
             status = TaskStatus.objects.get(user=user, task=infoTask, tutor=tutor)
             if status:
                 valueStatus = {'status': status, 'user': user}
-                if count in taskStatus:
-                    taskStatus[count].append(valueStatus)
-                else:
-                    taskStatus[count] = valueStatus
+                taskStatus[count] = valueStatus
             try:
                 rating = Rating.objects.get(user=user, task=infoTask)
             except:
                 rating = None
             if rating:
-                valueRating = {'user': user.username, 'rating': rating}
-                if count in taskStatus:
-                    ratings[count].append(valueRating)
-                else:
-                    ratings[count] = valueRating
+                valueRating = {'user': user.username, 'difficulty': rating.difficulty, 'utility': rating.utility, 'text': rating.text}
+                ratings[count] = valueRating
             count = count + 1
 
         taskForm = forms.TaskForm(request.POST or None, request.FILES or None, instance=infoTask)
@@ -584,7 +580,7 @@ class Controller:
         message = params['message']
         user = User.objects.get(username = 'Marcos')
         tokenDevice = user.deviceToken
-        push_service = FCMNotification(api_key="AAAAJPDrl-c:APA91bEKWQANHQcSQrkAlPOtN7rrGZ3VpyC1Zf17dCjCpCIZM6YCQ6unj4MFlOulo6dsXmmXFKWuSaSt-HE4JtqTJ675zPkYBNTtwvuUyXtqhQq74oTSzD85o4ZrVn9cTLphQEnlNjWb")
+        push_service = FCMNotification(api_key=API_KEY)
         registration_id = tokenDevice
         message_title = message
         message_body = message

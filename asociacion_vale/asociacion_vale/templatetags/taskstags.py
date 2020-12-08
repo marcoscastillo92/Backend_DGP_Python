@@ -13,6 +13,8 @@ def getStatus(array):
         profileImage = user.profileImage.url if user.profileImage else ""
         statusMsg = "Completado" if status.done else "En progreso"
         checked = "checked" if status.done else ""
+        finishedComment = status.comment if status.done else ""
+        hidden = "visible" if status.done else "none"
         html += f'''
         <div class="row align-items-center" id="resultados_{user.id}">
             <div class="col-sm">
@@ -22,7 +24,7 @@ def getStatus(array):
                 <a href="/tutors/users/edit/{user.id}">{user.name}</a> <br> {statusMsg} 
             </div>
             <div class="col-sm">
-                <form action="/tasks/status" method="POST"><label><input type="hidden" id="taskId" name="taskId" value="{status.id}"><input type="checkbox" id="resuelto{user.id}" name="done" value="1" {checked}> Resuelto</label><input type="submit" value="Actualizar"></form>
+                <form action="/tasks/status" method="POST"><label><input type="hidden" id="taskId" name="taskId" value="{status.id}"><input type="checkbox" id="resuelto{user.id}" name="done" value="1" {checked}> Resuelto</label><textarea name="comment" placeholder="Comentario" style="display: {hidden};">{finishedComment}</textarea><input type="submit" value="Actualizar"></form>
             </div>
             <div class="col-sm">
                 <a href="/tutors/tasks/chat/{status.task.identifier}/{user.id}"><img style="width: 50px;" src="/static/img/chat.png"> </a>
@@ -36,11 +38,10 @@ def getStatus(array):
 
 @register.simple_tag
 def getRatings(array):
-    response = ''
     html = '<div class="container">'
     for value in array:
         html += f'''
-            <div class="row align-items-center" id="valoracion_{array[value].get('user').username}">
+            <div class="row align-items-center" id="valoracion_{array[value].get('user')}">
                 <div class="col-sm">
                     {array[value].get('user')}
                 </div>
@@ -56,4 +57,4 @@ def getRatings(array):
             </div>
             '''
     html += '</div>'
-    return response
+    return mark_safe(html)

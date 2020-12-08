@@ -173,6 +173,7 @@ def setTaskStatus(request):
         if taskStatus.done and not request.POST.get('done'):
             substract = True
         taskStatus.done = bool(request.POST.get('done'))
+        taskStatus.comment = request.POST.get('comment')
         taskStatus.save()
         progress = Progress.objects.filter(user=taskStatus.user, category=taskStatus.task.category)
         if progress:

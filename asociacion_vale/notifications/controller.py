@@ -1,3 +1,4 @@
+from asociacion_vale.settings import API_KEY
 from .models import Notifications
 from users.models import User
 from pyfcm import FCMNotification
@@ -8,7 +9,7 @@ class Controller:
         user = User.objects.get(id=id)
         tokenDevice = user.deviceToken
         if tokenDevice != None and tokenDevice != "":
-            push_service = FCMNotification(api_key="AAAAJPDrl-c:APA91bEKWQANHQcSQrkAlPOtN7rrGZ3VpyC1Zf17dCjCpCIZM6YCQ6unj4MFlOulo6dsXmmXFKWuSaSt-HE4JtqTJ675zPkYBNTtwvuUyXtqhQq74oTSzD85o4ZrVn9cTLphQEnlNjWb")
+            push_service = FCMNotification(api_key=API_KEY)
             registration_id = tokenDevice
 
             if type == 'task':
@@ -22,8 +23,9 @@ class Controller:
                 message_body = "Tienes un nuevo mensaje en la tarea " + task
 
             notification = Notifications(
-                messageTitle = message_title,
-                messageBody =  message_body
+                messageTitle=message_title,
+                messageBody= message_body,
+                apiKey=API_KEY
             )
             notification.save()
             notification.user.add(user)
