@@ -21,6 +21,9 @@ class Controller:
             if type== "messageTask":
                 message_title = "Nuevo Mensaje en la tarea " + task
                 message_body = "Tienes un nuevo mensaje en la tarea " + task
+            if type == "finishedTask":
+                message_title = "Has finalizado la tarea " + task
+                message_body = "Has finalizado la tarea " + task
 
             notification = Notifications(
                 messageTitle=message_title,

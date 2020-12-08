@@ -5,6 +5,7 @@ from django.shortcuts import HttpResponseRedirect
 
 from users.models import User
 from .models import Rating, Task, Progress, Category, TaskStatus
+from notifications.controller import Controller as nController
 
 
 def append_value(dict_obj, key, value):
@@ -173,6 +174,9 @@ def setTaskStatus(request):
         if taskStatus.done and not request.POST.get('done'):
             substract = True
         taskStatus.done = bool(request.POST.get('done'))
+        if bool(request.POST.get('done')):
+            ncon = nController()
+            ncon.sendNotication(taskStatus.user.id, "finishedTask", None, taskStatus.task)
         taskStatus.comment = request.POST.get('comment')
         taskStatus.save()
         progress = Progress.objects.filter(user=taskStatus.user, category=taskStatus.task.category)
