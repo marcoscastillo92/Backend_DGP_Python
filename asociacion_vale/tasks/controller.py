@@ -176,7 +176,7 @@ def setTaskStatus(request):
         taskStatus.done = bool(request.POST.get('done'))
         if bool(request.POST.get('done')):
             ncon = nController()
-            ncon.sendNotication(taskStatus.user.id, "finishedTask", None, taskStatus.task)
+            ncon.sendNotication(taskStatus.user.id, "finishedTask", None, taskStatus.task.title)
         taskStatus.comment = request.POST.get('comment')
         taskStatus.save()
         progress = Progress.objects.filter(user=taskStatus.user, category=taskStatus.task.category)
