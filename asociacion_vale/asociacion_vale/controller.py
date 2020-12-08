@@ -505,7 +505,7 @@ class Controller:
         newForum.save()
         ncon = nController()
         task = Task.objects.get(identifier=identifier)
-        # ncon.sendNotication(user.id, "messageTask", None, task.title)
+        ncon.sendNotication(user.id, "messageTask", None, task.title)
         return redirect('taskChat', identifier=identifier, userId=userId)
 
     def tutorProfile(self, request, id):
