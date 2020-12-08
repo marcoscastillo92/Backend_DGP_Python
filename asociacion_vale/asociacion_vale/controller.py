@@ -40,8 +40,11 @@ class Controller:
                 destination.write(chunk)
         return fileName
 
-    def uploadFileFromTaskChat(self, f):
-        fileName = 'static/uploads/chat/tasks/'+f.name
+    def uploadFileFromTaskChat(self, f, identifier):
+        directory = 'static/uploads/chat/tasks/'+identifier+'/'
+        fileName = directory+f.name
+        if not os.path.exists(directory):
+            os.makedirs(directory)
         with open(fileName, 'wb+') as destination:
             for chunk in f.chunks():
                 destination.write(chunk)
@@ -489,7 +492,7 @@ class Controller:
         pathFile = ""
         mimeType = ""
         if request.FILES:
-            pathFile = self.uploadFileFromTaskChat(request.FILES['file'])
+            pathFile = self.uploadFileFromTaskChat(request.FILES['file'], identifier)
             filename, mimeType = os.path.splitext(pathFile)
         newForum = Forum(
             body = body,
