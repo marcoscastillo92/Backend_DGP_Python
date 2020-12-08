@@ -14,7 +14,7 @@ def getStatus(array):
         statusMsg = "Completado" if status.done else "En progreso"
         checked = "checked" if status.done else ""
         finishedComment = status.comment if status.done else ""
-        hidden = "visible" if status.done else "none"
+        hidden = "visible" if status.done else "visible"
         html += f'''
         <div class="row align-items-center" id="resultados_{user.id}">
             <div class="col-sm">
